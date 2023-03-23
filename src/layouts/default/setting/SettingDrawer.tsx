@@ -1,13 +1,13 @@
-import { defineComponent, computed, unref } from 'vue';
-import { BasicDrawer } from '/@/components/Drawer/index';
+import { computed, defineComponent, unref } from 'vue';
+import { BasicDrawer } from '/@/components/Drawer';
 import { Divider } from 'ant-design-vue';
 import {
-  TypePicker,
-  ThemeColorPicker,
+  InputNumberItem,
+  SelectItem,
   SettingFooter,
   SwitchItem,
-  SelectItem,
-  InputNumberItem,
+  ThemeColorPicker,
+  TypePicker,
 } from './components';
 
 import { AppDarkModeToggle } from '/@/components/Application';
@@ -24,19 +24,19 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { baseHandler } from './handler';
 
 import {
-  HandlerEnum,
   contentModeOptions,
-  topMenuAlignOptions,
   getMenuTriggerOptions,
-  routerTransitionOptions,
+  HandlerEnum,
   menuTypeList,
   mixSidebarTriggerOptions,
+  routerTransitionOptions,
+  topMenuAlignOptions,
 } from './enum';
 
 import {
+  APP_PRESET_COLOR_LIST,
   HEADER_PRESET_BG_COLOR_LIST,
   SIDE_BAR_BG_COLOR_LIST,
-  APP_PRESET_COLOR_LIST,
 } from '/@/settings/designSetting';
 
 const { t } = useI18n();
@@ -100,7 +100,7 @@ export default defineComponent({
         <>
           <TypePicker
             menuTypeList={menuTypeList}
-            handler={(item: typeof menuTypeList[0]) => {
+            handler={(item: (typeof menuTypeList)[0]) => {
               baseHandler(HandlerEnum.CHANGE_LAYOUT, {
                 mode: item.mode,
                 type: item.type,

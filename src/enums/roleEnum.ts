@@ -4,4 +4,6 @@ export enum RoleEnum {
 
   // tester
   TEST = 'test',
+
+  FIRE_MANAGE = 'fire_manage',
 }

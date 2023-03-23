@@ -1,9 +1,9 @@
 export interface BasicPageParams {
-  page: number;
-  pageSize: number;
+  current: number;
+  size: number;
 }
 
 export interface BasicFetchResult<T> {
-  items: T[];
+  records: T[];
   total: number;
 }

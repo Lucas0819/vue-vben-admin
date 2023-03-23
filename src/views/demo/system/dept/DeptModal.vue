@@ -4,18 +4,20 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './dept.data';
 
-  import { getDeptList } from '/@/api/demo/system';
+  import { createDept, getDeptList, updateDept } from '/@/api/demo/system';
+
   export default defineComponent({
     name: 'DeptModal',
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
+      const rowId = ref('');
 
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 100,
@@ -30,13 +32,14 @@
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
+          rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
           });
         }
         const treeData = await getDeptList();
         updateSchema({
-          field: 'parentDept',
+          field: 'parentId',
           componentProps: { treeData },
         });
       });
@@ -47,8 +50,12 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
+          if (unref(isUpdate)) {
+            values.id = unref(rowId);
+            await updateDept(values);
+          } else {
+            await createDept(values);
+          }
           closeModal();
           emit('success');
         } finally {

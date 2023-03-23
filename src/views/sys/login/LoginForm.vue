@@ -100,6 +100,10 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { ENTERPRISE_LOGIN_SCOPE, LOGIN_SECRET } from '/@/enums/serviceEnum';
+  import { AesEncryption } from '/@/utils/cipher';
+  import UTF8 from 'crypto-js/enc-utf8';
+  import Base64 from 'crypto-js/enc-base64';
   //import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
@@ -119,7 +123,7 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
+    account: '18600000001',
     password: '123456',
   });
 
@@ -129,15 +133,24 @@
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
+  const encryption = new AesEncryption({
+    key: LOGIN_SECRET,
+    iv: LOGIN_SECRET,
+  });
+
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;
     try {
       loading.value = true;
+      const encodePwd = encryption.encryptByAES(data.password);
       const userInfo = await userStore.login({
-        password: data.password,
+        password: encodePwd,
         username: data.account,
+        grant_type: 'password',
+        scope: 'server',
         mode: 'none', //不要默认的错误提示
+        headers: { Authorization: 'Basic ' + Base64.stringify(UTF8.parse(ENTERPRISE_LOGIN_SCOPE)) },
       });
       if (userInfo) {
         notification.success({

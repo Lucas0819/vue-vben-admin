@@ -1,16 +1,19 @@
 import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
-export type AccountParams = BasicPageParams & {
-  account?: string;
-  nickname?: string;
+export type StaffParams = BasicPageParams & {
+  queryParam?: string;
 };
 
 export type RoleParams = {
-  roleName?: string;
-  status?: string;
+  queryParam?: string;
 };
 
 export type RolePageParams = BasicPageParams & RoleParams;
+
+export type RoleAuthParams = {
+  roleId: string;
+  authIds: string[];
+};
 
 export type DeptParams = {
   deptName?: string;
@@ -22,48 +25,48 @@ export type MenuParams = {
   status?: string;
 };
 
-export interface AccountListItem {
-  id: string;
-  account: string;
-  email: string;
-  nickname: string;
-  role: number;
-  createTime: string;
-  remark: string;
-  status: number;
+export interface StaffListItem {
+  active: boolean;
+  id: number;
+  name: string;
+  orgId: number;
+  orgName: string;
+  phone: string;
+  roleName: string;
+  status: string;
+  userId: number;
 }
 
 export interface DeptListItem {
   id: string;
-  orderNo: string;
-  createTime: string;
-  remark: string;
-  status: number;
+  name: string;
+  parentId: string;
+  sort: string;
+  type: number;
+  children: DeptListItem[];
 }
 
 export interface MenuListItem {
-  id: string;
-  orderNo: string;
-  createTime: string;
-  status: number;
-  icon: string;
-  component: string;
-  permission: string;
+  code: string;
+  description: string;
+  id: number;
+  name: string;
+  parentId: number;
+  type: string;
+  children: MenuListItem[];
 }
 
 export interface RoleListItem {
-  id: string;
-  roleName: string;
-  roleValue: string;
-  status: number;
-  orderNo: string;
-  createTime: string;
+  id: number;
+  isAdmin: boolean;
+  isDefault: boolean;
+  name: string;
 }
 
 /**
  * @description: Request list return value
  */
-export type AccountListGetResultModel = BasicFetchResult<AccountListItem>;
+export type StaffListGetResultModel = BasicFetchResult<StaffListItem>;
 
 export type DeptListGetResultModel = BasicFetchResult<DeptListItem>;
 

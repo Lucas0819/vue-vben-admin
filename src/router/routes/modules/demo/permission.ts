@@ -55,7 +55,7 @@ const permission: AppRouteModule = {
           component: () => import('/@/views/demo/permission/front/AuthPageB.vue'),
           meta: {
             title: t('routes.demo.permission.frontTestB'),
-            roles: [RoleEnum.TEST],
+            roles: [RoleEnum.FIRE_MANAGE],
           },
         },
       ],

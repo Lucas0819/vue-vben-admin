@@ -12,7 +12,7 @@
         <BasicTree
           v-model:value="model[field]"
           :treeData="treeData"
-          :fieldNames="{ title: 'menuName', key: 'id' }"
+          :fieldNames="{ title: 'name', key: 'id' }"
           checkable
           toolbar
           title="菜单分配"
@@ -22,13 +22,20 @@
   </BasicDrawer>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './role.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTree, TreeItem } from '/@/components/Tree';
 
-  import { getMenuList } from '/@/api/demo/system';
+  import {
+    createRole,
+    getMenuList,
+    getRoleAuthIdList,
+    updateRole,
+    updateRoleAuth,
+  } from '/@/api/demo/system';
+  import { isEmpty } from '/@/utils/is';
 
   export default defineComponent({
     name: 'RoleDrawer',
@@ -37,6 +44,7 @@
     setup(_, { emit }) {
       const isUpdate = ref(true);
       const treeData = ref<TreeItem[]>([]);
+      const rowId = ref('');
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -55,8 +63,13 @@
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
+          rowId.value = data.record.id;
+          const authIds = (await getRoleAuthIdList(data.record.id)).map((item: any) =>
+            item.toString(),
+          );
           setFieldsValue({
             ...data.record,
+            menu: authIds,
           });
         }
       });
@@ -67,8 +80,20 @@
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
+          if (unref(isUpdate)) {
+            values.id = unref(rowId);
+            await updateRole(values);
+          } else {
+            await createRole(values);
+            // rowId.value = await createRole(values);
+          }
+          // TODO @Lucas 新增角色没有返回ID，无法写入权限列表
+          if (!isEmpty(unref(rowId)) && !isEmpty(values.menu)) {
+            await updateRoleAuth({
+              roleId: unref(rowId),
+              authIds: values.menu,
+            });
+          }
           closeDrawer();
           emit('success');
         } finally {

@@ -33,19 +33,23 @@
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getRoleListByPage } from '/@/api/demo/system';
+  import { deleteRole, getRoleListByPage } from '/@/api/demo/system';
 
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
 
   import { columns, searchFormSchema } from './role.data';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useI18n } from '/@/hooks/web/useI18n';
 
   export default defineComponent({
     name: 'RoleManagement',
     components: { BasicTable, RoleDrawer, TableAction },
     setup() {
+      const { t } = useI18n();
+
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload }] = useTable({
+      const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
         title: '角色列表',
         api: getRoleListByPage,
         columns,
@@ -79,11 +83,19 @@
         });
       }
 
-      function handleDelete(record: Recordable) {
-        console.log(record);
+      async function handleDelete(record: Recordable) {
+        try {
+          setTableLoading(true);
+          await deleteRole(record.id);
+          handleSuccess();
+        } finally {
+          setTableLoading(false);
+        }
       }
 
       function handleSuccess() {
+        const { createMessage } = useMessage();
+        createMessage.success(t('sys.api.operationSuccess'));
         reload();
       }
 

@@ -1,7 +1,7 @@
 import { encrypt, decrypt } from 'crypto-js/aes';
-import { parse } from 'crypto-js/enc-utf8';
-import pkcs7 from 'crypto-js/pad-pkcs7';
-import ECB from 'crypto-js/mode-ecb';
+import { parse } from 'crypto-js/enc-latin1';
+import zeropadding from 'crypto-js/pad-zeropadding';
+import CryptoJSCore from 'crypto-js/core';
 import md5 from 'crypto-js/md5';
 import UTF8 from 'crypto-js/enc-utf8';
 import Base64 from 'crypto-js/enc-base64';
@@ -27,8 +27,8 @@ export class AesEncryption {
 
   get getOptions() {
     return {
-      mode: ECB,
-      padding: pkcs7,
+      mode: CryptoJSCore.mode.CBC,
+      padding: zeropadding,
       iv: this.iv,
     };
   }

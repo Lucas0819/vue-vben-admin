@@ -1,49 +1,43 @@
+import { h } from 'vue';
 import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
+import { translateDictData } from '/@/utils/dict';
 
 export const columns: BasicColumn[] = [
   {
-    title: '用户名',
-    dataIndex: 'account',
+    title: '员工姓名',
+    dataIndex: 'name',
     width: 120,
   },
   {
-    title: '昵称',
-    dataIndex: 'nickname',
+    title: '手机号',
+    dataIndex: 'phone',
     width: 120,
   },
   {
-    title: '邮箱',
-    dataIndex: 'email',
+    title: '所属组织',
+    dataIndex: 'orgName',
     width: 120,
   },
   {
-    title: '创建时间',
-    dataIndex: 'createTime',
+    title: '员工角色',
+    dataIndex: 'roleName',
     width: 180,
   },
   {
-    title: '角色',
-    dataIndex: 'role',
+    title: '员工状态',
+    dataIndex: 'status',
     width: 200,
-  },
-  {
-    title: '备注',
-    dataIndex: 'remark',
+    customRender: ({ record }) => {
+      return h('span', translateDictData('tenant_staff_status', record.status));
+    },
   },
 ];
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'account',
-    label: '用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'nickname',
-    label: '昵称',
+    field: 'queryParam',
+    label: '员工姓名',
     component: 'Input',
     colProps: { span: 8 },
   },
