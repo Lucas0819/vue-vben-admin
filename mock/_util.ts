@@ -4,24 +4,26 @@ import { ResultEnum } from '/@/enums/httpEnum';
 export function resultSuccess<T = Recordable>(result: T, { message = 'ok' } = {}) {
   return {
     code: ResultEnum.SUCCESS,
-    result,
-    message,
+    data: result,
+    msg: message,
     type: 'success',
   };
 }
 
 export function resultPageSuccess<T = any>(
-  page: number,
-  pageSize: number,
-  list: T[],
+  size: number,
+  current: number,
+  records: T[],
   { message = 'ok' } = {},
 ) {
-  const pageData = pagination(page, pageSize, list);
+  const pageData = pagination(size, current, records);
 
   return {
     ...resultSuccess({
-      items: pageData,
-      total: list.length,
+      size,
+      current,
+      records: pageData,
+      total: records.length,
     }),
     message,
   };
