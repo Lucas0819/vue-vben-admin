@@ -76,7 +76,6 @@ model_template = '''<template>
     }},
   }});
 </script>
-
 '''
 
 def vue_drawer_generator(path_name, entity_name, biz_name, entityProperties):
@@ -84,7 +83,7 @@ def vue_drawer_generator(path_name, entity_name, biz_name, entityProperties):
 
     model_code = model_template.format(path=path_name, entity=entity_name, lowerEntity=entity_name.lower(), biz=biz_name)
 
-    api_model_file = f"src/views/{path_name}/{entity_name}Drawer.vue"
+    api_model_file = f"src/views/{path_name}/{entity_name.lower()}/{entity_name}Drawer.vue"
 
     api_model_dir = os.path.dirname(api_model_file)
     os.makedirs(api_model_dir, exist_ok=True)

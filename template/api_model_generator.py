@@ -15,13 +15,20 @@ export interface {entity}Item {{
 }}
 
 export type {entity}ListGetResultModel = BasicFetchResult<{entity}Item>;
-
 '''
 
+needLower = ['String']
+def getCurrentFiled(filed):
+    if filed in needLower:
+        return filed.lower()
+    else:
+        return filed
+
 def api_model_generator(path_name, entity_name, biz_name, entityProperties):
-    params = [f'{field[1]}?: {field[0]};' for field in entityProperties]
+
+    params = [f'{field[1]}?: {getCurrentFiled(field[0])};' for field in entityProperties]
     param_list = '\n  '.join(params)
-    field_list = '\n  '.join([f'{field[1]}: {field[0].lower()};' for field in entityProperties])
+    field_list = '\n  '.join([f'{field[1]}: {getCurrentFiled(field[0])};' for field in entityProperties])
 
     model_code = model_template.format(entity=entity_name, param_list=param_list, field_list=field_list)
 

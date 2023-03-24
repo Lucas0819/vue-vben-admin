@@ -30,7 +30,6 @@ export const update{entity} = (params?: {entity}Item) => defHttp.put({{ url: Api
 
 export const delete{entity} = ({lowerEntity}Id: string) =>
   defHttp.delete({{ url: Api.Delete{entity}.replace('{{{lowerEntity}Id}}', {lowerEntity}Id) }});
-
 '''
 
 def api_generator(path_name, entity_name, biz_name, entityProperties):

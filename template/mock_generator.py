@@ -2,7 +2,7 @@ import os
 
 # 生成前端代码
 model_template = '''import {{ MockMethod }} from 'vite-plugin-mock';
-import {{ resultPageSuccess, resultSuccess }} from '../_util';
+import {{ resultPageSuccess, resultSuccess }} from '../../_util';
 
 const {lowerEntity}List = (() => {{
   const result: any[] = [];
@@ -59,7 +59,6 @@ export default [
     }},
   }},
 ] as MockMethod[];
-
 '''
 
 def mock_generator(path_name, entity_name, biz_name, entityProperties):
@@ -69,7 +68,7 @@ def mock_generator(path_name, entity_name, biz_name, entityProperties):
 
     model_code = model_template.format(entity=entity_name, lowerEntity=entity_name.lower(), param_list=param_list, field_list=field_list)
 
-    api_model_file = f"mock/{path_name}/{entity_name}.ts"
+    api_model_file = f"mock/{path_name}/{entity_name.lower()}/{entity_name.lower()}.ts"
 
     api_model_dir = os.path.dirname(api_model_file)
     os.makedirs(api_model_dir, exist_ok=True)
