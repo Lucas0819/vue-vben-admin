@@ -32,7 +32,7 @@ def api_model_generator(path_name, entity_name, biz_name, entityProperties):
 
     model_code = model_template.format(entity=entity_name, param_list=param_list, field_list=field_list)
 
-    api_model_file = f"src/api/{path_name}/model/{entity_name}Model.ts"
+    api_model_file = f"src/api/{path_name}/model/{entity_name.lower()}Model.ts"
 
     api_model_dir = os.path.dirname(api_model_file)
     os.makedirs(api_model_dir, exist_ok=True)
