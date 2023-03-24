@@ -7,7 +7,7 @@ import {{
   {entity}ListGetResultModel,
   {entity}PageParams,
   {entity}Params,
-}} from './model/{entity}Model';
+}} from './model/{lowerEntity}Model';
 
 enum Api {{
   {entity}Page = '/{lowerEntity}/get{entity}Page',

@@ -2,7 +2,6 @@ import os
 
 # 生成前端代码
 model_template = '''import {{ BasicColumn, FormSchema }} from '/@/components/Table';
-import {{ h }} from 'vue';
 
 export const columns: BasicColumn[] = [
   {field_list}
@@ -18,13 +17,11 @@ export const formSchema: FormSchema[] = [
 '''
 
 def vue_data_generator(path_name, entity_name, biz_name, entityProperties):
-    params = [f'{field[1]}?: {field[0]};' for field in entityProperties]
-    param_list = '\n  '.join(params)
-    field_list = '\n  '.join([f'{{title: \'{field[2]}\', dataIndex: \'{field[1]}\', width: 120, }},' for field in entityProperties])
-    search_form_field_list = '\n  '.join([f'{{field: \'{field[1]}\',label: \'{field[2]}\',component: \'Input\',colProps: {{ span: 8 }},}},' for field in entityProperties])
-    form_field_list = '\n  '.join([f'{{field: \'{field[1]}\',label: \'{field[2]}\',required: true,component: \'Input\',}},' for field in entityProperties])
+    field_list = '\n  '.join([f'{{\n    title: \'{field[2]}\',\n    dataIndex: \'{field[1]}\',\n    width: 120,\n  }},' for field in entityProperties])
+    search_form_field_list = '\n  '.join([f'{{\n    field: \'{field[1]}\',\n    label: \'{field[2]}\',\n    component: \'Input\',\n    colProps: {{ span: 8 }},\n  }},' for field in entityProperties])
+    form_field_list = '\n  '.join([f'{{\n    field: \'{field[1]}\',\n    label: \'{field[2]}\',\n    required: true,\n    component: \'Input\',\n  }},' for field in entityProperties])
 
-    model_code = model_template.format(entity=entity_name, lowerEntity=entity_name.lower(), param_list=param_list, field_list=field_list, search_form_field_list=search_form_field_list, form_field_list=form_field_list)
+    model_code = model_template.format(entity=entity_name, lowerEntity=entity_name.lower(), field_list=field_list, search_form_field_list=search_form_field_list, form_field_list=form_field_list)
 
     api_model_file = f"src/views/{path_name}/{entity_name.lower()}/{entity_name.lower()}.data.ts"
 

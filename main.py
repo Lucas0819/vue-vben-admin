@@ -1,10 +1,10 @@
-import argparse
 import configparser
 import re
-# from template/api_model_generator import api_model_generator
 from template.api_generator import api_generator
 from template.api_model_generator import api_model_generator
 from template.mock_generator import mock_generator
+from template.router_generator import router_generator
+from template.router_i18n_generator import router_i18n_generator
 from template.vue_data import vue_data_generator
 from template.vue_drawer import vue_drawer_generator
 from template.vue_index import vue_index_generator
@@ -27,7 +27,6 @@ def generator_code(biz_name, path_name, entity_name, entity_path):
     vue_index_generator(path_name, entity_name, biz_name, entityProperties)
     vue_drawer_generator(path_name, entity_name, biz_name, entityProperties)
 
-
 config = configparser.ConfigParser()
 
 # 读取配置文件
@@ -46,5 +45,11 @@ for section_name in database_sections:
 
     generator_code(biz_name, path_name, entity_name, entity_path)
 
+# 获取所有router
+parent_routers = [section for section in config.sections() if section.startswith('router')]
+for parent_router in parent_routers:
+    path = config.get(parent_router, 'path_name')
+    children = [config[parent_router][key] for key in config[parent_router] if key.startswith('children')]
 
-
+    router_generator(path, children)
+    router_i18n_generator(path, children)

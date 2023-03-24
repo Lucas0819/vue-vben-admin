@@ -64,7 +64,7 @@ export default [
 def mock_generator(path_name, entity_name, biz_name, entityProperties):
     params = [f'{field[1]}?: {field[0]};' for field in entityProperties]
     param_list = '\n  '.join(params)
-    field_list = '\n      '.join([f'{field[1]}: \'@{{{field[1]}}}()\',' for field in entityProperties])
+    field_list = '\n      '.join([f'{field[1]}: \'@{field[1]}()\',' for field in entityProperties])
 
     model_code = model_template.format(entity=entity_name, lowerEntity=entity_name.lower(), param_list=param_list, field_list=field_list)
 

@@ -24,11 +24,18 @@ def getCurrentFiled(filed):
     else:
         return filed
 
+noAnnotation = ['String', 'Date', 'Integer', 'Float', 'BigDicmal'];
+def getNeedAnnotation(filed):
+    if filed in noAnnotation:
+        return ''
+    else:
+        return '// '
+
 def api_model_generator(path_name, entity_name, biz_name, entityProperties):
 
-    params = [f'{field[1]}?: {getCurrentFiled(field[0])};' for field in entityProperties]
+    params = [f'{getNeedAnnotation(field[0])}{field[1]}?: {getCurrentFiled(field[0])};' for field in entityProperties]
     param_list = '\n  '.join(params)
-    field_list = '\n  '.join([f'{field[1]}: {getCurrentFiled(field[0])};' for field in entityProperties])
+    field_list = '\n  '.join([f'{getNeedAnnotation(field[0])}{field[1]}: {getCurrentFiled(field[0])};' for field in entityProperties])
 
     model_code = model_template.format(entity=entity_name, param_list=param_list, field_list=field_list)
 
