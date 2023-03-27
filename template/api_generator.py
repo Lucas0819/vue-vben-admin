@@ -21,7 +21,7 @@ export const get{entity}ListByPage = (params: {entity}PageParams) =>
   defHttp.get<{entity}ListGetResultModel>({{ url: Api.{entity}Page, params }});
 
 export const getAll{entity}List = (params?: {entity}Params) =>
-  defHttp.get<{entity}ListGetResultModel>({{ url: Api.GetAll{entity}List, params }});
+  defHttp.get<{entity}Item[]>({{ url: Api.GetAll{entity}List, params }});
 
 export const create{entity} = (params?: {entity}Item) =>
   defHttp.post({{ url: Api.Create{entity}, params }});
