@@ -50,6 +50,20 @@ python 代码: [vue_index.py](vue_index.py)
 
 python 代码: [vue_drawer.py](vue_drawer.py)
 
+### 4.Router 配置
+
+#### 路由路径配置
+
+路径：`src/router/routes/modules/{path}/{path}.ts`
+
+python 代码: [router_generator.py](router_generator.py)
+
+#### 路由国际化配置
+
+路径(中文)：`src/locales/lang/zh-CN/routes/{path}.ts` 路径(英文)：`src/locales/lang/en/routes/{path}.ts`
+
+python 代码: [router_i18n_generator.py](router_i18n_generator.py)
+
 ---
 
 ## 执行方式&配置说明
