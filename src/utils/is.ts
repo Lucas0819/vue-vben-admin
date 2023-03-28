@@ -17,6 +17,7 @@ export function isObject(val: any): val is Record<any, any> {
 }
 
 export function isEmpty<T = unknown>(val: T): val is T {
+  if (isNullOrUnDef(val)) return true;
   if (isArray(val) || isString(val)) {
     return val.length === 0;
   }
