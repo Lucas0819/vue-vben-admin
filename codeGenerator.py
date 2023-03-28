@@ -13,19 +13,25 @@ from template.vue_index import vue_index_generator
 def generator_code(biz_name, path_name, entity_name, entity_path):
     # 读取Java实体类文件
     java_file = open(entity_path, "r")
-    java_code = java_file.read()
+    # 注入基础字段
+    java_code = 'private String id; // ID\n' \
+                'private String remarks;    // 备注\n' \
+                'private User createBy;    // 创建者\n' \
+                'private Date createDate;    // 创建日期\n' \
+                'private Date updateDate;    // 更新日期\n'
+    java_code += java_file.read()
     java_file.close()
 
     # 读取字段类型、字段名、中文描述
     pattern = re.compile(r'private\s+(\S+)\s+(\S+)\s*;\s*//\s*(.*)')
-    entityProperties = pattern.findall(java_code)
+    entity_properties = pattern.findall(java_code)
 
-    api_model_generator(path_name, entity_name, biz_name, entityProperties)
-    api_generator(path_name, entity_name, biz_name, entityProperties)
-    mock_generator(path_name, entity_name, biz_name, entityProperties)
-    vue_data_generator(path_name, entity_name, biz_name, entityProperties)
-    vue_index_generator(path_name, entity_name, biz_name, entityProperties)
-    vue_drawer_generator(path_name, entity_name, biz_name, entityProperties)
+    api_model_generator(path_name, entity_name, biz_name, entity_properties)
+    api_generator(path_name, entity_name, biz_name, entity_properties)
+    mock_generator(path_name, entity_name, biz_name, entity_properties)
+    vue_data_generator(path_name, entity_name, biz_name, entity_properties)
+    vue_index_generator(path_name, entity_name, biz_name, entity_properties)
+    vue_drawer_generator(path_name, entity_name, biz_name, entity_properties)
 
 config = configparser.ConfigParser()
 

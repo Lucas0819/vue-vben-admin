@@ -12,7 +12,6 @@ export type {entity}Params = {{
 export type {entity}PageParams = BasicPageParams & {entity}Params;
 
 export interface {entity}Item {{
-  id: string;
   {field_list}
 }}
 

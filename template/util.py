@@ -15,3 +15,7 @@ def to_lower_camel_case(s):
   s = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s)
   s = s.lower().split('_')
   return s[0] + ''.join(word.capitalize() for word in s[1:])
+
+# 将小驼峰转换为大驼峰
+def camel_to_pascal(name):
+    return re.sub(r'(?<!^)(?=[A-Z])', '_', name).title().replace('_', '')

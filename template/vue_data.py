@@ -20,7 +20,18 @@ export const formSchema: FormSchema[] = [
 
 
 def vue_data_generator(path_name, entity_name, biz_name, entity_properties):
-    field_list = '\n  '.join([f'{{\n    title: \'{field[2]}\',\n    dataIndex: \'{field[1]}\',\n    width: 120,\n  }},' for field in entity_properties])
+    # 其他默认字段不参与展示和编辑
+    disable_filed_list = ['remarks', 'createBy', 'createDate', 'updateDate']
+    entity_properties = list(filter(lambda x: not x[1] in disable_filed_list, entity_properties))
+
+    # ID列在表格内默认不展示
+    def default_hidden(field):
+        return '    defaultHidden: true,\n' if field[1] == 'id' else ''
+
+    field_list = '\n  '.join([f'{{\n    title: \'{field[2]}\',\n    dataIndex: \'{field[1]}\',\n    width: 120,\n{default_hidden(field)}  }},' for field in entity_properties])
+
+    # 查询&表单去除ID列
+    entity_properties = list(filter(lambda x: x[1] != 'id', entity_properties))
     search_form_field_list = '\n  '.join([f'{{\n    field: \'{field[1]}\',\n    label: \'{field[2]}\',\n    component: \'Input\',\n    colProps: {{ span: 8 }},\n  }},' for field in entity_properties])
     form_field_list = '\n  '.join([f'{{\n    field: \'{field[1]}\',\n    label: \'{field[2]}\',\n    required: true,\n    component: \'Input\',\n  }},' for field in entity_properties])
 
