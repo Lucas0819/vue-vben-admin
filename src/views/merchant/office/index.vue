@@ -6,17 +6,11 @@
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'name'">
-          <span style="color: #428bca; cursor: pointer" @click="handleEdit.bind(null, record)">{{
-            record.name
-          }}</span>
+          <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
         </template>
-        <template v-else-if="column.key === 'action'">
+        <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
-              // {
-              //   icon: 'clarity:note-edit-line',
-              //   onClick: handleEdit.bind(null, record),
-              // },
               {
                 label: '删除',
                 color: 'error',
@@ -46,10 +40,11 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteOffice, getOfficeListByPage } from '/@/api/merchant/office';
   import OfficeDrawer from './OfficeDrawer.vue';
+  import { Typography } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'OfficeManagement',
-    components: { BasicTable, OfficeDrawer, TableAction },
+    components: { BasicTable, OfficeDrawer, TableAction, Link: Typography.Link },
     setup() {
       const { t } = useI18n();
 
@@ -60,6 +55,10 @@
         columns,
         formConfig: {
           schemas: searchFormSchema,
+          baseColProps: {
+            span: 6,
+            style: { padding: '0 15px' },
+          },
         },
         useSearchForm: true,
         showTableSetting: true,

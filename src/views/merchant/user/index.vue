@@ -2,21 +2,20 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增主办账户 </a-button>
+        <a-button type="primary" @click="handleCreate"> 创建主办账户 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'name'">
+          <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
+        </template>
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               {
-                icon: 'clarity:note-edit-line',
-                onClick: handleEdit.bind(null, record),
-              },
-              {
-                icon: 'ant-design:delete-outlined',
+                label: '删除',
                 color: 'error',
                 popConfirm: {
-                  title: '是否确认删除',
+                  title: '是否确认删除该项吗？',
                   placement: 'left',
                   confirm: handleDelete.bind(null, record),
                 },
@@ -38,10 +37,11 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteUser, getUserListByPage } from '/@/api/merchant/user';
   import { useRouter } from 'vue-router';
+  import { Typography } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'UserManagement',
-    components: { BasicTable, TableAction },
+    components: { BasicTable, TableAction, Link: Typography.Link },
     setup() {
       const { t } = useI18n();
       const router = useRouter();
@@ -51,8 +51,11 @@
         api: getUserListByPage,
         columns,
         formConfig: {
-          labelWidth: 120,
           schemas: searchFormSchema,
+          baseColProps: {
+            span: 6,
+            style: { padding: '0 15px' },
+          },
         },
         useSearchForm: true,
         showTableSetting: true,

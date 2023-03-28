@@ -80,7 +80,7 @@ export default [
     },
   },
   {
-    url: '/basic-api/user/deleteUser',
+    url: '/basic-api/user/deleteUser/:id',
     timeout: 100,
     method: 'delete',
     response: ({ id }) => {

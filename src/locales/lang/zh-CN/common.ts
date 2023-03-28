@@ -8,7 +8,7 @@ export default {
   resetText: '重置',
   searchText: '搜索',
   queryText: '查询',
-  fuzzySearchText: '模糊搜素',
+  fuzzySearchText: '模糊搜索',
 
   createText: '新增',
   editText: '编辑',
