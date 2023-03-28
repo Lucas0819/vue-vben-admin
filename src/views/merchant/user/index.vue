@@ -26,7 +26,6 @@
         </template>
       </template>
     </BasicTable>
-    <UserDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -34,21 +33,19 @@
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
-  import { useDrawer } from '/@/components/Drawer';
-
   import { columns, searchFormSchema } from './user.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteUser, getUserListByPage } from '/@/api/merchant/user';
-  import UserDrawer from './UserDrawer.vue';
+  import { useRouter } from 'vue-router';
 
   export default defineComponent({
     name: 'UserManagement',
-    components: { BasicTable, UserDrawer, TableAction },
+    components: { BasicTable, TableAction },
     setup() {
       const { t } = useI18n();
+      const router = useRouter();
 
-      const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
         title: '主办账户列表',
         api: getUserListByPage,
@@ -71,16 +68,11 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
-          isUpdate: false,
-        });
+        router.push({ name: 'UserForm' });
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
-          isUpdate: true,
-        });
+        router.push({ name: 'UserForm', query: { id: record.id } });
       }
 
       async function handleDelete(record: Recordable) {
@@ -101,7 +93,6 @@
 
       return {
         registerTable,
-        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

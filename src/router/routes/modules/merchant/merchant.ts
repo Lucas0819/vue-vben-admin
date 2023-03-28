@@ -16,7 +16,7 @@ const charts: AppRouteModule = {
       path: 'office',
       name: 'OfficeManagement',
       meta: {
-        title: t('routes.merchant.merchant.office'),
+        title: t('routes.merchant.office.moduleName'),
       },
       component: () => import('/@/views/merchant/office/index.vue'),
     },
@@ -24,9 +24,23 @@ const charts: AppRouteModule = {
       path: 'user',
       name: 'UserManagement',
       meta: {
-        title: t('routes.merchant.merchant.user'),
+        title: t('routes.merchant.user.moduleName'),
       },
       component: () => import('/@/views/merchant/user/index.vue'),
+      children: [
+        {
+          path: 'user-form',
+          name: 'UserForm',
+          meta: {
+            title: t('routes.merchant.user.form'),
+            hideMenu: true,
+            dynamicLevel: 3,
+            realPath: '/merchant/user',
+            currentActiveMenu: '/merchant/user',
+          },
+          component: () => import('/@/views/merchant/user/userForm.vue'),
+        },
+      ],
     },
   ],
 };

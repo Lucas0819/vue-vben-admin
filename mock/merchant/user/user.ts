@@ -1,36 +1,38 @@
 import { MockMethod } from 'vite-plugin-mock';
 import { resultPageSuccess, resultSuccess } from '../../_util';
 
+const userItem = {
+  id: '@id()',
+  remarks: '@remarks()',
+  createBy: '@createBy()',
+  createDate: '@createDate()',
+  updateDate: '@updateDate()',
+  company: '@company()',
+  office: '@office()',
+  loginName: '@loginName()',
+  password: '@password()',
+  no: '@no()',
+  name: '@name()',
+  email: '@email()',
+  phone: '@phone()',
+  mobile: '@mobile()',
+  userType: '@userType()',
+  loginIp: '@loginIp()',
+  loginDate: '@loginDate()',
+  loginFlag: '@loginFlag()',
+  photo: '@photo()',
+  oldLoginName: '@oldLoginName()',
+  newPassword: '@newPassword()',
+  oldLoginIp: '@oldLoginIp()',
+  oldLoginDate: '@oldLoginDate()',
+  role: '@role()',
+  salespersonUrl: '@salespersonUrl()',
+};
+
 const userList = (() => {
   const result: any[] = [];
   for (let index = 0; index < 20; index++) {
-    result.push({
-      id: '@id()',
-      remarks: '@remarks()',
-      createBy: '@createBy()',
-      createDate: '@createDate()',
-      updateDate: '@updateDate()',
-      company: '@company()',
-      office: '@office()',
-      loginName: '@loginName()',
-      password: '@password()',
-      no: '@no()',
-      name: '@name()',
-      email: '@email()',
-      phone: '@phone()',
-      mobile: '@mobile()',
-      userType: '@userType()',
-      loginIp: '@loginIp()',
-      loginDate: '@loginDate()',
-      loginFlag: '@loginFlag()',
-      photo: '@photo()',
-      oldLoginName: '@oldLoginName()',
-      newPassword: '@newPassword()',
-      oldLoginIp: '@oldLoginIp()',
-      oldLoginDate: '@oldLoginDate()',
-      role: '@role()',
-      salespersonUrl: '@salespersonUrl()',
-    });
+    result.push(userItem);
   }
   return result;
 })();
@@ -54,6 +56,14 @@ export default [
     },
   },
   {
+    url: '/basic-api/user/findOne/:id',
+    timeout: 100,
+    method: 'get',
+    response: () => {
+      return resultSuccess(userItem);
+    },
+  },
+  {
     url: '/basic-api/user/createUser',
     timeout: 500,
     method: 'post',
@@ -65,8 +75,7 @@ export default [
     url: '/basic-api/user/updateUser',
     timeout: 100,
     method: 'put',
-    response: ({ item }) => {
-      const { id } = item;
+    response: ({ id }) => {
       return resultSuccess({ id });
     },
   },
@@ -74,8 +83,7 @@ export default [
     url: '/basic-api/user/deleteUser',
     timeout: 100,
     method: 'delete',
-    response: ({ item }) => {
-      const { id } = item;
+    response: ({ id }) => {
       return resultSuccess({ id });
     },
   },
