@@ -85,7 +85,7 @@ def vue_drawer_generator(path_name, entity_name, biz_name, entity_properties):
 
     model_code = model_template.format(path=path_name, entity=entity_name, lowerCamelEntity=to_lower_camel_case(entity_name), biz=biz_name)
 
-    api_model_file = f"src/views/{to_dash_case(path_name)}/{to_dash_case(entity_name)}/{to_lower_camel_case(entity_name)}Drawer.vue"
+    api_model_file = f"src/views/{to_dash_case(path_name)}/{to_dash_case(entity_name)}/{entity_name}Drawer.vue"
 
     api_model_dir = os.path.dirname(api_model_file)
     os.makedirs(api_model_dir, exist_ok=True)
