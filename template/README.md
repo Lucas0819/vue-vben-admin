@@ -12,13 +12,13 @@
 
 #### API 接口数据类型定义
 
-路径：`src/api/{path_name}/model/{entity_name.lower()}Model.ts`
+路径：`src/api/{path_name}/model/{entity_name}Model.ts`
 
 python 代码: [api_model_generator.py](api_model_generator.py)
 
 #### API 接口方法
 
-路径：`src/api/{path_name}/{entity_name.lower()}.ts`
+路径：`src/api/{path_name}/{entity_name}.ts`
 
 python 代码: [api_generator.py](api_generator.py)
 
@@ -26,7 +26,7 @@ python 代码: [api_generator.py](api_generator.py)
 
 > 实体类基础 CRUD 的 Mock 数据
 
-路径：`mock/{path_name}/{entity_name.lower()}/{entity_name.lower()}.ts`
+路径：`mock/{path_name}/{entity_name}/{entity_name}.ts`
 
 python 代码: [mock_generator.py](mock_generator.py)
 
@@ -34,19 +34,19 @@ python 代码: [mock_generator.py](mock_generator.py)
 
 #### 基础表格和表单的数据类型定义
 
-路径：`src/views/{path_name}/{entity_name.lower()}/{entity_name.lower()}.data.ts`
+路径：`src/views/{path_name}/{entity_name}/{entity_name}.data.ts`
 
 python 代码: [vue_data.py](vue_data.py)
 
 #### Vue 基础页面文件
 
-路径：`src/views/{path_name}/{entity_name.lower()}/index.vue`
+路径：`src/views/{path_name}/{entity_name}/index.vue`
 
 python 代码: [vue_index.py](vue_index.py)
 
 #### Vue 编辑组件(默认为侧拉抽屉 Drawer)
 
-路径：`src/views/{path_name}/{entity_name.lower()}/{entity_name}Drawer.vue`
+路径：`src/views/{path_name}/{entity_name}/{entity_name}Drawer.vue`
 
 python 代码: [vue_drawer.py](vue_drawer.py)
 
@@ -60,7 +60,9 @@ python 代码: [router_generator.py](router_generator.py)
 
 #### 路由国际化配置
 
-路径(中文)：`src/locales/lang/zh-CN/routes/{path}.ts` 路径(英文)：`src/locales/lang/en/routes/{path}.ts`
+路径(中文)：`src/locales/lang/zh-CN/routes/{path}.ts`
+
+路径(英文)：`src/locales/lang/en/routes/{path}.ts`
 
 python 代码: [router_i18n_generator.py](router_i18n_generator.py)
 

@@ -1,6 +1,8 @@
 import os
 
 # 生成前端代码
+from util import to_lower_camel_case, to_dash_case
+
 model_template = '''<template>
   <div>
     <BasicTable @register="registerTable">
@@ -39,10 +41,10 @@ model_template = '''<template>
 
   import {{ useDrawer }} from '/@/components/Drawer';
 
-  import {{ columns, searchFormSchema }} from './{lowerEntity}.data';
+  import {{ columns, searchFormSchema }} from './{lowerCamelEntity}.data';
   import {{ useMessage }} from '/@/hooks/web/useMessage';
   import {{ useI18n }} from '/@/hooks/web/useI18n';
-  import {{ delete{entity}, get{entity}ListByPage }} from '/@/api/{path}/{lowerEntity}';
+  import {{ delete{entity}, get{entity}ListByPage }} from '/@/api/{path}/{lowerCamelEntity}';
   import {entity}Drawer from './{entity}Drawer.vue';
 
   export default defineComponent({{
@@ -115,12 +117,12 @@ model_template = '''<template>
 </script>
 '''
 
-def vue_index_generator(path_name, entity_name, biz_name, entityProperties):
-    params = [f'{field[1]}?: {field[0]};' for field in entityProperties]
+def vue_index_generator(path_name, entity_name, biz_name, entity_properties):
+    params = [f'{field[1]}?: {field[0]};' for field in entity_properties]
 
-    model_code = model_template.format(path=path_name, entity=entity_name, lowerEntity=entity_name.lower(), biz=biz_name)
+    model_code = model_template.format(path=path_name, entity=entity_name, lowerCamelEntity=to_lower_camel_case(entity_name), biz=biz_name)
 
-    api_model_file = f"src/views/{path_name}/{entity_name.lower()}/index.vue"
+    api_model_file = f"src/views/{to_dash_case(path_name)}/{to_dash_case(entity_name)}/index.vue"
 
     api_model_dir = os.path.dirname(api_model_file)
     os.makedirs(api_model_dir, exist_ok=True)

@@ -1,6 +1,8 @@
 import os
 
 # 生成前端代码
+from util import to_lower_camel_case, to_dash_case
+
 model_template = '''<template>
   <BasicDrawer
     v-bind="$attrs"
@@ -16,9 +18,9 @@ model_template = '''<template>
 <script lang="ts">
   import {{ computed, defineComponent, ref, unref }} from 'vue';
   import {{ BasicForm, useForm }} from '/@/components/Form/index';
-  import {{ formSchema }} from './{lowerEntity}.data';
+  import {{ formSchema }} from './{lowerCamelEntity}.data';
   import {{ BasicDrawer, useDrawerInner }} from '/@/components/Drawer';
-  import {{ create{entity}, update{entity} }} from '/@/api/{path}/{lowerEntity}';
+  import {{ create{entity}, update{entity} }} from '/@/api/{path}/{lowerCamelEntity}';
 
   export default defineComponent({{
     name: '{entity}Drawer',
@@ -78,12 +80,12 @@ model_template = '''<template>
 </script>
 '''
 
-def vue_drawer_generator(path_name, entity_name, biz_name, entityProperties):
-    params = [f'{field[1]}?: {field[0]};' for field in entityProperties]
+def vue_drawer_generator(path_name, entity_name, biz_name, entity_properties):
+    params = [f'{field[1]}?: {field[0]};' for field in entity_properties]
 
-    model_code = model_template.format(path=path_name, entity=entity_name, lowerEntity=entity_name.lower(), biz=biz_name)
+    model_code = model_template.format(path=path_name, entity=entity_name, lowerCamelEntity=to_lower_camel_case(entity_name), biz=biz_name)
 
-    api_model_file = f"src/views/{path_name}/{entity_name.lower()}/{entity_name}Drawer.vue"
+    api_model_file = f"src/views/{to_dash_case(path_name)}/{to_dash_case(entity_name)}/{to_lower_camel_case(entity_name)}Drawer.vue"
 
     api_model_dir = os.path.dirname(api_model_file)
     os.makedirs(api_model_dir, exist_ok=True)
