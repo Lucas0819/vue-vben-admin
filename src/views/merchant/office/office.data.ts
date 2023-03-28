@@ -2,6 +2,12 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 
 export const columns: BasicColumn[] = [
   {
+    title: 'ID',
+    dataIndex: 'id',
+    width: 120,
+    defaultHidden: true,
+  },
+  {
     title: '父级编号',
     dataIndex: 'parent',
     width: 120,

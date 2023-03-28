@@ -1,6 +1,11 @@
 import { BasicFetchResult, BasicPageParams } from '/@/api/model/baseModel';
 
 export type OfficeParams = {
+  id?: string;
+  remarks?: string;
+  // createBy?: User;
+  createDate?: Date;
+  updateDate?: Date;
   // parent?: Office;
   parentIds?: string;
   name?: string;
@@ -71,6 +76,10 @@ export type OfficePageParams = BasicPageParams & OfficeParams;
 
 export interface OfficeItem {
   id: string;
+  remarks: string;
+  // createBy: User;
+  createDate: Date;
+  updateDate: Date;
   // parent: Office;
   parentIds: string;
   name: string;

@@ -1,6 +1,11 @@
 import { BasicFetchResult, BasicPageParams } from '/@/api/model/baseModel';
 
 export type UserParams = {
+  id?: string;
+  remarks?: string;
+  // createBy?: User;
+  createDate?: Date;
+  updateDate?: Date;
   // company?: Office;
   // office?: Office;
   loginName?: string;
@@ -27,6 +32,10 @@ export type UserPageParams = BasicPageParams & UserParams;
 
 export interface UserItem {
   id: string;
+  remarks: string;
+  // createBy: User;
+  createDate: Date;
+  updateDate: Date;
   // company: Office;
   // office: Office;
   loginName: string;

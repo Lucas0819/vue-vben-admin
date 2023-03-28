@@ -5,6 +5,11 @@ const userList = (() => {
   const result: any[] = [];
   for (let index = 0; index < 20; index++) {
     result.push({
+      id: '@id()',
+      remarks: '@remarks()',
+      createBy: '@createBy()',
+      createDate: '@createDate()',
+      updateDate: '@updateDate()',
       company: '@company()',
       office: '@office()',
       loginName: '@loginName()',
