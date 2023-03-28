@@ -8,6 +8,7 @@ export default {
   resetText: 'Reset',
   searchText: 'Search',
   queryText: 'Search',
+  fuzzySearchText: 'Fuzzy search',
 
   inputText: 'Please enter',
   chooseText: 'Please choose',

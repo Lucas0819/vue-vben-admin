@@ -1,720 +1,101 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { useI18n } from '/@/hooks/web/useI18n';
+
+const { t } = useI18n();
+
+const colProps = { span: 6, style: { padding: '0 15px' } };
+
+const placeholderText = t('common.fuzzySearchText');
 
 export const columns: BasicColumn[] = [
   {
-    title: 'ID',
-    dataIndex: 'id',
-    width: 120,
-    defaultHidden: true,
-  },
-  {
-    title: '父级编号',
-    dataIndex: 'parent',
-    width: 120,
-  },
-  {
-    title: '所有父级编号',
-    dataIndex: 'parentIds',
-    width: 120,
-  },
-  {
-    title: '机构名称',
-    dataIndex: 'name',
-    width: 120,
-  },
-  {
-    title: '归属区域',
-    dataIndex: 'area',
-    width: 120,
-  },
-  {
-    title: '机构编码',
-    dataIndex: 'code',
-    width: 120,
-  },
-  {
-    title: '机构类型（1：公司；2：部门；3：小组）',
-    dataIndex: 'type',
-    width: 120,
-  },
-  {
-    title: '机构等级（1：一级；2：二级；3：三级；4：四级）',
-    dataIndex: 'grade',
-    width: 120,
-  },
-  {
-    title: '联系地址',
-    dataIndex: 'address',
-    width: 120,
-  },
-  {
-    title: '合成logo+店铺二维码',
+    title: '二维码',
     dataIndex: 'zipCode',
     width: 120,
   },
   {
-    title: 'logo',
-    dataIndex: 'master',
+    title: '商户号',
+    dataIndex: 'code',
     width: 120,
   },
   {
-    title: '电话',
-    dataIndex: 'phone',
+    title: '商户名称',
+    dataIndex: 'name',
     width: 120,
   },
   {
-    title: '店铺短域名',
-    dataIndex: 'fax',
+    title: '上级商户',
+    dataIndex: 'parent',
     width: 120,
+    customRender: ({ record }) => {
+      return record.parent;
+    },
   },
   {
-    title: '主办方介绍',
-    dataIndex: 'email',
+    title: '结算比例',
+    dataIndex: 'parent',
     width: 120,
+    customRender: ({ record }) => {
+      return record.parent;
+    },
   },
   {
-    title: '是否可用',
-    dataIndex: 'useable',
-    width: 120,
-  },
-  {
-    title: '新版大麦用户名',
-    dataIndex: 'damaiUserName',
-    width: 120,
-  },
-  {
-    title: '智游宝用户名',
-    dataIndex: 'zhiyoubaoUserName',
-    width: 120,
-  },
-  {
-    title: '智游宝企业码',
-    dataIndex: 'zhiyoubaoCorpCode',
-    width: 120,
-  },
-  {
-    title: '智游宝企业私钥',
-    dataIndex: 'zhiyoubaoPrivateKey',
-    width: 120,
-  },
-  {
-    title: '票付通用户名',
-    dataIndex: 'piaofutongUserName',
-    width: 120,
-  },
-  {
-    title: '票付通密码',
-    dataIndex: 'piaofutongPassword',
-    width: 120,
-  },
-  {
-    title: '微票用户名',
-    dataIndex: 'weipiaoUserName',
-    width: 120,
-  },
-  {
-    title: '微票密码',
-    dataIndex: 'weipiaoPassword',
-    width: 120,
-  },
-  {
-    title: '麦座用户名',
-    dataIndex: 'maizuoUserName',
-    width: 120,
-  },
-  {
-    title: '麦座密码',
-    dataIndex: 'maizuoPassword',
-    width: 120,
-  },
-  {
-    title: '保利用户名',
-    dataIndex: 'baoliUserName',
-    width: 120,
-  },
-  {
-    title: '保利密码',
-    dataIndex: 'baoliPassword',
-    width: 120,
-  },
-  {
-    title: '中演用户名',
-    dataIndex: 'zhongyanUserName',
-    width: 120,
-  },
-  {
-    title: '中演密码',
-    dataIndex: 'zhongyanPassword',
-    width: 120,
-  },
-  {
-    title: '旅游资源聚合平台供应商通信标识',
-    dataIndex: 'jqiclubSupplierIdentity',
-    width: 120,
-  },
-  {
-    title: '旅游资源聚合平台签名验证KEY',
-    dataIndex: 'jqiclubSignkey',
-    width: 120,
-  },
-  {
-    title: '微票云用户名',
-    dataIndex: 'wpiaoUserName',
-    width: 120,
-  },
-  {
-    title: '票付通接口用户名',
-    dataIndex: 'pftmxUserName',
-    width: 120,
-  },
-  {
-    title: '票付通接口秘钥',
-    dataIndex: 'pftmxKey',
-    width: 120,
-  },
-  {
-    title: '猫眼演出用户名',
-    dataIndex: 'maoyanUserName',
-    width: 120,
-  },
-  {
-    title: '结算用户',
-    dataIndex: 'accOpenid',
-    width: 120,
-  },
-  {
-    title: '结算姓名',
+    title: '收款账户(真实姓名)',
     dataIndex: 'accName',
     width: 120,
   },
   {
-    title: '收款公众号',
-    dataIndex: 'sysWxConfigId',
+    title: '卡券电话',
+    dataIndex: 'phone',
     width: 120,
   },
   {
-    title: '麦座新版锁定类型',
-    dataIndex: 'maizuoNewLockType',
+    title: '创建时间',
+    dataIndex: 'parent',
+    width: 120,
+    customRender: ({ record }) => {
+      return record.parent;
+    },
+  },
+  {
+    title: '支付账户状态',
+    dataIndex: 'accName',
     width: 120,
   },
   {
-    title: '商户代理商户中间人用户ID',
-    dataIndex: 'businessUserId',
-    width: 120,
-  },
-  {
-    title: '商户代理商户中间人代理ID',
-    dataIndex: 'businessAgentId',
-    width: 120,
-  },
-  {
-    title: '店铺风格,0:默认 1:经典',
-    dataIndex: 'isClassicShop',
-    width: 120,
-  },
-  {
-    title: '商户类型0个人1企业',
-    dataIndex: 'merchantType',
-    width: 120,
-  },
-  {
-    title: '企业名称',
-    dataIndex: 'companyName',
-    width: 120,
-  },
-  {
-    title: '省份编码 （省市编码）',
-    dataIndex: 'provCode',
-    width: 120,
-  },
-  {
-    title: '地区编码 （省市编码）',
-    dataIndex: 'areaCode',
-    width: 120,
-  },
-  {
-    title: '统一社会信用码',
-    dataIndex: 'socialCreditCode',
-    width: 120,
-  },
-  {
-    title: '统一社会信用证有效期',
-    dataIndex: 'socialCreditCodeExpires',
-    width: 120,
-  },
-  {
-    title: '经营范围',
-    dataIndex: 'businessScope',
-    width: 120,
-  },
-  {
-    title: '法人姓名',
-    dataIndex: 'legalPerson',
-    width: 120,
-  },
-  {
-    title: '法人身份证号码',
-    dataIndex: 'legalCertId',
-    width: 120,
-  },
-  {
-    title: '法人身份证有效期',
-    dataIndex: 'legalCertIdExpires',
-    width: 120,
-  },
-  {
-    title: '法人手机号',
-    dataIndex: 'legalMp',
-    width: 120,
-  },
-  {
-    title: '企业地址',
-    dataIndex: 'companyAddress',
-    width: 120,
-  },
-  {
-    title: '银行代码，如果需要自动开结算账户，本字段必填（详见附录 银行代码）',
-    dataIndex: 'bankCode',
-    width: 120,
-  },
-  {
-    title: '银行卡号，如果需要自动开结算账户，本字段必填',
-    dataIndex: 'cardNo',
-    width: 120,
-  },
-  {
-    title:
-      '银行卡对应的户名，如果需要自动开结算账户，本字段必填；若银行账户类型是对公，必须与企业名称一致',
-    dataIndex: 'cardName',
-    width: 120,
-  },
-  {
-    title: '证件号，银行账户类型为对私时，必填',
-    dataIndex: 'certId',
-    width: 120,
-  },
-  {
-    title: '手机号',
-    dataIndex: 'telNo',
-    width: 120,
-  },
-  {
-    title: '结算账户ID 汇付创建结算账户时返回',
-    dataIndex: 'settleAccountId',
-    width: 120,
-  },
-  {
-    title: '企业用户创建结算账户的审核状态',
-    dataIndex: 'settleAccountStatus',
-    width: 120,
-  },
-  {
-    title: '汇付返回信息',
-    dataIndex: 'adaMsg',
-    width: 120,
-  },
-  {
-    title: '上传文件路径',
-    dataIndex: 'payFile',
-    width: 120,
-  },
-  {
-    title: '汇付member_id',
-    dataIndex: 'adaMemberId',
-    width: 120,
-  },
-  {
-    title: '汇付信息id',
-    dataIndex: 'adaInfoId',
+    title: '备注',
+    dataIndex: 'phone',
     width: 120,
   },
 ];
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'parent',
-    label: '父级编号',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'parentIds',
-    label: '所有父级编号',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
     field: 'name',
-    label: '机构名称',
+    label: '商户名称',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: colProps,
+    componentProps: {
+      placeholder: placeholderText,
+    },
   },
   {
     field: 'area',
-    label: '归属区域',
+    label: '结算比例',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: colProps,
+    componentProps: {
+      placeholder: placeholderText,
+    },
   },
   {
-    field: 'code',
-    label: '机构编码',
+    field: 'remark',
+    label: '商户备注',
     component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'type',
-    label: '机构类型（1：公司；2：部门；3：小组）',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'grade',
-    label: '机构等级（1：一级；2：二级；3：三级；4：四级）',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'address',
-    label: '联系地址',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'zipCode',
-    label: '合成logo+店铺二维码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'master',
-    label: 'logo',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'phone',
-    label: '电话',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'fax',
-    label: '店铺短域名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'email',
-    label: '主办方介绍',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'useable',
-    label: '是否可用',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'damaiUserName',
-    label: '新版大麦用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'zhiyoubaoUserName',
-    label: '智游宝用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'zhiyoubaoCorpCode',
-    label: '智游宝企业码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'zhiyoubaoPrivateKey',
-    label: '智游宝企业私钥',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'piaofutongUserName',
-    label: '票付通用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'piaofutongPassword',
-    label: '票付通密码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'weipiaoUserName',
-    label: '微票用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'weipiaoPassword',
-    label: '微票密码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'maizuoUserName',
-    label: '麦座用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'maizuoPassword',
-    label: '麦座密码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'baoliUserName',
-    label: '保利用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'baoliPassword',
-    label: '保利密码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'zhongyanUserName',
-    label: '中演用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'zhongyanPassword',
-    label: '中演密码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'jqiclubSupplierIdentity',
-    label: '旅游资源聚合平台供应商通信标识',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'jqiclubSignkey',
-    label: '旅游资源聚合平台签名验证KEY',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'wpiaoUserName',
-    label: '微票云用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'pftmxUserName',
-    label: '票付通接口用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'pftmxKey',
-    label: '票付通接口秘钥',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'maoyanUserName',
-    label: '猫眼演出用户名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'accOpenid',
-    label: '结算用户',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'accName',
-    label: '结算姓名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'sysWxConfigId',
-    label: '收款公众号',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'maizuoNewLockType',
-    label: '麦座新版锁定类型',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'businessUserId',
-    label: '商户代理商户中间人用户ID',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'businessAgentId',
-    label: '商户代理商户中间人代理ID',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'isClassicShop',
-    label: '店铺风格,0:默认 1:经典',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'merchantType',
-    label: '商户类型0个人1企业',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'companyName',
-    label: '企业名称',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'provCode',
-    label: '省份编码 （省市编码）',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'areaCode',
-    label: '地区编码 （省市编码）',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'socialCreditCode',
-    label: '统一社会信用码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'socialCreditCodeExpires',
-    label: '统一社会信用证有效期',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'businessScope',
-    label: '经营范围',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'legalPerson',
-    label: '法人姓名',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'legalCertId',
-    label: '法人身份证号码',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'legalCertIdExpires',
-    label: '法人身份证有效期',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'legalMp',
-    label: '法人手机号',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'companyAddress',
-    label: '企业地址',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'bankCode',
-    label: '银行代码，如果需要自动开结算账户，本字段必填（详见附录 银行代码）',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'cardNo',
-    label: '银行卡号，如果需要自动开结算账户，本字段必填',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'cardName',
-    label:
-      '银行卡对应的户名，如果需要自动开结算账户，本字段必填；若银行账户类型是对公，必须与企业名称一致',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'certId',
-    label: '证件号，银行账户类型为对私时，必填',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'telNo',
-    label: '手机号',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'settleAccountId',
-    label: '结算账户ID 汇付创建结算账户时返回',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'settleAccountStatus',
-    label: '企业用户创建结算账户的审核状态',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'adaMsg',
-    label: '汇付返回信息',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'payFile',
-    label: '上传文件路径',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'adaMemberId',
-    label: '汇付member_id',
-    component: 'Input',
-    colProps: { span: 8 },
-  },
-  {
-    field: 'adaInfoId',
-    label: '汇付信息id',
-    component: 'Input',
-    colProps: { span: 8 },
+    colProps: colProps,
+    componentProps: {
+      placeholder: placeholderText,
+    },
   },
 ];
 
@@ -733,7 +114,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     field: 'name',
-    label: '机构名称',
+    label: '商户名称',
     required: true,
     component: 'Input',
   },
@@ -781,7 +162,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     field: 'phone',
-    label: '电话',
+    label: '卡券电话',
     required: true,
     component: 'Input',
   },
@@ -931,7 +312,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     field: 'accName',
-    label: '结算姓名',
+    label: '收款账户(真实姓名)',
     required: true,
     component: 'Input',
   },

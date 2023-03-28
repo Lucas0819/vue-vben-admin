@@ -2,21 +2,26 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增主办单位 </a-button>
+        <a-button type="primary" @click="handleCreate"> 创建商户 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'action'">
+        <template v-if="column.key === 'name'">
+          <span style="color: #428bca; cursor: pointer" @click="handleEdit.bind(null, record)">{{
+            record.name
+          }}</span>
+        </template>
+        <template v-else-if="column.key === 'action'">
           <TableAction
             :actions="[
+              // {
+              //   icon: 'clarity:note-edit-line',
+              //   onClick: handleEdit.bind(null, record),
+              // },
               {
-                icon: 'clarity:note-edit-line',
-                onClick: handleEdit.bind(null, record),
-              },
-              {
-                icon: 'ant-design:delete-outlined',
+                label: '删除',
                 color: 'error',
                 popConfirm: {
-                  title: '是否确认删除',
+                  title: '是否确认删除该项吗？',
                   placement: 'left',
                   confirm: handleDelete.bind(null, record),
                 },
@@ -54,7 +59,6 @@
         api: getOfficeListByPage,
         columns,
         formConfig: {
-          labelWidth: 120,
           schemas: searchFormSchema,
         },
         useSearchForm: true,
