@@ -10,6 +10,9 @@ export default {
   queryText: 'Search',
   fuzzySearchText: 'Fuzzy search',
 
+  createText: 'Create',
+  editText: 'Update',
+
   inputText: 'Please enter',
   chooseText: 'Please choose',
 

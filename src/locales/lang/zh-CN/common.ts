@@ -10,6 +10,9 @@ export default {
   queryText: '查询',
   fuzzySearchText: '模糊搜素',
 
+  createText: '新增',
+  editText: '编辑',
+
   inputText: '请输入',
   chooseText: '请选择',
 

@@ -2,6 +2,8 @@ export default {
   api: {
     operationSuccess: 'Operation Success',
     operationFailed: 'Operation failed',
+    createSuccessMsg: '{0} is created successfully',
+    updateSuccessMsg: '{0} is updated successfully',
     errorTip: 'Error Tip',
     successTip: 'Success Tip',
     errorMessage: 'The operation failed, the system is abnormal!',

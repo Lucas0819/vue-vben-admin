@@ -2,6 +2,8 @@ export default {
   api: {
     operationSuccess: '操作成功',
     operationFailed: '操作失败',
+    createSuccessMsg: '{0}数据创建成功',
+    updateSuccessMsg: '{0}数据更新成功',
     errorTip: '错误提示',
     successTip: '成功提示',
     errorMessage: '操作失败,系统异常!',
