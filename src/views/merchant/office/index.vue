@@ -1,7 +1,8 @@
 <template>
   <div>
+    <PageWrapper title="主办单位列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
-      <template #toolbar>
+      <template #tableTitle>
         <a-button type="primary" @click="handleCreate"> 创建商户 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -41,23 +42,23 @@
   import { deleteOffice, getOfficeListByPage } from '/@/api/merchant/office';
   import OfficeDrawer from './OfficeDrawer.vue';
   import { Typography } from 'ant-design-vue';
+  import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
     name: 'OfficeManagement',
-    components: { BasicTable, OfficeDrawer, TableAction, Link: Typography.Link },
+    components: { BasicTable, OfficeDrawer, TableAction, Link: Typography.Link, PageWrapper },
     setup() {
       const { t } = useI18n();
 
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
-        title: '主办单位列表',
         api: getOfficeListByPage,
         columns,
         formConfig: {
           schemas: searchFormSchema,
           baseColProps: {
             span: 6,
-            style: { padding: '0 15px' },
+            style: { paddingLeft: '5px', paddingRight: '25px' },
           },
         },
         useSearchForm: true,

@@ -41,17 +41,17 @@
 <script lang="ts">
   import type {
     BasicTableProps,
-    TableActionType,
-    SizeType,
     ColumnChangeParam,
+    SizeType,
+    TableActionType,
   } from './types/table';
+  import { InnerHandlers } from './types/table';
 
-  import { defineComponent, ref, computed, unref, toRaw, inject, watchEffect } from 'vue';
+  import { computed, defineComponent, inject, ref, toRaw, unref, watchEffect } from 'vue';
   import { Table } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { PageWrapperFixedHeightKey } from '/@/components/Page';
   import HeaderCell from './components/HeaderCell.vue';
-  import { InnerHandlers } from './types/table';
 
   import { usePagination } from './hooks/usePagination';
   import { useColumns } from './hooks/useColumns';
@@ -391,7 +391,7 @@
     }
 
     .ant-table-wrapper {
-      padding: 6px;
+      padding: 15px;
       background-color: @component-background;
       border-radius: 2px;
 
