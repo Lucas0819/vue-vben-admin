@@ -52,7 +52,6 @@
         @change="changeRadioValue"
       />
     </BasicModal>
-    <OfficeDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -60,25 +59,23 @@
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
-  import { useDrawer } from '/@/components/Drawer';
-
   import { columns, searchFormSchema } from './office.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteOffice, getOfficeListByPage } from '/@/api/merchant/office';
-  import OfficeDrawer from './OfficeDrawer.vue';
   import { Tag, Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { translateDictData } from '/@/utils/dict';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { RadioButtonGroup } from '/@/components/Form';
   import { OfficeItem } from '/@/api/merchant/model/officeModel';
+  import { PageEnum } from '/@/enums/pageEnum';
+  import { useRouter } from 'vue-router';
 
   export default defineComponent({
     name: 'OfficeManagement',
     components: {
       BasicTable,
-      OfficeDrawer,
       TableAction,
       Link: Typography.Link,
       PageWrapper,
@@ -88,8 +85,8 @@
     },
     setup() {
       const { t } = useI18n();
+      const router = useRouter();
       const dataSource = ref<OfficeItem[]>([]);
-      const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, setLoading: setTableLoading, setTableData }] = useTable({
         api: getOfficeListByPage,
         columns,
@@ -127,15 +124,13 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
-          isUpdate: false,
-        });
+        router.push(PageEnum.MERCHANT_OFFICE_FORM);
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
-          isUpdate: true,
+        router.push({
+          path: PageEnum.MERCHANT_OFFICE_FORM,
+          query: { id: record.id },
         });
       }
 
@@ -199,7 +194,6 @@
       return {
         translateDictData,
         registerTable,
-        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

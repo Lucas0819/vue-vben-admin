@@ -102,113 +102,109 @@ export const searchFormSchema: FormSchema[] = [
 
 export const formSchema: FormSchema[] = [
   {
-    field: 'parent',
-    label: '父级编号',
-    required: false,
-    component: 'Input',
+    field: 'parentId',
+    label: '上级商户',
+    required: true,
+    component: 'Select',
+    defaultValue: '1',
+    componentProps: {
+      options: [
+        { label: '票票龙2', value: '1' },
+        { label: '票票龙2', value: '2' },
+        { label: '票票龙3', value: '3' },
+        { label: '票票龙4', value: '4' },
+        { label: '票票龙5', value: '5' },
+      ],
+    },
   },
   {
-    field: 'parentIds',
-    label: '所有父级编号',
-    required: false,
+    field: 'code',
+    label: '商户号',
+    defaultValue: '110946',
     component: 'Input',
+    required: true,
   },
   {
     field: 'name',
     label: '商户名称',
-    required: false,
     component: 'Input',
+    required: true,
+    componentProps: {
+      placeholder: '必填信息，长度上限为12汉字',
+      maxLength: 12,
+    },
   },
   {
     field: 'area',
     label: '归属区域',
     required: false,
-    component: 'Input',
+    component: 'Select',
+    defaultValue: '1',
+    componentProps: {
+      options: [
+        { label: '中国', value: '1' },
+        { label: '辽宁省', value: '2' },
+        { label: '大连市', value: '3' },
+        { label: '沈阳市', value: '4' },
+        { label: '抚顺市', value: '5' },
+      ],
+    },
   },
   {
-    field: 'code',
-    label: '机构编码',
+    field: 'isClassicShop',
+    label: '店铺风格',
     required: false,
-    component: 'Input',
-  },
-  {
-    field: 'type',
-    label: '机构类型（1：公司；2：部门；3：小组）',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'grade',
-    label: '机构等级（1：一级；2：二级；3：三级；4：四级）',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'address',
-    label: '联系地址',
-    required: false,
-    component: 'Input',
+    component: 'Select',
+    defaultValue: '1',
+    componentProps: {
+      options: [
+        { label: '默认', value: '0' },
+        { label: '经典', value: '1' },
+      ],
+    },
   },
   {
     field: 'zipCode',
-    label: '合成logo+店铺二维码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'master',
-    label: 'logo',
+    label: '商户logo',
     required: false,
     component: 'Input',
   },
   {
     field: 'phone',
-    label: '卡券电话',
-    required: false,
+    label: '客服电话',
     component: 'Input',
-  },
-  {
-    field: 'fax',
-    label: '店铺短域名',
-    required: false,
-    component: 'Input',
+    required: true,
+    componentProps: {
+      placeholder: '必填信息',
+    },
   },
   {
     field: 'email',
-    label: '主办方介绍',
+    label: '商户简介',
+    required: false,
+    component: 'InputTextArea',
+  },
+  {
+    field: 'accOpenid',
+    label: '结算用户',
     required: false,
     component: 'Input',
   },
   {
-    field: 'useable',
-    label: '是否可用',
+    field: 'accName',
+    label: '收款账户(真实姓名)',
     required: false,
     component: 'Input',
   },
   {
-    field: 'damaiUserName',
-    label: '新版大麦用户名',
+    field: 'remarks',
+    label: '备注',
     required: false,
-    component: 'Input',
+    component: 'InputTextArea',
   },
-  {
-    field: 'zhiyoubaoUserName',
-    label: '智游宝用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'zhiyoubaoCorpCode',
-    label: '智游宝企业码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'zhiyoubaoPrivateKey',
-    label: '智游宝企业私钥',
-    required: false,
-    component: 'Input',
-  },
+];
+
+export const formSchema1: FormSchema[] = [
   {
     field: 'piaofutongUserName',
     label: '票付通用户名',
@@ -220,6 +216,9 @@ export const formSchema: FormSchema[] = [
     label: '票付通密码',
     required: false,
     component: 'Input',
+    itemProps: {
+      extra: '客户、邀评人默认被分享',
+    },
   },
   {
     field: 'weipiaoUserName',
@@ -306,18 +305,6 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    field: 'accOpenid',
-    label: '结算用户',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'accName',
-    label: '收款账户(真实姓名)',
-    required: false,
-    component: 'Input',
-  },
-  {
     field: 'sysWxConfigId',
     label: '收款公众号',
     required: false,
@@ -338,12 +325,6 @@ export const formSchema: FormSchema[] = [
   {
     field: 'businessAgentId',
     label: '商户代理商户中间人代理ID',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'isClassicShop',
-    label: '店铺风格,0:默认 1:经典',
     required: false,
     component: 'Input',
   },
