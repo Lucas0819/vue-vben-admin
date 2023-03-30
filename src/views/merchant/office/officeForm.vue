@@ -1,6 +1,6 @@
 <template>
-  <PageWrapper title="主办账户">
-    <CollapseContainer title="添加主办账户">
+  <PageWrapper title="主办单位">
+    <CollapseContainer title="添加主办单位">
       <BasicForm @register="register" @submit="handleSubmit" />
     </CollapseContainer>
   </PageWrapper>
@@ -11,9 +11,9 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { CollapseContainer } from '/@/components/Container';
   import { PageWrapper } from '/@/components/Page';
-  import { formSchema } from '/@/views/merchant/user/user.data';
+  import { formSchema } from '/@/views/merchant/office/office.data';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { createUser, findOne, updateUser } from '/@/api/merchant/user';
+  import { createOffice, findOne, updateOffice } from '/@/api/merchant/office';
   import { useRouter } from 'vue-router';
   import { onMountedOrActivated } from '/@/hooks/core/onMountedOrActivated';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -65,7 +65,7 @@
         if (!unref(isUpdate)) return;
         await resetFields();
         const data = await findOne(recordId.value);
-        setTitle('主办账户-' + data.name);
+        setTitle('主办单位-' + data.name);
         setFieldsValue(data);
       });
 
@@ -73,9 +73,9 @@
         const values = await validate();
         if (unref(isUpdate)) {
           values.id = unref(recordId);
-          await updateUser(values);
+          await updateOffice(values);
         } else {
-          await createUser(values);
+          await createOffice(values);
         }
         await handleSuccess();
         await closeCurrent();
@@ -88,8 +88,8 @@
           createSuccessModal({
             title: t('sys.api.operationSuccess'),
             content: unref(isUpdate)
-              ? t('sys.api.updateSuccessMsg', ['主办账户'])
-              : t('sys.api.createSuccessMsg', ['主办账户']),
+              ? t('sys.api.updateSuccessMsg', ['主办单位'])
+              : t('sys.api.createSuccessMsg', ['主办单位']),
             closable: false,
             okText: t('common.back'),
             onOk: resolve,

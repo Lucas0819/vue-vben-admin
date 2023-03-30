@@ -8,6 +8,7 @@ from template.router_i18n_generator import router_i18n_generator
 from template.vue_data import vue_data_generator
 from template.vue_drawer import vue_drawer_generator
 from template.vue_index import vue_index_generator
+from template.vue_form import vue_form_generator
 
 
 def generator_code(biz_name, path_name, entity_name, entity_path):
@@ -32,6 +33,7 @@ def generator_code(biz_name, path_name, entity_name, entity_path):
     vue_data_generator(path_name, entity_name, biz_name, entity_properties)
     vue_index_generator(path_name, entity_name, biz_name, entity_properties)
     vue_drawer_generator(path_name, entity_name, biz_name, entity_properties)
+    vue_form_generator(path_name, entity_name, biz_name, entity_properties)
 
 config = configparser.ConfigParser()
 

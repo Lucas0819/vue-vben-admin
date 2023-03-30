@@ -38,6 +38,7 @@
   import { deleteUser, getUserListByPage } from '/@/api/merchant/user';
   import { useRouter } from 'vue-router';
   import { Typography } from 'ant-design-vue';
+  import { PageEnum } from '/@/enums/pageEnum';
 
   export default defineComponent({
     name: 'UserManagement',
@@ -71,11 +72,14 @@
       });
 
       function handleCreate() {
-        router.push({ name: 'UserForm' });
+        router.push(PageEnum.MERCHANT_USER_FORM);
       }
 
       function handleEdit(record: Recordable) {
-        router.push({ name: 'UserForm', query: { id: record.id } });
+        router.push({
+          path: PageEnum.MERCHANT_USER_FORM,
+          query: { id: record.id },
+        });
       }
 
       async function handleDelete(record: Recordable) {
