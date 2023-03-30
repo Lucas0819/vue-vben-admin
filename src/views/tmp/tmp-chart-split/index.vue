@@ -1,22 +1,22 @@
 <template>
   <div>
+    <PageWrapper title="票图结构模板列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增票图结构模板 </a-button>
+      <template #tableTitle>
+        <a-button type="primary" @click="handleCreate"> 创建票图结构模板 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'name'">
+          <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
+        </template>
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               {
-                icon: 'clarity:note-edit-line',
-                onClick: handleEdit.bind(null, record),
-              },
-              {
-                icon: 'ant-design:delete-outlined',
+                label: '删除',
                 color: 'error',
                 popConfirm: {
-                  title: '是否确认删除',
+                  title: '是否确认删除该项吗？',
                   placement: 'left',
                   confirm: handleDelete.bind(null, record),
                 },
@@ -26,7 +26,6 @@
         </template>
       </template>
     </BasicTable>
-    <TmpChartSplitDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -34,28 +33,31 @@
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
-  import { useDrawer } from '/@/components/Drawer';
-
   import { columns, searchFormSchema } from './tmpChartSplit.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteTmpChartSplit, getTmpChartSplitListByPage } from '/@/api/tmp/tmpChartSplit';
-  import TmpChartSplitDrawer from './TmpChartSplitDrawer.vue';
+  import { useRouter } from 'vue-router';
+  import { Typography } from 'ant-design-vue';
+  import { PageWrapper } from '/@/components/Page';
+  import { PageEnum } from '/@/enums/pageEnum';
 
   export default defineComponent({
     name: 'TmpChartSplitManagement',
-    components: { BasicTable, TmpChartSplitDrawer, TableAction },
+    components: { BasicTable, TableAction, Link: Typography.Link, PageWrapper },
     setup() {
       const { t } = useI18n();
+      const router = useRouter();
 
-      const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
-        title: '票图结构模板列表',
         api: getTmpChartSplitListByPage,
         columns,
         formConfig: {
-          labelWidth: 120,
           schemas: searchFormSchema,
+          baseColProps: {
+            span: 6,
+            style: { paddingLeft: '5px', paddingRight: '25px' },
+          },
         },
         useSearchForm: true,
         showTableSetting: true,
@@ -71,15 +73,13 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
-          isUpdate: false,
-        });
+        router.push(PageEnum.TMP_TMP_CHART_SPLIT_FORM);
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
-          isUpdate: true,
+        router.push({
+          path: PageEnum.TMP_TMP_CHART_SPLIT_FORM,
+          query: { id: record.id },
         });
       }
 
@@ -101,7 +101,6 @@
 
       return {
         registerTable,
-        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

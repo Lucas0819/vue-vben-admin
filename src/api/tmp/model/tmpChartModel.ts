@@ -11,6 +11,8 @@ export type TmpChartParams = {
   isSplit?: string;
   photourl?: string;
   isRelease?: number;
+  areaName?: string;
+  cnt?: number;
 };
 
 export type TmpChartPageParams = BasicPageParams & TmpChartParams;
@@ -26,6 +28,8 @@ export interface TmpChartItem {
   isSplit: string;
   photourl: string;
   isRelease: number;
+  areaName: string;
+  cnt: number;
 }
 
 export type TmpChartListGetResultModel = BasicFetchResult<TmpChartItem>;

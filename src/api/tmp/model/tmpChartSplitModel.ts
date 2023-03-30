@@ -13,6 +13,7 @@ export type TmpChartSplitParams = {
   stagePosition?: number;
   splitCss?: string;
   desJson?: string;
+  tmpChartName?: string;
 };
 
 export type TmpChartSplitPageParams = BasicPageParams & TmpChartSplitParams;
@@ -30,6 +31,7 @@ export interface TmpChartSplitItem {
   stagePosition: number;
   splitCss: string;
   desJson: string;
+  tmpChartName: string;
 }
 
 export type TmpChartSplitListGetResultModel = BasicFetchResult<TmpChartSplitItem>;

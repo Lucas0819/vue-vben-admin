@@ -9,9 +9,10 @@ import {
 enum Api {
   TmpChartSplitPage = '/tmpChartSplit/getTmpChartSplitPage',
   GetAllTmpChartSplitList = '/tmpChartSplit/getAllTmpChartSplitList',
+  FindOne = '/tmpChartSplit/findOne/{id}',
   CreateTmpChartSplit = '/tmpChartSplit/createTmpChartSplit',
   UpdateTmpChartSplit = '/tmpChartSplit/updateTmpChartSplit',
-  DeleteTmpChartSplit = '/tmpChartSplit/deleteTmpChartSplit/{tmpChartSplitId}',
+  DeleteTmpChartSplit = '/tmpChartSplit/deleteTmpChartSplit/{id}',
 }
 
 export const getTmpChartSplitListByPage = (params: TmpChartSplitPageParams) =>
@@ -20,11 +21,14 @@ export const getTmpChartSplitListByPage = (params: TmpChartSplitPageParams) =>
 export const getAllTmpChartSplitList = (params?: TmpChartSplitParams) =>
   defHttp.get<TmpChartSplitItem[]>({ url: Api.GetAllTmpChartSplitList, params });
 
+export const findOne = (id) =>
+  defHttp.get<TmpChartSplitItem>({ url: Api.FindOne.replace('{id}', id) });
+
 export const createTmpChartSplit = (params?: TmpChartSplitItem) =>
   defHttp.post({ url: Api.CreateTmpChartSplit, params });
 
 export const updateTmpChartSplit = (params?: TmpChartSplitItem) =>
   defHttp.put({ url: Api.UpdateTmpChartSplit, params });
 
-export const deleteTmpChartSplit = (tmpChartSplitId: string) =>
-  defHttp.delete({ url: Api.DeleteTmpChartSplit.replace('{tmpChartSplitId}', tmpChartSplitId) });
+export const deleteTmpChartSplit = (id: string) =>
+  defHttp.delete({ url: Api.DeleteTmpChartSplit.replace('{id}', id) });

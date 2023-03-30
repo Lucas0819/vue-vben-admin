@@ -24,6 +24,12 @@ export enum PageEnum {
   TMP_CHART_SPLIT_SEAT = '/tmp/tmp-chart-split-structure',
 
   /**
+   * 票图管理
+   */
+  TMP_TMP_CHART_FORM = '/tmp/tmp-chart/form',
+  TMP_TMP_CHART_SPLIT_FORM = '/tmp/tmp-chart-split-structure/form',
+
+  /**
    * 保利
    */
   BAOLI_BAOLI_PRICE_FORM = '/baoli/baoli-price/form',
