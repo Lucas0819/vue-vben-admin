@@ -62,7 +62,10 @@
       });
 
       onMountedOrActivated(async () => {
-        if (!unref(isUpdate)) return;
+        if (!unref(isUpdate)) {
+          setTitle('主办账户-新增');
+          return;
+        }
         await resetFields();
         const data = await findOne(recordId.value);
         setTitle('主办账户-' + data.name);

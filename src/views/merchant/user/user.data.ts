@@ -119,161 +119,121 @@ export const searchFormSchema: FormSchema[] = [
     field: 'company',
     label: '归属公司',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'office',
     label: '归属部门',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'loginName',
     label: '登录名',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'password',
     label: '密码',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'no',
     label: '工号',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'name',
     label: '姓名',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'email',
     label: '邮箱',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'phone',
     label: '电话',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'mobile',
     label: '手机',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'userType',
     label: '用户类型',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'loginIp',
     label: '最后登陆IP',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'loginDate',
     label: '最后登陆日期',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'loginFlag',
     label: '是否允许登陆',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'photo',
     label: '头像',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'oldLoginName',
     label: '原登录名',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'newPassword',
     label: '新密码',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'oldLoginIp',
     label: '上次登陆IP',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'oldLoginDate',
     label: '上次登陆日期',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'role',
     label: '根据角色查询用户条件',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
   {
     field: 'salespersonUrl',
     label: '销售员邀请链接',
     component: 'Input',
-    componentProps: {
-      placeholder: placeholderText,
-    },
+    componentProps: { placeholder: placeholderText },
   },
 ];
 

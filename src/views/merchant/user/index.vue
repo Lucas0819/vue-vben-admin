@@ -1,7 +1,8 @@
 <template>
   <div>
+    <PageWrapper title="主办账户列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
-      <template #toolbar>
+      <template #tableTitle>
         <a-button type="primary" @click="handleCreate"> 创建主办账户 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -38,24 +39,24 @@
   import { deleteUser, getUserListByPage } from '/@/api/merchant/user';
   import { useRouter } from 'vue-router';
   import { Typography } from 'ant-design-vue';
+  import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
 
   export default defineComponent({
     name: 'UserManagement',
-    components: { BasicTable, TableAction, Link: Typography.Link },
+    components: { BasicTable, TableAction, Link: Typography.Link, PageWrapper },
     setup() {
       const { t } = useI18n();
       const router = useRouter();
 
       const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
-        title: '主办账户列表',
         api: getUserListByPage,
         columns,
         formConfig: {
           schemas: searchFormSchema,
           baseColProps: {
             span: 6,
-            style: { padding: '0 15px' },
+            style: { paddingLeft: '5px', paddingRight: '25px' },
           },
         },
         useSearchForm: true,
