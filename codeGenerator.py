@@ -9,6 +9,7 @@ from template.vue_data import vue_data_generator
 from template.vue_drawer import vue_drawer_generator
 from template.vue_index import vue_index_generator
 from template.vue_form import vue_form_generator
+from template.util import parse_variable_definitions
 
 
 def generator_code(biz_name, path_name, entity_name, entity_path):
@@ -24,8 +25,8 @@ def generator_code(biz_name, path_name, entity_name, entity_path):
     java_file.close()
 
     # 读取字段类型、字段名、中文描述
-    pattern = re.compile(r'private\s+(\S+)\s+(\S+)\s*;\s*//\s*(.*)')
-    entity_properties = pattern.findall(java_code)
+    entity_properties = parse_variable_definitions(java_code)
+
 
     api_model_generator(path_name, entity_name, biz_name, entity_properties)
     api_generator(path_name, entity_name, biz_name, entity_properties)

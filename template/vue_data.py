@@ -4,6 +4,11 @@ import os
 from util import to_lower_camel_case, to_dash_case
 
 model_template = '''import {{ BasicColumn, FormSchema }} from '/@/components/Table';
+import {{ useI18n }} from '/@/hooks/web/useI18n';
+
+const {{ t }} = useI18n();
+
+const placeholderText = t('common.fuzzySearchText');
 
 export const columns: BasicColumn[] = [
   {field_list}
@@ -28,12 +33,27 @@ def vue_data_generator(path_name, entity_name, biz_name, entity_properties):
     def default_hidden(field):
         return '    defaultHidden: true,\n' if field[1] == 'id' else ''
 
-    field_list = '\n  '.join([f'{{\n    title: \'{field[2]}\',\n    dataIndex: \'{field[1]}\',\n    width: 120,\n{default_hidden(field)}  }},' for field in entity_properties])
+    field_list = '\n  '.join([f'{{'
+                              f'\n    title: \'{field[2]}\','
+                              f'\n    dataIndex: \'{field[1]}\','
+                              f'\n    width: 120,'
+                              f'\n{default_hidden(field)}'
+                              f'  }},' for field in entity_properties])
 
     # 查询&表单去除ID列
     entity_properties = list(filter(lambda x: x[1] != 'id', entity_properties))
-    search_form_field_list = '\n  '.join([f'{{\n    field: \'{field[1]}\',\n    label: \'{field[2]}\',\n    component: \'Input\',\n    colProps: {{ span: 8 }},\n  }},' for field in entity_properties])
-    form_field_list = '\n  '.join([f'{{\n    field: \'{field[1]}\',\n    label: \'{field[2]}\',\n    required: true,\n    component: \'Input\',\n  }},' for field in entity_properties])
+    search_form_field_list = '\n  '.join([f'{{'
+                                          f'\n    field: \'{field[1]}\','
+                                          f'\n    label: \'{field[2]}\','
+                                          f'\n    component: \'Input\','
+                                          f'\n    componentProps: {{ placeholder: placeholderText }},'
+                                          f'\n  }},' for field in entity_properties])
+    form_field_list = '\n  '.join([f'{{'
+                                   f'\n    field: \'{field[1]}\','
+                                   f'\n    label: \'{field[2]}\','
+                                   f'\n    required: false,'
+                                   f'\n    component: \'Input\','
+                                   f'\n  }},' for field in entity_properties])
 
     model_code = model_template.format(entity=entity_name, lowerCamelEntity=to_lower_camel_case(entity_name), field_list=field_list, search_form_field_list=search_form_field_list, form_field_list=form_field_list)
 

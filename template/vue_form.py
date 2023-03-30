@@ -16,9 +16,9 @@ model_template = '''<template>
   import {{ BasicForm, useForm }} from '/@/components/Form';
   import {{ CollapseContainer }} from '/@/components/Container';
   import {{ PageWrapper }} from '/@/components/Page';
-  import {{ formSchema }} from '/@/views/merchant/{lowerCamelEntity}/{lowerCamelEntity}.data';
+  import {{ formSchema }} from '/@/views/{path}/{dash_case_entity}/{lower_camel_entity}.data';
   import {{ useI18n }} from '/@/hooks/web/useI18n';
-  import {{ create{entity}, findOne, update{entity} }} from '/@/api/merchant/{lowerCamelEntity}';
+  import {{ create{entity}, findOne, update{entity} }} from '/@/api/{path}/{lower_camel_entity}';
   import {{ useRouter }} from 'vue-router';
   import {{ onMountedOrActivated }} from '/@/hooks/core/onMountedOrActivated';
   import {{ useMessage }} from '/@/hooks/web/useMessage';
@@ -67,7 +67,10 @@ model_template = '''<template>
       }});
 
       onMountedOrActivated(async () => {{
-        if (!unref(isUpdate)) return;
+        if (!unref(isUpdate)) {{
+          setTitle('{biz}-新增');
+          return;
+        }}
         await resetFields();
         const data = await findOne(recordId.value);
         setTitle('{biz}-' + data.name);
@@ -114,7 +117,7 @@ model_template = '''<template>
 def vue_form_generator(path_name, entity_name, biz_name, entity_properties):
     params = [f'{field[1]}?: {field[0]};' for field in entity_properties]
 
-    model_code = model_template.format(path=path_name, entity=entity_name, lowerCamelEntity=to_lower_camel_case(entity_name), biz=biz_name)
+    model_code = model_template.format(path=to_dash_case(path_name), entity=entity_name, lower_camel_entity=to_lower_camel_case(entity_name), dash_case_entity=to_dash_case(entity_name), biz=biz_name)
 
     api_model_file = f"src/views/{to_dash_case(path_name)}/{to_dash_case(entity_name)}/{to_lower_camel_case(entity_name)}Form.vue"
 
