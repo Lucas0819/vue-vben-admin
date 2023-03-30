@@ -3,21 +3,25 @@ import { resultPageSuccess, resultSuccess } from '../../_util';
 
 const officeItem = {
   id: '@id()',
-  remarks: '@remarks()',
+  remarks: 'Z-2023.3.24-原商户名称：中环辰星，改为：中环小剧场',
   createBy: '@createBy()',
-  createDate: '@createDate()',
+  createDate: '2023-03-26 14:36:33',
   updateDate: '@updateDate()',
-  parent: '@parent()',
+  parent: {
+    id: '@id()',
+    name: '@name()',
+  },
   parentIds: '@parentIds()',
   name: '@name()',
   area: '@area()',
-  code: '@code()',
+  code: '110953',
   type: '@type()',
   grade: '@grade()',
   address: '@address()',
-  zipCode: '@zipCode()',
+  zipCode:
+    'https://wx.pplon.cn/userfiles/logo/10d76d17c38b461f82f87118f4bcd7e4.png?v=1680057932911',
   master: '@master()',
-  phone: '@phone()',
+  phone: '15121096118',
   fax: '@fax()',
   email: '@email()',
   useable: '@useable()',
@@ -66,11 +70,12 @@ const officeItem = {
   certId: '@certId()',
   telNo: '@telNo()',
   settleAccountId: '@settleAccountId()',
-  settleAccountStatus: '@settleAccountStatus()',
+  settleAccountStatus: '0',
   adaMsg: '@adaMsg()',
   payFile: '@payFile()',
   adaMemberId: '@adaMemberId()',
   adaInfoId: '@adaInfoId()',
+  settlementRatio: '0.994',
 };
 
 const officeList = (() => {

@@ -6,7 +6,7 @@ export type OfficeParams = {
   // createBy?: User;
   createDate?: Date;
   updateDate?: Date;
-  // parent?: Office;
+  parent?: OfficeItem;
   parentIds?: string;
   name?: string;
   // area?: Area;
@@ -70,6 +70,7 @@ export type OfficeParams = {
   payFile?: string;
   adaMemberId?: string;
   adaInfoId?: string;
+  settlementRatio?: string;
 };
 
 export type OfficePageParams = BasicPageParams & OfficeParams;
@@ -80,7 +81,7 @@ export interface OfficeItem {
   // createBy: User;
   createDate: Date;
   updateDate: Date;
-  // parent: Office;
+  parent: OfficeItem;
   parentIds: string;
   name: string;
   // area: Area;
@@ -144,6 +145,7 @@ export interface OfficeItem {
   payFile: string;
   adaMemberId: string;
   adaInfoId: string;
+  settlementRatio: string;
 }
 
 export type OfficeListGetResultModel = BasicFetchResult<OfficeItem>;

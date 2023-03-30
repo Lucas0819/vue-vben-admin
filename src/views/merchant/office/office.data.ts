@@ -9,61 +9,59 @@ export const columns: BasicColumn[] = [
   {
     title: '二维码',
     dataIndex: 'zipCode',
-    width: 120,
+    width: 60,
   },
   {
     title: '商户号',
     dataIndex: 'code',
-    width: 120,
+    width: 80,
   },
   {
     title: '商户名称',
     dataIndex: 'name',
-    width: 120,
+    width: 200,
+    sorter: true,
   },
   {
     title: '上级商户',
     dataIndex: 'parent',
-    width: 120,
+    width: 150,
     customRender: ({ record }) => {
-      return record.parent;
+      return record.parent.name;
     },
   },
   {
     title: '结算比例',
-    dataIndex: 'parent',
-    width: 120,
-    customRender: ({ record }) => {
-      return record.parent;
-    },
+    dataIndex: 'settlementRatio',
+    width: 90,
   },
   {
     title: '收款账户(真实姓名)',
     dataIndex: 'accName',
-    width: 120,
+    width: 170,
   },
   {
     title: '卡券电话',
     dataIndex: 'phone',
-    width: 120,
+    width: 150,
   },
   {
     title: '创建时间',
-    dataIndex: 'parent',
-    width: 120,
-    customRender: ({ record }) => {
-      return record.parent;
-    },
+    dataIndex: 'createDate',
+    width: 200,
+    sorter: true,
+    defaultSortOrder: 'descend',
   },
   {
     title: '支付账户状态',
-    dataIndex: 'accName',
+    dataIndex: 'settleAccountStatus',
     width: 120,
+    sorter: true,
   },
   {
     title: '备注',
-    dataIndex: 'phone',
-    width: 120,
+    dataIndex: 'remarks',
+    sorter: true,
   },
 ];
 
@@ -77,11 +75,19 @@ export const searchFormSchema: FormSchema[] = [
     },
   },
   {
-    field: 'area',
+    field: 'settlementRatio',
     label: '结算比例',
-    component: 'Input',
+    component: 'Select',
+    defaultValue: '1',
     componentProps: {
-      placeholder: placeholderText,
+      options: [
+        { label: '全部', value: 'all' },
+        { label: '0.6%', value: '1' },
+        { label: '0.7%', value: '2' },
+        { label: '1%', value: '3' },
+        { label: '2.6%', value: '4' },
+        { label: '2.7%', value: '5' },
+      ],
     },
   },
   {
