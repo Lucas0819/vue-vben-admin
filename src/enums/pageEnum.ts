@@ -22,4 +22,11 @@ export enum PageEnum {
   TMP_CHART_MANAGEMENT = '/tmp/tmp-chart',
   TMP_CHART_FORM = '/tmp/tmp-chart/form',
   TMP_CHART_SPLIT_SEAT = '/tmp/tmp-chart-split-structure',
+
+  /**
+   * 保利
+   */
+  BAOLI_BAOLI_PRICE_FORM = '/baoli/baoli-price/form',
+  BAOLI_BAOLI_RESULT_FORM = '/baoli/baoli-result/form',
+  BAOLI_BAOLI_SEAT_FORM = '/baoli/baoli-seat/form',
 }
