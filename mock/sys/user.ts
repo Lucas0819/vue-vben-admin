@@ -226,6 +226,19 @@ export default [
     },
   },
   {
+    url: '/basic-api/auth/oauth/token',
+    method: 'post',
+    response: () => {
+      return {
+        access_token: 'string',
+        default_tenant_id: 'string',
+        name: '云盾01',
+        user_id: '92',
+        username: '18600000001',
+      };
+    },
+  },
+  {
     url: '/basic-api/getPermCode',
     timeout: 200,
     method: 'get',
