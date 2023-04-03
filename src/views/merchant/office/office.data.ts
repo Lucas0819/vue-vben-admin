@@ -7,6 +7,11 @@ const placeholderText = t('common.fuzzySearchText');
 
 export const columns: BasicColumn[] = [
   {
+    title: 'id',
+    dataIndex: 'id',
+    defaultHidden: true,
+  },
+  {
     title: '二维码',
     dataIndex: 'zipCode',
     width: 60,
@@ -38,17 +43,24 @@ export const columns: BasicColumn[] = [
   {
     title: '收款账户(真实姓名)',
     dataIndex: 'accName',
-    width: 170,
+    width: 150,
   },
   {
     title: '卡券电话',
     dataIndex: 'phone',
+    width: 120,
+  },
+  {
+    title: '修改时间',
+    dataIndex: 'updateDate',
     width: 150,
+    sorter: true,
+    defaultHidden: true,
   },
   {
     title: '创建时间',
     dataIndex: 'createDate',
-    width: 200,
+    width: 150,
     sorter: true,
     defaultSortOrder: 'descend',
   },
@@ -62,6 +74,12 @@ export const columns: BasicColumn[] = [
     title: '备注',
     dataIndex: 'remarks',
     sorter: true,
+  },
+  {
+    title: '汇付账户ID',
+    dataIndex: 'adaMemberId',
+    sorter: true,
+    defaultHidden: true,
   },
 ];
 
@@ -167,7 +185,7 @@ export const formSchema: FormSchema[] = [
     field: 'zipCode',
     label: '商户logo',
     required: false,
-    component: 'Input',
+    component: 'Upload',
   },
   {
     field: 'phone',
