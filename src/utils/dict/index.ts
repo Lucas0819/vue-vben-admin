@@ -2,7 +2,7 @@ import { BasicKeys, Persistent } from '/@/utils/cache/persistent';
 import { CacheTypeEnum, DICT_ENUM_KEY } from '/@/enums/cacheEnum';
 import projectSetting from '/@/settings/projectSetting';
 import { DictModel } from '/@/api/sys/model/dictModel';
-import { isEmpty } from '/@/utils/is';
+import { isEmpty, isNullOrUnDef } from '/@/utils/is';
 
 const { permissionCacheType } = projectSetting;
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL;
@@ -30,12 +30,15 @@ export function clearDictCache(immediate = true) {
 export function translateDictData(type: string, code: string): string {
   if (isEmpty(code)) return DEFAULT_DICT_VALUE;
   const currentDictData = getDictDataByType(type);
+  if (isEmpty(currentDictData as DictModel[])) return DEFAULT_DICT_VALUE;
   const currentData = currentDictData.find((item: DictModel) => item.code === code);
-  return currentData ? currentData.description : DEFAULT_DICT_VALUE;
+  if (isNullOrUnDef(currentData)) return DEFAULT_DICT_VALUE;
+  return currentData.description;
 }
 
 export function getDictDataByType(type: string): DictModel[] {
   if (isEmpty(type)) return [];
   const dictData = getDictData();
+  if (isNullOrUnDef(dictData) || isEmpty(dictData as DictModel[])) return [];
   return dictData.filter((item: DictModel) => item.type === type);
 }
