@@ -26,6 +26,7 @@
         </template>
       </template>
     </BasicTable>
+    <TmpChartSplitDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -41,10 +42,18 @@
   import { Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
+  import TmpChartSplitDrawer from '/@/views/tmp/tmp-chart-split/TmpChartSplitDrawer.vue';
+  import { useDrawer } from '/@/components/Drawer';
 
   export default defineComponent({
     name: 'TmpChartSplitManagement',
-    components: { BasicTable, TableAction, Link: Typography.Link, PageWrapper },
+    components: {
+      TmpChartSplitDrawer,
+      BasicTable,
+      TableAction,
+      Link: Typography.Link,
+      PageWrapper,
+    },
     setup() {
       const { t } = useI18n();
       const router = useRouter();
@@ -59,8 +68,8 @@
             style: { paddingLeft: '5px', paddingRight: '25px' },
           },
         },
-        useSearchForm: true,
-        showTableSetting: true,
+        useSearchForm: false,
+        showTableSetting: false,
         bordered: true,
         showIndexColumn: false,
         actionColumn: {
@@ -70,15 +79,20 @@
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
+        canResize: false,
+        pagination: false,
       });
 
+      const [registerDrawer, { openDrawer }] = useDrawer();
+
       function handleCreate() {
-        router.push(PageEnum.TMP_TMP_CHART_SPLIT_FORM);
+        openDrawer(true);
+        // router.push(PageEnum.TMP_TMP_CHART_SPLIT_FORM);
       }
 
       function handleEdit(record: Recordable) {
         router.push({
-          path: PageEnum.TMP_TMP_CHART_SPLIT_FORM,
+          path: PageEnum.TMP_TMP_CHART_SPLIT_SEAT,
           query: { id: record.id },
         });
       }
@@ -101,6 +115,7 @@
 
       return {
         registerTable,
+        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

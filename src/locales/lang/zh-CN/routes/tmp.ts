@@ -10,5 +10,6 @@ export default {
   tmpChartSplit: {
     moduleName: '票图结构模板',
     form: '票图结构模板-维护',
+    seat: '票图结构模板-座位维护',
   },
 };

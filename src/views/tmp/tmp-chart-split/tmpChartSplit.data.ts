@@ -1,9 +1,4 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
-import { useI18n } from '/@/hooks/web/useI18n';
-
-const { t } = useI18n();
-
-const placeholderText = t('common.fuzzySearchText');
 
 export const columns: BasicColumn[] = [
   {
@@ -54,56 +49,7 @@ export const columns: BasicColumn[] = [
   },
 ];
 
-export const searchFormSchema: FormSchema[] = [
-  {
-    field: 'tempChartId',
-    label: 'temp_chart_id',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'name',
-    label: '楼层',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'initRow',
-    label: '行数',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'initColumn',
-    label: '列数',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'stagePosition',
-    label: '舞台位置,-1为没有舞台,其他数字为所在列的后面,此处列数从1开始',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'splitCss',
-    label: '多结构CSS',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'desJson',
-    label: '明细JSON',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'tmpChartName',
-    label: 'tmpChartName',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-];
+export const searchFormSchema: FormSchema[] = [];
 
 export const formSchema: FormSchema[] = [
   {

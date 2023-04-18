@@ -9,7 +9,7 @@ import {
   windowToCanvas,
 } from './seatUtil';
 import { StyleValue } from '/@/utils/types';
-import { isDef, isEmpty } from '/@/utils/is';
+import { isDef, isEmpty, isNullOrUnDef } from '/@/utils/is';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { cloneDeep } from 'lodash-es';
 
@@ -578,12 +578,12 @@ function drag() {
  * @param shapes
  */
 function hasShapeItem(shapes: ShapeItem[], shapeItem: ShapeItem): boolean {
-  if (isEmpty(shapes)) return false;
+  if (isNullOrUnDef(shapes) || isEmpty(shapes as ShapeItem[])) return false;
   return shapes.some((item) => item.index === shapeItem.index);
 }
 
 function getShapeItem(shapes: ShapeItem[], shapeItem: ShapeItem): ShapeItem | undefined {
-  if (isEmpty(shapes)) return undefined;
+  if (isNullOrUnDef(shapes) || isEmpty(shapes as ShapeItem[])) return undefined;
   return shapes.find((item) => item.index === shapeItem.index);
 }
 

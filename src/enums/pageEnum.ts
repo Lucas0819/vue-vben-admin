@@ -27,7 +27,7 @@ export enum PageEnum {
    * 票图管理
    */
   TMP_TMP_CHART_FORM = '/tmp/tmp-chart/form',
-  TMP_TMP_CHART_SPLIT_FORM = '/tmp/tmp-chart-split-structure/form',
+  TMP_TMP_CHART_SPLIT_SEAT = '/tmp/tmp-chart/split-seat',
 
   /**
    * 保利

@@ -10,5 +10,6 @@ export default {
   tmpChartSplit: {
     moduleName: 'tmpChartSplit',
     form: 'tmpChartSplit-maintain',
+    seat: 'tmpChartSplit-seatMaintain',
   },
 };

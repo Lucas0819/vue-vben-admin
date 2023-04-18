@@ -32,27 +32,17 @@ const charts: AppRouteModule = {
           },
           component: () => import('/@/views/tmp/tmp-chart/tmpChartForm.vue'),
         },
-      ],
-    },
-    {
-      path: 'tmp-chart-split',
-      name: 'TmpChartSplitManagement',
-      meta: {
-        title: t('routes.tmp.tmpChartSplit.moduleName'),
-      },
-      component: () => import('/@/views/tmp/tmp-chart-split/index.vue'),
-      children: [
         {
-          path: 'form',
-          name: 'TmpChartSplitForm',
+          path: 'split-seat',
+          name: 'TmpChartSplitSeat',
           meta: {
-            title: t('routes.tmp.tmpChartSplit.form'),
+            title: t('routes.tmp.tmpChartSplit.seat'),
             hideMenu: true,
             dynamicLevel: 3,
-            realPath: '/tmp/tmp-chart-split',
-            currentActiveMenu: '/tmp/tmp-chart-split',
+            realPath: '/tmp/tmp-chart',
+            currentActiveMenu: '/tmp/tmp-chart',
           },
-          component: () => import('/@/views/tmp/tmp-chart-split/tmpChartSplitForm.vue'),
+          component: () => import('/@/views/tmp/tmp-chart-split/tmpChartSplitSeat.vue'),
         },
       ],
     },

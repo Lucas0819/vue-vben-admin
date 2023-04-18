@@ -3,6 +3,7 @@
     <CollapseContainer title="添加活动地址-票图">
       <BasicForm @register="register" @submit="handleSubmit" />
     </CollapseContainer>
+    <TmpChartSplitManagement />
   </PageWrapper>
 </template>
 
@@ -19,9 +20,11 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { isEmpty } from '/@/utils/is';
   import { useTabs } from '/@/hooks/web/useTabs';
+  import TmpChartSplitManagement from '/@/views/tmp/tmp-chart-split/index.vue';
 
   export default defineComponent({
     components: {
+      TmpChartSplitManagement,
       BasicForm,
       CollapseContainer,
       PageWrapper,
