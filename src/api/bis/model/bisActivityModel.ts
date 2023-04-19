@@ -1,9 +1,12 @@
 import { BasicFetchResult, BasicPageParams } from '/@/api/model/baseModel';
+import { UserBaseInfoVO } from '/@/api/sys/model/userModel';
+import { BisActivityEventItem } from '/@/api/bis/model/bisActivityEventModel';
+import { ViewPriceItem } from '/@/api/bis/model/viewPriceModel';
 
 export type BisActivityParams = {
   id?: string;
   remarks?: string;
-  // createBy?: User;
+  createBy?: UserBaseInfoVO;
   createDate?: Date;
   updateDate?: Date;
   bisActivityTypeId?: string;
@@ -34,8 +37,8 @@ export type BisActivityParams = {
   attention?: string;
   bisActivityStateId?: string;
   fatherId?: string;
-  // businessDiscount?: BigDecimal;
-  // businessFixed?: BigDecimal;
+  businessDiscount?: number;
+  businessFixed?: number;
   ext?: string;
   extSystem?: string;
   groupId?: string;
@@ -63,7 +66,7 @@ export type BisActivityPageParams = BasicPageParams & BisActivityParams;
 export interface BisActivityItem {
   id: string;
   remarks: string;
-  // createBy: User;
+  createBy: UserBaseInfoVO;
   createDate: Date;
   updateDate: Date;
   bisActivityTypeId: string;
@@ -94,8 +97,8 @@ export interface BisActivityItem {
   attention: string;
   bisActivityStateId: string;
   fatherId: string;
-  // businessDiscount: BigDecimal;
-  // businessFixed: BigDecimal;
+  businessDiscount: number;
+  businessFixed: number;
   ext: string;
   extSystem: string;
   groupId: string;
@@ -110,11 +113,11 @@ export interface BisActivityItem {
   bisUserId: string;
   // tmpPlace: TmpPlace;
   // bisActivityType: Dict;
-  // viewPrice: ViewPrice;
+  viewPrice: ViewPriceItem;
   extInfo: string;
   checkDelayMsg: string;
   nameCorrect: string;
-  // bisActivityEventList: List<BisActivityEvent>;
+  bisActivityEventList: BisActivityEventItem[];
   // bisClassicPlateAct: BisClassicPlateAct;
 }
 

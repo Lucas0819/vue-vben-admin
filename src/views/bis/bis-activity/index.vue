@@ -5,9 +5,12 @@
       <template #tableTitle>
         <a-button type="primary" @click="handleCreate"> 创建活动 </a-button>
       </template>
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ text, column, record }">
         <template v-if="column.key === 'name'">
           <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
+        </template>
+        <template v-if="column.key === 'status'">
+          <Tag color="#87d068">{{ text }}</Tag>
         </template>
         <template v-if="column.key === 'action'">
           <TableAction
@@ -38,13 +41,13 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteBisActivity, getBisActivityListByPage } from '/@/api/bis/bisActivity';
   import { useRouter } from 'vue-router';
-  import { Typography } from 'ant-design-vue';
+  import { Tag, Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
 
   export default defineComponent({
     name: 'BisActivityManagement',
-    components: { BasicTable, TableAction, Link: Typography.Link, PageWrapper },
+    components: { BasicTable, TableAction, Link: Typography.Link, PageWrapper, Tag },
     setup() {
       const { t } = useI18n();
       const router = useRouter();

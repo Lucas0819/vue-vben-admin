@@ -13,7 +13,7 @@ export type BisVipcardParams = {
   isAgent?: number;
   seq?: number;
   type?: string;
-  // discount?: BigDecimal;
+  discount?: number;
   ctBuo?: number;
   ctBva?: number;
 };
@@ -33,7 +33,7 @@ export interface BisVipcardItem {
   isAgent: number;
   seq: number;
   type: string;
-  // discount: BigDecimal;
+  discount: number;
   ctBuo: number;
   ctBva: number;
 }

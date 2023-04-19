@@ -13,16 +13,6 @@ export const columns: BasicColumn[] = [
     defaultHidden: true,
   },
   {
-    title: '活动类型ID',
-    dataIndex: 'bisActivityTypeId',
-    width: 120,
-  },
-  {
-    title: '活动门店ID',
-    dataIndex: 'tmpPlaceId',
-    width: 120,
-  },
-  {
     title: '活动名称',
     dataIndex: 'name',
     width: 120,
@@ -33,233 +23,68 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '封面图片竖版',
-    dataIndex: 'photoVer',
+    title: '商户名称',
+    dataIndex: ['createBy', 'companyName'],
     width: 120,
   },
   {
-    title: '海报模板',
-    dataIndex: 'photoPoster',
+    title: '活动时间',
+    dataIndex: ['viewPrice', 'showStart'],
     width: 120,
+    format: (text, record) => {
+      if (record.isHide > 0) return '长期有效';
+      return text || '-';
+    },
   },
   {
-    title: '封面图片横版',
-    dataIndex: 'photoHor',
+    title: '票价',
+    dataIndex: ['viewPrice', 'showPrice'],
     width: 120,
+    format: (text) => {
+      return text ? '￥' + text : '-';
+    },
   },
   {
-    title: '封面图片小',
-    dataIndex: 'photoSmall',
-    width: 120,
+    title: '活动状态',
+    dataIndex: 'status',
   },
   {
-    title: '活动介绍',
-    dataIndex: 'describe',
-    width: 120,
-  },
-  {
-    title: '是否上架',
-    dataIndex: 'isSale',
-    width: 120,
-  },
-  {
-    title: '是否选座',
-    dataIndex: 'isSeat',
-    width: 120,
-  },
-  {
-    title: '是否测试',
-    dataIndex: 'isTest',
-    width: 120,
-  },
-  {
-    title: '是否延迟检票',
-    dataIndex: 'isCheckDelay',
-    width: 120,
-  },
-  {
-    title: '检票延迟时间',
-    dataIndex: 'checkDelayMinute',
-    width: 120,
-  },
-  {
-    title: '是否追加延迟检票提示',
-    dataIndex: 'isAppendCheckDelayMsg',
-    width: 120,
-  },
-  {
-    title: '追加延迟检票提示',
-    dataIndex: 'appendCheckDelayMsg',
-    width: 120,
-  },
-  {
-    title: '官方店铺不延迟',
-    dataIndex: 'isOfficialNoCheckDelay',
-    width: 120,
-  },
-  {
-    title: '禁止分销',
-    dataIndex: 'isNoAgent',
-    width: 120,
-  },
-  {
-    title: '是否非电子',
-    dataIndex: 'isNotwxcard',
-    width: 120,
-  },
-  {
-    title: '排序',
-    dataIndex: 'seq',
-    width: 120,
-  },
-  {
-    title: '企业通知标签',
+    title: '通知',
     dataIndex: 'qyTotag',
     width: 120,
   },
   {
-    title: '提示语1|活动打包到二维码里',
-    dataIndex: 'promptOne',
-    width: 120,
-  },
-  {
-    title: '提示语2|黑名单（例外的代理商的user_id）',
-    dataIndex: 'promptTwo',
-    width: 120,
-  },
-  {
-    title: '提示语3|白名单（例外的代理商的user_id）',
-    dataIndex: 'promptThree',
-    width: 120,
-  },
-  {
-    title: '视频链接(暂时用作讯飞链接)',
-    dataIndex: 'videoUrl',
-    width: 120,
-  },
-  {
-    title: '购票须知(用作讯飞预计存储内容字段)',
-    dataIndex: 'attention',
-    width: 120,
-  },
-  {
-    title: '活动验证方式(wx_card,ele_card,ems,take_code,name_phone,ticket_lib_third)',
-    dataIndex: 'bisActivityStateId',
-    width: 120,
-  },
-  {
-    title: '关联ID',
-    dataIndex: 'fatherId',
-    width: 120,
-  },
-  {
-    title: '商户代理商户折扣',
-    dataIndex: 'businessDiscount',
-    width: 120,
-  },
-  {
-    title: '商户代理商户固定金额',
-    dataIndex: 'businessFixed',
-    width: 120,
-  },
-  {
-    title: '扩展长字段说明',
-    dataIndex: 'ext',
-    width: 120,
-  },
-  {
-    title: '神秘代码',
-    dataIndex: 'extSystem',
-    width: 120,
-  },
-  {
-    title: '组ID,判断哪些活动属于一组,用户自互通座位状态，（好像没用上）',
-    dataIndex: 'groupId',
-    width: 120,
-  },
-  {
-    title: '票付通产品名称',
-    dataIndex: 'pftName',
-    width: 120,
-  },
-  {
-    title: '票付通ID: lid_aid',
-    dataIndex: 'pftIds',
-    width: 120,
-  },
-  {
-    title: '票纸票面定义',
-    dataIndex: 'tmpPaperId',
-    width: 120,
-  },
-  {
-    title: '是否抢票活动',
-    dataIndex: 'isSnapup',
-    width: 120,
-  },
-  {
-    title: '是否REDIS活动',
-    dataIndex: 'isRedisActivity',
-    width: 120,
-  },
-  {
-    title: '关联ID',
-    dataIndex: 'childId',
-    width: 120,
-  },
-  {
-    title: '代理隐藏',
-    dataIndex: 'isHide',
-    width: 120,
-  },
-  {
-    title: '主办方',
-    dataIndex: 'sysOfficeId',
-    width: 120,
-  },
-  {
-    title: '代理商用户',
-    dataIndex: 'bisUserId',
-    width: 120,
-  },
-  {
-    title: '地址',
-    dataIndex: 'tmpPlace',
-    width: 120,
-  },
-  {
     title: '活动分类',
-    dataIndex: 'bisActivityType',
+    dataIndex: ['bisActivityType', 'label'],
     width: 120,
   },
   {
-    title: '票价显示',
-    dataIndex: 'viewPrice',
+    title: '活动排序',
+    dataIndex: 'seq',
     width: 120,
   },
   {
-    title: '扩展长字段翻译说明',
-    dataIndex: 'extInfo',
+    title: '修改时间',
+    dataIndex: 'updateDate',
+    align: 'center',
+    defaultHidden: true,
     width: 120,
   },
   {
-    title: '转换后的延迟检票提示',
-    dataIndex: 'checkDelayMsg',
+    title: '创建时间',
+    dataIndex: 'createDate',
+    align: 'center',
+    defaultHidden: true,
     width: 120,
   },
   {
-    title: '活动名对齐',
-    dataIndex: 'nameCorrect',
+    title: '销售状态',
+    dataIndex: 'isSale',
     width: 120,
   },
   {
-    title: 'bisActivityEventList',
-    dataIndex: 'bisActivityEventList',
-    width: 120,
-  },
-  {
-    title: 'bisClassicPlateAct',
-    dataIndex: 'bisClassicPlateAct',
+    title: '备注',
+    dataIndex: 'remarks',
     width: 120,
   },
 ];
