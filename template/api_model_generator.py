@@ -19,7 +19,7 @@ export type {entity}ListGetResultModel = BasicFetchResult<{entity}Item>;
 '''
 
 needLower = ['String']
-mathFiled = ['Integer', 'Float']
+mathFiled = ['Integer', 'Float', 'BigDecimal']
 def getCurrentFiled(filed):
     if filed in needLower:
         return filed.lower()
@@ -28,7 +28,7 @@ def getCurrentFiled(filed):
     else:
         return filed
 
-noAnnotation = ['String', 'Date', 'Integer', 'Float'];
+noAnnotation = ['String', 'Date', 'Integer', 'Float', 'BigDecimal'];
 def getNeedAnnotation(filed):
     if filed in noAnnotation:
         return ''

@@ -25,13 +25,11 @@ export const formSchema: FormSchema[] = [
 
 
 def vue_data_generator(path_name, entity_name, biz_name, entity_properties):
-    # 其他默认字段不参与展示和编辑
-    disable_filed_list = ['remarks', 'createBy', 'createDate', 'updateDate']
-    entity_properties = list(filter(lambda x: not x[1] in disable_filed_list, entity_properties))
+    hidden_filed_list = ['id', 'remarks', 'createBy', 'createDate', 'updateDate']
 
-    # ID列在表格内默认不展示
+    # 几个基础列在表格内默认不展示
     def default_hidden(field):
-        return '    defaultHidden: true,\n' if field[1] == 'id' else ''
+        return '    defaultHidden: true,\n' if field[1] in hidden_filed_list else ''
 
     field_list = '\n  '.join([f'{{'
                               f'\n    title: \'{field[2]}\','
@@ -40,8 +38,9 @@ def vue_data_generator(path_name, entity_name, biz_name, entity_properties):
                               f'\n{default_hidden(field)}'
                               f'  }},' for field in entity_properties])
 
-    # 查询&表单去除ID列
-    entity_properties = list(filter(lambda x: x[1] != 'id', entity_properties))
+    # 查询&表单去除基础列
+    entity_properties = list(filter(lambda x: not x[1] in hidden_filed_list, entity_properties))
+
     search_form_field_list = '\n  '.join([f'{{'
                                           f'\n    field: \'{field[1]}\','
                                           f'\n    label: \'{field[2]}\','
