@@ -23,6 +23,11 @@ export enum PageEnum {
   TMP_TMP_CHART_SPLIT_SEAT = '/tmp/tmp-chart/split-seat',
   TMP_TMP_PAPER_FORM = '/tmp/tmp-paper/form',
 
+  BIS_BIS_BANNER_FORM = '/bis/bis-banner/form',
+  BIS_BIS_ACTIVITY_FORM = '/bis/bis-activity/form',
+  BIS_BIS_ACTIVITY_EVENT_FORM = '/bis/bis-activity-event/form',
+  BIS_BIS_VIPCARD_FORM = '/bis/bis-vipcard/form',
+
   /**
    * 保利
    */
