@@ -1,15 +1,15 @@
 import configparser
 import re
-from template.api_generator import api_generator
-from template.api_model_generator import api_model_generator
-from template.mock_generator import mock_generator
-from template.router_generator import router_generator
-from template.router_i18n_generator import router_i18n_generator
-from template.vue_data import vue_data_generator
-from template.vue_drawer import vue_drawer_generator
-from template.vue_index import vue_index_generator
-from template.vue_form import vue_form_generator
-from template.util import parse_variable_definitions
+from api_generator import api_generator
+from api_model_generator import api_model_generator
+from mock_generator import mock_generator
+from router_generator import router_generator
+from router_i18n_generator import router_i18n_generator
+from vue_data import vue_data_generator
+from vue_drawer import vue_drawer_generator
+from vue_index import vue_index_generator
+from vue_form import vue_form_generator
+from util import parse_variable_definitions
 
 
 def generator_code(biz_name, path_name, entity_name, entity_path):

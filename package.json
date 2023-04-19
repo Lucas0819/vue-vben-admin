@@ -31,7 +31,7 @@
     "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "prepare": "husky install",
     "gen:icon": "esno ./build/generate/icon/index.ts",
-    "gen:code": "python codeGenerator.py"
+    "gen:code": "python template/codeGenerator.py"
   },
   "dependencies": {
     "@ant-design/colors": "^6.0.0",
