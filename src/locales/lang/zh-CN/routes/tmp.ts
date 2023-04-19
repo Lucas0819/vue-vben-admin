@@ -12,4 +12,8 @@ export default {
     form: '票图结构模板-维护',
     seat: '票图结构模板-座位维护',
   },
+  tmpPaper: {
+    moduleName: '票纸设计',
+    form: '票纸设计-维护',
+  },
 };

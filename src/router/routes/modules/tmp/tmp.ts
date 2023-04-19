@@ -46,6 +46,28 @@ const charts: AppRouteModule = {
         },
       ],
     },
+    {
+      path: 'tmp-paper',
+      name: 'TmpPaperManagement',
+      meta: {
+        title: t('routes.tmp.tmpPaper.moduleName'),
+      },
+      component: () => import('/@/views/tmp/tmp-paper/index.vue'),
+      children: [
+        {
+          path: 'form',
+          name: 'TmpPaperForm',
+          meta: {
+            title: t('routes.tmp.tmpPaper.form'),
+            hideMenu: true,
+            dynamicLevel: 3,
+            realPath: '/tmp/tmp-paper',
+            currentActiveMenu: '/tmp/tmp-paper',
+          },
+          component: () => import('/@/views/tmp/tmp-paper/tmpPaperForm.vue'),
+        },
+      ],
+    },
   ],
 };
 

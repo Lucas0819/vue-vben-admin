@@ -12,4 +12,8 @@ export default {
     form: 'tmpChartSplit-maintain',
     seat: 'tmpChartSplit-seatMaintain',
   },
+  tmpPaper: {
+    moduleName: 'tmpPaper',
+    form: 'tmpPaper-maintain',
+  },
 };

@@ -19,15 +19,9 @@ export enum PageEnum {
   /**
    * 活动管理
    */
-  TMP_CHART_MANAGEMENT = '/tmp/tmp-chart',
-  TMP_CHART_FORM = '/tmp/tmp-chart/form',
-  TMP_CHART_SPLIT_SEAT = '/tmp/tmp-chart-split-structure',
-
-  /**
-   * 票图管理
-   */
   TMP_TMP_CHART_FORM = '/tmp/tmp-chart/form',
   TMP_TMP_CHART_SPLIT_SEAT = '/tmp/tmp-chart/split-seat',
+  TMP_TMP_PAPER_FORM = '/tmp/tmp-paper/form',
 
   /**
    * 保利
