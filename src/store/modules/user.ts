@@ -41,23 +41,23 @@ export const useUserStore = defineStore({
     lastUpdateTime: 0,
   }),
   getters: {
-    getUserInfo(): UserBaseInfoVO {
-      return this.userInfo || getAuthCache<UserBaseInfoVO>(USER_INFO_KEY) || {};
+    getUserInfo(state): UserBaseInfoVO {
+      return state.userInfo || getAuthCache<UserBaseInfoVO>(USER_INFO_KEY) || {};
     },
-    getCurrentTenantId(): string {
-      return this.currentTenantId || getAuthCache<string>(CURRENT_TENANT_ID_KEY);
+    getCurrentTenantId(state): string {
+      return state.currentTenantId || getAuthCache<string>(CURRENT_TENANT_ID_KEY);
     },
-    getToken(): string {
-      return this.token || getAuthCache<string>(TOKEN_KEY);
+    getToken(state): string {
+      return state.token || getAuthCache<string>(TOKEN_KEY);
     },
-    getRoleList(): RoleEnum[] {
-      return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+    getRoleList(state): RoleEnum[] {
+      return state.roleList.length > 0 ? state.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
     },
-    getSessionTimeout(): boolean {
-      return !!this.sessionTimeout;
+    getSessionTimeout(state): boolean {
+      return !!state.sessionTimeout;
     },
-    getLastUpdateTime(): number {
-      return this.lastUpdateTime;
+    getLastUpdateTime(state): number {
+      return state.lastUpdateTime;
     },
   },
   actions: {
