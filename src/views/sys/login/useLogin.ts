@@ -1,6 +1,6 @@
-import type { ValidationRule, FormInstance } from 'ant-design-vue/lib/form/Form';
-import type { RuleObject, NamePath } from 'ant-design-vue/lib/form/interface';
-import { ref, computed, unref, Ref } from 'vue';
+import type { FormInstance } from 'ant-design-vue/lib/form/Form';
+import type { NamePath, Rule, RuleObject } from 'ant-design-vue/lib/form/interface';
+import { computed, ref, Ref, unref } from 'vue';
 import { useI18n } from '/@/hooks/web/useI18n';
 
 export enum LoginStateEnum {
@@ -70,7 +70,7 @@ export function useFormRules(formData?: Recordable) {
     };
   };
 
-  const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
+  const getFormRules = computed((): { [k: string]: Rule | Rule[] } => {
     const accountFormRule = unref(getAccountFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);

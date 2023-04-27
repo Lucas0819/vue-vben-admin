@@ -1,9 +1,8 @@
 <script lang="tsx">
-  import { type Recordable, type Nullable } from '@vben/types';
+  import { type Nullable, type Recordable } from '@vben/types';
   import type { PropType, Ref } from 'vue';
   import { computed, defineComponent, toRefs, unref } from 'vue';
   import type { FormActionType, FormProps, FormSchema } from '../types/form';
-  import type { ValidationRule } from 'ant-design-vue/lib/form/Form';
   import type { TableActionType } from '/@/components/Table';
   import { Col, Divider, Form } from 'ant-design-vue';
   import { componentMap } from '../componentMap';
@@ -18,6 +17,7 @@
   import { cloneDeep, upperFirst } from 'lodash-es';
   import { useItemLabelWidth } from '../hooks/useLabelWidth';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { Rule } from 'ant-design-vue/lib/form/interface';
 
   export default defineComponent({
     name: 'BasicFormItem',
@@ -139,7 +139,7 @@
         return { isShow, isIfShow };
       }
 
-      function handleRules(): ValidationRule[] {
+      function handleRules(): Rule[] {
         const {
           rules: defRules = [],
           component,
@@ -150,10 +150,10 @@
         } = props.schema;
 
         if (isFunction(dynamicRules)) {
-          return dynamicRules(unref(getValues)) as ValidationRule[];
+          return dynamicRules(unref(getValues)) as Rule[];
         }
 
-        let rules: ValidationRule[] = cloneDeep(defRules) as ValidationRule[];
+        let rules: Rule[] = cloneDeep(defRules) as Rule[];
         const { rulesMessageJoinLabel: globalRulesMessageJoinLabel } = props.formProps;
 
         const joinLabel = Reflect.has(props.schema, 'rulesMessageJoinLabel')
