@@ -82,15 +82,15 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { computed, reactive, ref, unref } from 'vue';
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
+  import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'ant-design-vue';
   import {
-    GithubFilled,
-    WechatFilled,
     AlipayCircleFilled,
+    GithubFilled,
     GoogleCircleFilled,
     TwitterCircleFilled,
+    WechatFilled,
   } from '@ant-design/icons-vue';
   import LoginFormTitle from './LoginFormTitle.vue';
 
@@ -98,7 +98,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { useUserStore } from '/@/store/modules/user';
-  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
+  import { LoginStateEnum, useFormRules, useFormValid, useLoginState } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { ENTERPRISE_LOGIN_SCOPE, LOGIN_SECRET } from '/@/enums/serviceEnum';
   import { AesEncryption } from '/@/utils/cipher';
