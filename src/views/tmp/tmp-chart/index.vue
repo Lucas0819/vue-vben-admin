@@ -41,7 +41,7 @@
   import { Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
-  import { onMountedOrActivated } from '/@/hooks/core/onMountedOrActivated';
+  import { onMountedOrActivated } from '@vben/hooks';
   import { isEmpty } from '/@/utils/is';
   import { TmpChartItem } from '/@/api/tmp/model/tmpChartModel';
 

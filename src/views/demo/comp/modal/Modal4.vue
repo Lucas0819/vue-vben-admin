@@ -11,9 +11,10 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, nextTick, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
+
   const schemas: FormSchema[] = [
     {
       field: 'field1',
@@ -42,10 +43,10 @@
       const modelRef = ref({});
       const [
         registerForm,
-        {
-          // setFieldsValue,
-          // setProps
-        },
+        // {
+        //   setFieldsValue,
+        //   setProps
+        // },
       ] = useForm({
         labelWidth: 120,
         schemas,

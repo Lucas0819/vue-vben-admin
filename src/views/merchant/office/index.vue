@@ -174,6 +174,7 @@
 
       function handleShow(visible: boolean) {
         if (visible) {
+          /* empty */
         }
       }
 

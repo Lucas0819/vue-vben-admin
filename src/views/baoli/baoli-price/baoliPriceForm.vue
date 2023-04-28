@@ -15,7 +15,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { createBaoliPrice, findOne, updateBaoliPrice } from '/@/api/baoli/baoliPrice';
   import { useRouter } from 'vue-router';
-  import { onMountedOrActivated } from '/@/hooks/core/onMountedOrActivated';
+  import { onMountedOrActivated } from '@vben/hooks';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { isEmpty } from '/@/utils/is';
   import { useTabs } from '/@/hooks/web/useTabs';

@@ -20,7 +20,7 @@ model_template = '''<template>
   import {{ useI18n }} from '/@/hooks/web/useI18n';
   import {{ create{entity}, findOne, update{entity} }} from '/@/api/{path}/{lower_camel_entity}';
   import {{ useRouter }} from 'vue-router';
-  import {{ onMountedOrActivated }} from '/@/hooks/core/onMountedOrActivated';
+  import {{ onMountedOrActivated }} from '@vben/hooks';
   import {{ useMessage }} from '/@/hooks/web/useMessage';
   import {{ isEmpty }} from '/@/utils/is';
   import {{ useTabs }} from '/@/hooks/web/useTabs';

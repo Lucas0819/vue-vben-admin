@@ -2,16 +2,16 @@
   <canvas
     id="seatCvs"
     class="seat-cvs"
-    style="border: 1px #cccccc solid; position: relative; top: -6px"
+    style=" position: relative; top: -6px;border: 1px #ccc solid"
   ></canvas>
-  <div v-if="selectRule" v-html="selectRule.html"></div>
+  <div v-if="selectRule">{{ selectRule.html }}</div>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
   import { isEmpty } from '/@/utils/is';
   import { useTabs } from '/@/hooks/web/useTabs';
-  import { onMountedOrActivated } from '/@/hooks/core/onMountedOrActivated';
+  import { onMountedOrActivated } from '@vben/hooks';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { findOne } from '/@/api/tmp/tmpChartSplit';
@@ -54,10 +54,10 @@
 </script>
 <style lang="scss" scoped>
   .seat-cvs {
-    border: 1px #cccccc solid;
     position: relative;
     top: -6px;
     width: 100%;
     height: 100%;
+    border: 1px #ccc solid;
   }
 </style>

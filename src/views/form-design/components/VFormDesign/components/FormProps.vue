@@ -78,9 +78,18 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
-  import { InputNumber, Slider, Checkbox, Col, RadioChangeEvent } from 'ant-design-vue';
-  // import RadioButtonGroup from '/@/components/RadioButtonGroup.vue';
-  import { Form, FormItem, Radio } from 'ant-design-vue';
+  import {
+    Checkbox,
+    Col,
+    Form,
+    FormItem,
+    InputNumber,
+    Radio,
+    RadioChangeEvent,
+    Slider,
+  } from 'ant-design-vue';
+  import { IFormConfig } from '@/views/form-design/typings/v-form-component';
+
   export default defineComponent({
     name: 'FormProps',
     components: {
@@ -96,10 +105,12 @@
     setup() {
       const { formConfig } = useFormDesignState();
 
-      formConfig.value = formConfig.value || {
-        labelCol: { span: 24 },
-        wrapperCol: { span: 24 },
-      };
+      formConfig.value =
+        formConfig.value ||
+        ({
+          labelCol: { span: 24 },
+          wrapperCol: { span: 24 },
+        } as IFormConfig);
 
       const lableLayoutChange = (e: RadioChangeEvent) => {
         if (e.target.value === 'Grid') {

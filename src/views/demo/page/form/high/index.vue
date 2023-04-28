@@ -59,7 +59,9 @@
 
           const [values, taskValues] = await Promise.all([validate(), validateTaskForm()]);
           console.log('form data:', values, taskValues);
-        } catch (error) {}
+        } catch (error) {
+          /* empty */
+        }
       }
 
       return { register, registerTask, submitAll, tableRef };
