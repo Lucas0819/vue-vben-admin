@@ -7,6 +7,10 @@ export default {
     moduleName: '活动地址-票图',
     form: '活动地址-票图-维护',
   },
+  tmpPlace: {
+    moduleName: '活动地址-有座',
+    form: '活动地址-有座-维护',
+  },
   tmpChartSplit: {
     moduleName: '票图结构模板',
     form: '票图结构模板-维护',

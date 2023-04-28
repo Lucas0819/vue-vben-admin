@@ -7,6 +7,10 @@ export default {
     moduleName: 'tmpChart',
     form: 'tmpChart-maintain',
   },
+  tmpPlace: {
+    moduleName: 'tmpPlace',
+    form: 'tmpPlace-maintain',
+  },
   tmpChartSplit: {
     moduleName: 'tmpChartSplit',
     form: 'tmpChartSplit-maintain',
