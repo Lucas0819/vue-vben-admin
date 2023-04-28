@@ -1,8 +1,9 @@
 <template>
   <div>
+    <PageWrapper title="菜单管理" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
+      <template #tableTitle>
+        <a-button type="primary" @click="handleCreate"> 创建菜单 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -32,17 +33,18 @@
 <script lang="ts">
   import { defineComponent, nextTick } from 'vue';
 
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { getMenuList } from '/@/api/demo/system';
 
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
 
   import { columns, searchFormSchema } from './menu.data';
+  import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
     name: 'MenuManagement',
-    components: { BasicTable, MenuDrawer, TableAction },
+    components: { BasicTable, MenuDrawer, TableAction, PageWrapper },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, expandAll }] = useTable({
@@ -50,7 +52,10 @@
         api: getMenuList,
         columns,
         formConfig: {
-          labelWidth: 120,
+          baseColProps: {
+            span: 6,
+            style: { paddingLeft: '5px', paddingRight: '25px' },
+          },
           schemas: searchFormSchema,
         },
         isTreeTable: true,

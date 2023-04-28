@@ -1,5 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { h } from 'vue';
 
 const { t } = useI18n();
 
@@ -185,7 +186,7 @@ export const formSchema: FormSchema[] = [
     field: 'zipCode',
     label: '商户logo',
     required: false,
-    component: 'Upload',
+    component: 'Input',
   },
   {
     field: 'phone',
@@ -235,7 +236,18 @@ export const formSchema1: FormSchema[] = [
     required: false,
     component: 'Input',
     itemProps: {
-      extra: '客户、邀评人默认被分享',
+      extra: h('div', [
+        h('span', '登录网址: '),
+        h(
+          'a',
+          {
+            onClick: () => {
+              window.open('http://op.o2o.wepiao.com/index.php?r=default/index');
+            },
+          },
+          'http://op.o2o.wepiao.com/index.php?r=default/index',
+        ),
+      ]),
     },
   },
   {

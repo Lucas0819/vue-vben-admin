@@ -1,8 +1,9 @@
 <template>
   <div>
+    <PageWrapper title="角色管理" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
+      <template #tableTitle>
+        <a-button type="primary" @click="handleCreate"> 创建角色 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -32,7 +33,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
 
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { deleteRole, getRoleListByPage } from '/@/api/demo/system';
 
   import { useDrawer } from '/@/components/Drawer';
@@ -41,10 +42,11 @@
   import { columns, searchFormSchema } from './role.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
     name: 'RoleManagement',
-    components: { BasicTable, RoleDrawer, TableAction },
+    components: { BasicTable, RoleDrawer, TableAction, PageWrapper },
     setup() {
       const { t } = useI18n();
 
@@ -54,7 +56,10 @@
         api: getRoleListByPage,
         columns,
         formConfig: {
-          labelWidth: 120,
+          baseColProps: {
+            span: 6,
+            style: { paddingLeft: '5px', paddingRight: '25px' },
+          },
           schemas: searchFormSchema,
         },
         useSearchForm: true,

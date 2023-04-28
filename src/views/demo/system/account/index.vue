@@ -1,9 +1,9 @@
 <template>
-  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
+  <PageWrapper title="账号管理" dense contentFullHeight fixedHeight contentClass="flex">
     <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
     <BasicTable @register="registerTable" class="w-3/4 xl:w-4/5" :searchInfo="searchInfo">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+      <template #tableTitle>
+        <a-button type="primary" @click="handleCreate"> 创建账号 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -64,7 +64,10 @@
         rowKey: 'id',
         columns,
         formConfig: {
-          labelWidth: 120,
+          baseColProps: {
+            span: 6,
+            style: { paddingLeft: '5px', paddingRight: '25px' },
+          },
           schemas: searchFormSchema,
           autoSubmitOnEnter: true,
         },
@@ -76,7 +79,7 @@
           return info;
         },
         actionColumn: {
-          width: 120,
+          width: 80,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },

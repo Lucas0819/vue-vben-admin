@@ -39,7 +39,6 @@ export const searchFormSchema: FormSchema[] = [
     field: 'queryParam',
     label: '员工姓名',
     component: 'Input',
-    colProps: { span: 8 },
   },
 ];
 

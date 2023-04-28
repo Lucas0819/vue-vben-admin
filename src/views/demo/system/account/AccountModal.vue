@@ -4,7 +4,7 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { accountFormSchema } from './account.data';
@@ -20,7 +20,7 @@
 
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
-        baseColProps: { span: 24 },
+        baseColProps: { span: 22 },
         schemas: accountFormSchema,
         showActionButtonGroup: false,
         actionColOptions: {
@@ -53,7 +53,7 @@
         ]);
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增账号' : '编辑账号'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '创建账号' : '编辑账号'));
 
       async function handleSubmit() {
         try {

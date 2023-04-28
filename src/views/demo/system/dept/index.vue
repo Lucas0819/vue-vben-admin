@@ -1,8 +1,9 @@
 <template>
   <div>
+    <PageWrapper title="部门管理" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增部门 </a-button>
+      <template #tableTitle>
+        <a-button type="primary" @click="handleCreate"> 创建部门 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -51,10 +52,11 @@
   import { columns, searchFormSchema } from './dept.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
     name: 'DeptManagement',
-    components: { BasicTable, DeptModal, TableAction },
+    components: { BasicTable, DeptModal, TableAction, PageWrapper },
     setup() {
       const { createMessage } = useMessage();
       const { t } = useI18n();
@@ -64,12 +66,15 @@
         api: getDeptList,
         columns,
         formConfig: {
-          labelWidth: 120,
+          baseColProps: {
+            span: 6,
+            style: { paddingLeft: '5px', paddingRight: '25px' },
+          },
           schemas: searchFormSchema,
         },
         pagination: false,
         striped: false,
-        useSearchForm: true,
+        useSearchForm: false,
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,

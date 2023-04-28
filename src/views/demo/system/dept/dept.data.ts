@@ -18,7 +18,6 @@ export const searchFormSchema: FormSchema[] = [
   //   field: 'deptName',
   //   label: '部门名称',
   //   component: 'Input',
-  //   colProps: { span: 8 },
   // },
   // {
   //   field: 'status',
@@ -30,7 +29,6 @@ export const searchFormSchema: FormSchema[] = [
   //       { label: '停用', value: '1' },
   //     ],
   //   },
-  //   colProps: { span: 8 },
   // },
 ];
 

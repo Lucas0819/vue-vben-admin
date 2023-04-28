@@ -6,7 +6,7 @@ import Icon from '@/components/Icon/Icon.vue';
 export const columns: BasicColumn[] = [
   {
     title: '菜单名称',
-    dataIndex: 'menuName',
+    dataIndex: 'name',
     width: 200,
     align: 'left',
   },
@@ -20,7 +20,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '权限标识',
-    dataIndex: 'permission',
+    dataIndex: 'code',
     width: 180,
   },
   {
@@ -60,7 +60,6 @@ export const searchFormSchema: FormSchema[] = [
     field: 'menuName',
     label: '菜单名称',
     component: 'Input',
-    colProps: { span: 8 },
   },
   {
     field: 'status',
@@ -72,7 +71,6 @@ export const searchFormSchema: FormSchema[] = [
         { label: '停用', value: '1' },
       ],
     },
-    colProps: { span: 8 },
   },
 ];
 

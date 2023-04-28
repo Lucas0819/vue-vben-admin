@@ -21,7 +21,7 @@
 
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 100,
-        baseColProps: { span: 24 },
+        baseColProps: { span: 22 },
         schemas: formSchema,
         showActionButtonGroup: false,
       });
@@ -44,7 +44,7 @@
         });
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增部门' : '编辑部门'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '创建部门' : '编辑部门'));
 
       async function handleSubmit() {
         try {

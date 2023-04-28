@@ -367,6 +367,7 @@
   .@{prefix-cls} {
     max-width: 100%;
     height: 100%;
+    padding: 16px;
 
     &-row__striped {
       td {
@@ -375,8 +376,6 @@
     }
 
     &-form-container {
-      padding: 16px;
-
       .ant-form {
         width: 100%;
         margin-bottom: 16px;
