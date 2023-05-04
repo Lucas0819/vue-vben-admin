@@ -31,7 +31,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, nextTick } from 'vue';
+  import { defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
   import { getMenuList } from '/@/api/demo/system';
@@ -47,7 +47,7 @@
     components: { BasicTable, MenuDrawer, TableAction, PageWrapper },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload, expandAll }] = useTable({
+      const [registerTable, { reload }] = useTable({
         title: '菜单列表',
         api: getMenuList,
         columns,
@@ -65,7 +65,7 @@
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
-        canResize: false,
+        // canResize: false,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -98,7 +98,7 @@
 
       function onFetchSuccess() {
         // 演示默认展开所有表项
-        nextTick(expandAll);
+        // nextTick(expandAll);
       }
 
       return {
