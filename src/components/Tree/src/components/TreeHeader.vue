@@ -1,5 +1,5 @@
 <template>
-  <div :class="bem()" class="flex px-2 py-4 items-center">
+  <div :class="bem()" class="flex px-2 py-4 mb-4 items-center">
     <slot name="headerTitle" v-if="slots.headerTitle"></slot>
     <BasicTitle :helpMessage="helpMessage" v-if="!slots.headerTitle && title">
       {{ title }}
