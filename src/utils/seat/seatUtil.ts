@@ -6,7 +6,7 @@
  */
 import { cloneDeep } from 'lodash-es';
 import { isEmpty } from '/@/utils/is';
-import { ShapeItem } from '/@/utils/seat/seatAdd';
+import { ShapeItem, TmpShapeItem } from '@/utils/seat/seat';
 
 //使用SvgAPI进行扩展,SVG的API比canvas更加全面
 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -119,7 +119,7 @@ export const trackTransform = function (ctx: CustomCanvasRenderingContext2D) {
 };
 
 //根据图形属性生成图形路径,并根据颜色填充
-export const buildPath = function (shape: ShapeItem) {
+export const buildPath = function (shape: ShapeItem | TmpShapeItem) {
   let x = shape.x;
   let y = shape.y;
   let width = shape.width;
@@ -128,7 +128,7 @@ export const buildPath = function (shape: ShapeItem) {
   const type = shape.type;
   if (type == 'rect') {
     if (shape.borderColor) {
-      ctxInfo.lineWidth = shape.lineWidth;
+      ctxInfo.lineWidth = shape.lineWidth ?? 0;
       ctxInfo.strokeStyle = shape.borderColor;
       ctxInfo.strokeRect(x, y, width, height);
     }
@@ -201,7 +201,7 @@ export const buildPath = function (shape: ShapeItem) {
     ctxInfo.lineTo(x, y + r1);
     r1 !== 0 && ctxInfo.quadraticCurveTo(x, y, x + r1, y);
     if (shape.borderColor) {
-      ctxInfo.lineWidth = shape.lineWidth;
+      ctxInfo.lineWidth = shape.lineWidth ?? 0;
       ctxInfo.strokeStyle = shape.borderColor;
       ctxInfo.stroke();
     }
@@ -222,7 +222,7 @@ export const buildPath = function (shape: ShapeItem) {
         }
       }
       if (shape.borderColor) {
-        ctxInfo.lineWidth = shape.lineWidth;
+        ctxInfo.lineWidth = shape.lineWidth ?? 0;
         ctxInfo.strokeStyle = shape.borderColor;
         ctxInfo.stroke();
       }

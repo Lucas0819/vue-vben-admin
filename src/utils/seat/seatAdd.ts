@@ -8,10 +8,10 @@ import {
   trackTransform,
   windowToCanvas,
 } from './seatUtil';
-import { StyleValue } from '/@/utils/types';
 import { isDef, isEmpty, isNullOrUnDef } from '/@/utils/is';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { cloneDeep } from 'lodash-es';
+import { LabelText, RuleStyle, ShapeItem, TmpShapeItem } from '@/utils/seat/seat';
 
 /**
  * 改写自：seat-add12121.js
@@ -69,11 +69,6 @@ const { createMessage } = useMessage();
 // 按钮选择状态
 export const selectType = ref('square'); // 选择方式, square: 矩形选择 || trajectory: 轨迹
 
-interface RuleStyle {
-  style?: StyleValue;
-  html?: string;
-  visible: boolean;
-}
 export const selectRule = ref<RuleStyle>(); // 选择内容提示
 
 //初始化所有画板大小
@@ -112,31 +107,6 @@ function godPerspectives() {
       Math.floor(heightScale / seatRatioOfScreenY),
     ) * 0.7;
   minScale = scale;
-}
-
-export interface ShapeItem {
-  index: number;
-  type: string;
-  x: number;
-  y: number;
-  _x?: number;
-  _y?: number;
-  width: number;
-  height: number;
-  lineWidth: number; //border
-  borderColor?: string; //border color
-  fillColor: string; //fill color
-  isSeat?: boolean; //是否被设定为座位
-  r?: number | number[];
-  inter?: number;
-}
-
-interface LabelText {
-  x: number;
-  y: number;
-  text: string;
-  font: string;
-  color: string;
 }
 
 //初始化座位
@@ -640,7 +610,7 @@ function select() {
     if (selectType.value == 'square') {
       //矩形选择
       //鼠标滑选时显示的矩形框
-      const selectRect = {
+      const selectRect: TmpShapeItem = {
         type: 'corner',
         //实际坐标
         x: trueSelectPoint.x < trueSelectPoint2.x ? trueSelectPoint.x : trueSelectPoint2.x,
