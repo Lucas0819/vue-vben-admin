@@ -13,49 +13,33 @@ export const columns: BasicColumn[] = [
     defaultHidden: true,
   },
   {
-    title: 'ticketFaceData',
+    title: '描述',
     dataIndex: 'ticketFaceData',
-    width: 120,
+    sorter: true,
   },
   {
-    title: 'ticketFaceWidth',
+    title: '票面宽度',
     dataIndex: 'ticketFaceWidth',
     width: 120,
   },
   {
-    title: 'ticketFaceHeight',
+    title: '票面高度',
     dataIndex: 'ticketFaceHeight',
     width: 120,
   },
   {
-    title: 'bgImg',
-    dataIndex: 'bgImg',
-    width: 120,
+    title: '创建时间',
+    dataIndex: 'createDate',
+    width: 180,
+    sorter: true,
+    defaultSortOrder: 'descend',
   },
 ];
 
 export const searchFormSchema: FormSchema[] = [
   {
     field: 'ticketFaceData',
-    label: 'ticketFaceData',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'ticketFaceWidth',
-    label: 'ticketFaceWidth',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'ticketFaceHeight',
-    label: 'ticketFaceHeight',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
-  },
-  {
-    field: 'bgImg',
-    label: 'bgImg',
+    label: '模糊搜索',
     component: 'Input',
     componentProps: { placeholder: placeholderText },
   },

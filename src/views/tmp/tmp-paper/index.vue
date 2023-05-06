@@ -3,23 +3,18 @@
     <PageWrapper title="票纸设计列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
       <template #tableTitle>
+        <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
         <a-button type="primary" @click="handleCreate"> 创建票纸设计 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'name'">
-          <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
+        <template v-if="column.key === 'ticketFaceData'">
+          <Link @click="() => handleEdit(record)">{{ record.ticketFaceData }}</Link>
         </template>
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               {
-                label: '删除',
-                color: 'error',
-                popConfirm: {
-                  title: '是否确认删除该项吗？',
-                  placement: 'left',
-                  confirm: handleDelete.bind(null, record),
-                },
+                label: '复制到活动',
               },
             ]"
           />
@@ -29,7 +24,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
@@ -49,7 +44,7 @@
       const { t } = useI18n();
       const router = useRouter();
 
-      const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
+      const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpPaperListByPage,
         columns,
         formConfig: {
@@ -64,12 +59,19 @@
         bordered: true,
         showIndexColumn: false,
         actionColumn: {
-          width: 80,
+          width: 100,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
+        rowSelection: {
+          type: 'checkbox',
+        },
+      });
+
+      const canBatchDelete = computed(() => {
+        return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
       });
 
       function handleCreate() {
@@ -105,6 +107,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        canBatchDelete,
       };
     },
   });

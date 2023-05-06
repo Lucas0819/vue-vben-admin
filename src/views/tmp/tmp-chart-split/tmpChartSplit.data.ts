@@ -8,12 +8,13 @@ export const columns: BasicColumn[] = [
     defaultHidden: true,
   },
   {
-    title: 'temp_chart_id',
+    title: 'id',
     dataIndex: 'tempChartId',
     width: 120,
+    defaultHidden: true,
   },
   {
-    title: '楼层',
+    title: '结构名称',
     dataIndex: 'name',
     width: 120,
   },
@@ -28,7 +29,7 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '舞台位置,-1为没有舞台,其他数字为所在列的后面,此处列数从1开始',
+    title: '所含区域',
     dataIndex: 'stagePosition',
     width: 120,
   },
@@ -40,11 +41,6 @@ export const columns: BasicColumn[] = [
   {
     title: '明细JSON',
     dataIndex: 'desJson',
-    width: 120,
-  },
-  {
-    title: 'tmpChartName',
-    dataIndex: 'tmpChartName',
     width: 120,
   },
 ];

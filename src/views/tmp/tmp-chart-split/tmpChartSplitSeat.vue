@@ -2,7 +2,7 @@
   <canvas
     id="seatCvs"
     class="seat-cvs"
-    style=" position: relative; top: -6px;border: 1px #ccc solid"
+    style="position: relative; top: -6px; border: 1px #ccc solid"
   ></canvas>
   <div v-if="selectRule">{{ selectRule.html }}</div>
 </template>

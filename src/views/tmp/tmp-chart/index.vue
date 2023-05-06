@@ -3,6 +3,7 @@
     <PageWrapper title="活动地址-票图列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
       <template #tableTitle>
+        <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
         <a-button type="primary" @click="handleCreate"> 创建活动地址-票图 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -13,13 +14,20 @@
           <TableAction
             :actions="[
               {
-                label: '删除',
+                label: '复制',
+              },
+              {
+                label: record.name === 'Ruth White' ? '已发布' : '待发布',
                 color: 'error',
+                disabled: record.name === 'Ruth White',
                 popConfirm: {
-                  title: '是否确认删除该项吗？',
+                  title: '是否确认发布该项吗？',
                   placement: 'left',
                   confirm: handleDelete.bind(null, record),
                 },
+              },
+              {
+                label: '比对',
               },
             ]"
           />
@@ -29,7 +37,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
@@ -52,7 +60,7 @@
       const { t } = useI18n();
       const router = useRouter();
 
-      const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
+      const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpChartListByPage,
         columns,
         formConfig: {
@@ -67,13 +75,21 @@
         bordered: true,
         showIndexColumn: false,
         actionColumn: {
-          width: 80,
+          width: 150,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
+        rowSelection: {
+          type: 'checkbox',
+        },
       });
+
+      const canBatchDelete = computed(() => {
+        return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
+      });
+
       onMountedOrActivated(async () => {
         const list = await getAllTmpChartList();
         if (isEmpty(list as TmpChartItem[])) return;
@@ -113,6 +129,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        canBatchDelete,
       };
     },
   });

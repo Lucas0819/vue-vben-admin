@@ -1,8 +1,9 @@
 <template>
   <div>
     <PageWrapper title="票图结构模板列表" :contentStyle="{ margin: 0 }" />
-    <BasicTable @register="registerTable">
+    <BasicTable @register="registerTable" style=" padding-right: 0;padding-left: 0">
       <template #tableTitle>
+        <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
         <a-button type="primary" @click="handleCreate"> 创建票图结构模板 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
@@ -30,7 +31,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
@@ -58,7 +59,7 @@
       const { t } = useI18n();
       const router = useRouter();
 
-      const [registerTable, { reload, setLoading: setTableLoading }] = useTable({
+      const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpChartSplitListByPage,
         columns,
         formConfig: {
@@ -72,18 +73,25 @@
         showTableSetting: false,
         bordered: true,
         showIndexColumn: false,
-        actionColumn: {
-          width: 80,
-          title: '操作',
-          dataIndex: 'action',
-          // slots: { customRender: 'action' },
-          fixed: undefined,
-        },
+        // actionColumn: {
+        //   width: 80,
+        //   title: '操作',
+        //   dataIndex: 'action',
+        //   // slots: { customRender: 'action' },
+        //   fixed: undefined,
+        // },
         canResize: false,
         pagination: false,
+        rowSelection: {
+          type: 'checkbox',
+        },
       });
 
       const [registerDrawer, { openDrawer }] = useDrawer();
+
+      const canBatchDelete = computed(() => {
+        return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
+      });
 
       function handleCreate() {
         openDrawer(true);
@@ -120,6 +128,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        canBatchDelete,
       };
     },
   });
