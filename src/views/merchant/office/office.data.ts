@@ -54,14 +54,14 @@ export const columns: BasicColumn[] = [
   {
     title: '修改时间',
     dataIndex: 'updateDate',
-    width: 150,
+    width: 180,
     sorter: true,
     defaultHidden: true,
   },
   {
     title: '创建时间',
     dataIndex: 'createDate',
-    width: 150,
+    width: 180,
     sorter: true,
     defaultSortOrder: 'descend',
   },
