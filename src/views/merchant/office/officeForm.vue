@@ -3,9 +3,6 @@
     <CollapseContainer title="商户基本信息">
       <BasicForm @register="register" @submit="handleSubmit" />
     </CollapseContainer>
-    <CollapseContainer title="有座第三方系统设置" class="mt-4">
-      <BasicForm @register="registerForm1" @submit="handleSubmit" />
-    </CollapseContainer>
   </PageWrapper>
 </template>
 
@@ -14,7 +11,7 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { CollapseContainer } from '/@/components/Container';
   import { PageWrapper } from '/@/components/Page';
-  import { formSchema, formSchema1 } from '/@/views/merchant/office/office.data';
+  import { formSchema } from '/@/views/merchant/office/office.data';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { createOffice, findOne, updateOffice } from '/@/api/merchant/office';
   import { useRouter } from 'vue-router';
@@ -66,47 +63,17 @@
         schemas: formSchema,
       });
 
-      const [
-        registerForm1,
-        { resetFields: resetFields1, setFieldsValue: setFieldsValue1, validate: validate1 },
-      ] = useForm({
-        autoFocusFirstItem: true,
-        baseColProps: {
-          span: 24,
-        },
-        labelCol: {
-          span: 4,
-        },
-        wrapperCol: {
-          span: 8,
-        },
-        actionColOptions: {
-          span: 24,
-          style: 'text-align: left; margin-left: 200px;',
-        },
-        resetButtonOptions: {
-          text: t('common.resetText'),
-        },
-        submitButtonOptions: {
-          text: t('common.saveText'),
-        },
-        schemas: formSchema1,
-      });
-
       onMountedOrActivated(async () => {
         if (!unref(isUpdate)) return;
         await resetFields();
-        await resetFields1();
         const data = await findOne(recordId.value);
         setTitle('主办单位-' + data.name);
         setFieldsValue(data);
-        setFieldsValue1(data);
       });
 
       async function handleSubmit() {
         const values = await validate();
-        const values1 = await validate1();
-        const office = { ...values, ...values1 };
+        const office = { ...values };
         if (unref(isUpdate)) {
           office.id = unref(recordId);
           await updateOffice(office);
@@ -136,7 +103,6 @@
       return {
         register,
         handleSubmit,
-        registerForm1,
       };
     },
   });

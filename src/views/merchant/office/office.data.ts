@@ -1,6 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { h } from 'vue';
 
 const { t } = useI18n();
 
@@ -154,6 +153,19 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
+    field: 'status',
+    label: '商户状态',
+    required: false,
+    component: 'Select',
+    defaultValue: '1',
+    componentProps: {
+      options: [
+        { label: '启用', value: '1' },
+        { label: '停用', value: '2' },
+      ],
+    },
+  },
+  {
     field: 'area',
     label: '归属区域',
     required: false,
@@ -205,7 +217,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     field: 'accOpenid',
-    label: '结算用户',
+    label: '汇付账户',
     required: false,
     component: 'Input',
   },
@@ -220,281 +232,5 @@ export const formSchema: FormSchema[] = [
     label: '备注',
     required: false,
     component: 'InputTextArea',
-  },
-];
-
-export const formSchema1: FormSchema[] = [
-  {
-    field: 'piaofutongUserName',
-    label: '票付通用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'piaofutongPassword',
-    label: '票付通密码',
-    required: false,
-    component: 'Input',
-    itemProps: {
-      extra: h('div', [
-        h('span', '登录网址: '),
-        h(
-          'a',
-          {
-            onClick: () => {
-              window.open('http://op.o2o.wepiao.com/index.php?r=default/index');
-            },
-          },
-          'http://op.o2o.wepiao.com/index.php?r=default/index',
-        ),
-      ]),
-    },
-  },
-  {
-    field: 'weipiaoUserName',
-    label: '微票用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'weipiaoPassword',
-    label: '微票密码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'maizuoUserName',
-    label: '麦座用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'maizuoPassword',
-    label: '麦座密码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'baoliUserName',
-    label: '保利用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'baoliPassword',
-    label: '保利密码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'zhongyanUserName',
-    label: '中演用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'zhongyanPassword',
-    label: '中演密码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'jqiclubSupplierIdentity',
-    label: '旅游资源聚合平台供应商通信标识',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'jqiclubSignkey',
-    label: '旅游资源聚合平台签名验证KEY',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'wpiaoUserName',
-    label: '微票云用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'pftmxUserName',
-    label: '票付通接口用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'pftmxKey',
-    label: '票付通接口秘钥',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'maoyanUserName',
-    label: '猫眼演出用户名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'sysWxConfigId',
-    label: '收款公众号',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'maizuoNewLockType',
-    label: '麦座新版锁定类型',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'businessUserId',
-    label: '商户代理商户中间人用户ID',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'businessAgentId',
-    label: '商户代理商户中间人代理ID',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'merchantType',
-    label: '商户类型0个人1企业',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'companyName',
-    label: '企业名称',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'provCode',
-    label: '省份编码 （省市编码）',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'areaCode',
-    label: '地区编码 （省市编码）',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'socialCreditCode',
-    label: '统一社会信用码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'socialCreditCodeExpires',
-    label: '统一社会信用证有效期',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'businessScope',
-    label: '经营范围',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'legalPerson',
-    label: '法人姓名',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'legalCertId',
-    label: '法人身份证号码',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'legalCertIdExpires',
-    label: '法人身份证有效期',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'legalMp',
-    label: '法人手机号',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'companyAddress',
-    label: '企业地址',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'bankCode',
-    label: '银行代码，如果需要自动开结算账户，本字段必填（详见附录 银行代码）',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'cardNo',
-    label: '银行卡号，如果需要自动开结算账户，本字段必填',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'cardName',
-    label:
-      '银行卡对应的户名，如果需要自动开结算账户，本字段必填；若银行账户类型是对公，必须与企业名称一致',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'certId',
-    label: '证件号，银行账户类型为对私时，必填',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'telNo',
-    label: '手机号',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'settleAccountId',
-    label: '结算账户ID 汇付创建结算账户时返回',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'settleAccountStatus',
-    label: '企业用户创建结算账户的审核状态',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'adaMsg',
-    label: '汇付返回信息',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'payFile',
-    label: '上传文件路径',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'adaMemberId',
-    label: '汇付member_id',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'adaInfoId',
-    label: '汇付信息id',
-    required: false,
-    component: 'Input',
   },
 ];
