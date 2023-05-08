@@ -1,7 +1,6 @@
 <template>
   <div>
-    <PageWrapper title="票图结构模板列表" :contentStyle="{ margin: 0 }" />
-    <BasicTable @register="registerTable" style=" padding-right: 0;padding-left: 0">
+    <BasicTable @register="registerTable" style="padding: 3px" class="mt-4">
       <template #tableTitle>
         <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
         <a-button type="primary" @click="handleCreate"> 创建票图结构模板 </a-button>
@@ -41,7 +40,6 @@
   import { deleteTmpChartSplit, getTmpChartSplitListByPage } from '/@/api/tmp/tmpChartSplit';
   import { useRouter } from 'vue-router';
   import { Typography } from 'ant-design-vue';
-  import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
   import TmpChartSplitDrawer from '/@/views/tmp/tmp-chart-split/TmpChartSplitDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
@@ -53,7 +51,6 @@
       BasicTable,
       TableAction,
       Link: Typography.Link,
-      PageWrapper,
     },
     setup() {
       const { t } = useI18n();
