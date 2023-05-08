@@ -22,8 +22,8 @@ model_template = '''<template>
   import {{ useRouter }} from 'vue-router';
   import {{ onMountedOrActivated }} from '@vben/hooks';
   import {{ useMessage }} from '/@/hooks/web/useMessage';
-  import {{ isEmpty }} from '/@/utils/is';
   import {{ useTabs }} from '/@/hooks/web/useTabs';
+  import {{ isNotEmpty }} from '/@/utils/is';
 
   export default defineComponent({{
     components: {{
@@ -37,7 +37,7 @@ model_template = '''<template>
       const router = useRouter();
       const {{ query }} = unref(router.currentRoute);
       const isUpdate = ref(false);
-      if (!isEmpty(query.id)) {{
+      if (isNotEmpty(query.id)) {{
         recordId.value = query.id;
         isUpdate.value = true;
       }}

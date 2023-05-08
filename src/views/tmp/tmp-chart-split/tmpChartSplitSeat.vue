@@ -9,7 +9,7 @@
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { isEmpty } from '/@/utils/is';
+  import { isEmpty, isNotEmpty } from '/@/utils/is';
   import { useTabs } from '/@/hooks/web/useTabs';
   import { onMountedOrActivated } from '@vben/hooks';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -27,7 +27,7 @@
       const recordData = ref<TmpChartSplitItem>();
       const router = useRouter();
       const { query } = unref(router.currentRoute);
-      if (!isEmpty(query.id)) {
+      if (isNotEmpty(query.id)) {
         recordId.value = query.id;
       }
 

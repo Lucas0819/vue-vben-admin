@@ -1,3 +1,5 @@
+import { NonNullable } from '@vben/types';
+
 const toString = Object.prototype.toString;
 
 export function is(val: unknown, type: string) {
@@ -30,6 +32,11 @@ export function isEmpty<T = unknown>(val: T): val is T {
   }
 
   return false;
+}
+
+export function isNotEmpty<T>(val: T): val is NonNullable<T> {
+  if (isNullOrUnDef(val)) return false;
+  return !isEmpty(val);
 }
 
 export function isDate(val: unknown): val is Date {

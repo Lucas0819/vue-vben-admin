@@ -18,8 +18,8 @@
   import { useRouter } from 'vue-router';
   import { onMountedOrActivated } from '@vben/hooks';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { isEmpty } from '/@/utils/is';
   import { useTabs } from '/@/hooks/web/useTabs';
+  import { isNotEmpty } from '@/utils/is';
   import TmpChartSplitManagement from '/@/views/tmp/tmp-chart-split/index.vue';
 
   export default defineComponent({
@@ -35,7 +35,7 @@
       const router = useRouter();
       const { query } = unref(router.currentRoute);
       const isUpdate = ref(false);
-      if (!isEmpty(query.id)) {
+      if (isNotEmpty(query.id)) {
         recordId.value = query.id;
         isUpdate.value = true;
       }
