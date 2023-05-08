@@ -42,7 +42,7 @@ model_template = '''<template>
   import {{ useMessage }} from '/@/hooks/web/useMessage';
   import {{ useI18n }} from '/@/hooks/web/useI18n';
   import {{ delete{entity}, get{entity}ListByPage }} from '/@/api/{path}/{lowerCamelEntity}';
-  import {{ useRouter }} from 'vue-router';
+  import {{ useGo }} from '@/hooks/web/usePage';
   import {{ Typography }} from 'ant-design-vue';
   import {{ PageWrapper }} from '/@/components/Page';
   import {{ PageEnum }} from '/@/enums/pageEnum';
@@ -52,7 +52,7 @@ model_template = '''<template>
     components: {{ BasicTable, TableAction, Link: Typography.Link, PageWrapper }},
     setup() {{
       const {{ t }} = useI18n();
-      const router = useRouter();
+      const go = useGo();
 
       const [registerTable, {{ reload, setLoading: setTableLoading }}] = useTable({{
         api: get{entity}ListByPage,
@@ -78,11 +78,11 @@ model_template = '''<template>
       }});
 
       function handleCreate() {{
-        router.push(PageEnum.{form_path});
+        go(PageEnum.{form_path});
       }}
 
       function handleEdit(record: Recordable) {{
-        router.push({{
+        go({{
           path: PageEnum.{form_path},
           query: {{ id: record.id }},
         }});
