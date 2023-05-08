@@ -41,7 +41,7 @@
   import { defineComponent, reactive } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { getStaffPage } from '/@/api/demo/system';
+  import { getStaffPage } from '/@/api/sys/system';
   import { PageWrapper } from '/@/components/Page';
   import DeptTree from './DeptTree.vue';
 

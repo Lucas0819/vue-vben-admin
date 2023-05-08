@@ -34,7 +34,7 @@
   import { defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { deleteRole, getRoleListByPage } from '/@/api/demo/system';
+  import { deleteRole, getRoleListByPage } from '/@/api/sys/system';
 
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';

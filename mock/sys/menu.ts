@@ -1,4 +1,4 @@
-import { resultSuccess, resultError, getRequestToken, requestParams } from '../_util';
+import { getRequestToken, requestParams, resultError, resultSuccess } from '../_util';
 import { MockMethod } from 'vite-plugin-mock';
 import { createFakeUserList } from './user';
 
@@ -153,7 +153,7 @@ const sysRoute = {
         title: 'routes.demo.system.account',
         ignoreKeepAlive: true,
       },
-      component: '/demo/system/account/index',
+      component: '/sys/system/account/index',
     },
     {
       path: 'account_detail/:id',
@@ -165,7 +165,7 @@ const sysRoute = {
         showMenu: false,
         currentActiveMenu: '/system/account',
       },
-      component: '/demo/system/account/AccountDetail',
+      component: '/sys/system/account/AccountDetail',
     },
     {
       path: 'role',
@@ -174,7 +174,7 @@ const sysRoute = {
         title: 'routes.demo.system.role',
         ignoreKeepAlive: true,
       },
-      component: '/demo/system/role/index',
+      component: '/sys/system/role/index',
     },
 
     {
@@ -184,7 +184,7 @@ const sysRoute = {
         title: 'routes.demo.system.menu',
         ignoreKeepAlive: true,
       },
-      component: '/demo/system/menu/index',
+      component: '/sys/system/menu/index',
     },
     {
       path: 'dept',
@@ -193,7 +193,7 @@ const sysRoute = {
         title: 'routes.demo.system.dept',
         ignoreKeepAlive: true,
       },
-      component: '/demo/system/dept/index',
+      component: '/sys/system/dept/index',
     },
     {
       path: 'changePassword',
@@ -202,7 +202,7 @@ const sysRoute = {
         title: 'routes.demo.system.password',
         ignoreKeepAlive: true,
       },
-      component: '/demo/system/password/index',
+      component: '/sys/system/password/index',
     },
   ],
 };

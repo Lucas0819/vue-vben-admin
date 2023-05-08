@@ -34,7 +34,7 @@
   import { defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { getMenuList } from '/@/api/demo/system';
+  import { getMenuList } from '/@/api/sys/system';
 
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';

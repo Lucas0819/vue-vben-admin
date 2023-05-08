@@ -34,7 +34,7 @@
     getRoleAuthIdList,
     updateRole,
     updateRoleAuth,
-  } from '/@/api/demo/system';
+  } from '/@/api/sys/system';
   import { isEmpty } from '/@/utils/is';
 
   export default defineComponent({

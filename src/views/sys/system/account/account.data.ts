@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
+import { getAllRoleList, isAccountExist } from '/@/api/sys/system';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { translateDictData } from '/@/utils/dict';
 
