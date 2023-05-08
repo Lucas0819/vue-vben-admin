@@ -73,6 +73,7 @@ export const searchFormSchema: FormSchema[] = [
       dataField: 'data',
       labelField: 'name',
       valueField: 'code',
+      showSearch: true,
       isLeaf: (record) => {
         return !(record.levelType < 3);
       },

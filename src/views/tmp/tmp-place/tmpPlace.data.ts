@@ -1,6 +1,8 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { areaRecord } from '@/api/demo/cascader';
+import { h } from 'vue';
+import { Button } from 'ant-design-vue';
 
 const { t } = useI18n();
 
@@ -101,6 +103,7 @@ export const searchFormSchema: FormSchema[] = [
       dataField: 'data',
       labelField: 'name',
       valueField: 'code',
+      showSearch: true,
       isLeaf: (record) => {
         return !(record.levelType < 3);
       },
@@ -142,6 +145,20 @@ export const formSchema: FormSchema[] = [
     label: '所属区域',
     required: false,
     component: 'Input',
+  },
+  {
+    field: 'field1',
+    component: 'Input',
+    label: ' ',
+    render: () => {
+      return h(
+        Button,
+        {
+          type: 'primary',
+        },
+        '选择位置',
+      );
+    },
   },
   {
     field: 'address',
