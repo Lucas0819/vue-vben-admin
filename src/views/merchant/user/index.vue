@@ -38,6 +38,10 @@
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getUserListByPage,
         columns,
+        defSort: {
+          field: 'oldLoginDate',
+          order: 'descend',
+        },
         formConfig: {
           schemas: searchFormSchema,
           baseColProps: {

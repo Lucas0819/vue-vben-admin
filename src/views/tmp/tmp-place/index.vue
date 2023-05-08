@@ -53,6 +53,10 @@
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpPlaceListByPage,
         columns,
+        defSort: {
+          field: 'createDate',
+          order: 'descend',
+        },
         formConfig: {
           schemas: searchFormSchema,
           baseColProps: {
@@ -73,6 +77,11 @@
         // },
         rowSelection: {
           type: 'checkbox',
+        },
+        beforeFetch(info) {
+          if (info.areaId) {
+            info.areaId = info.areaId.join(',');
+          }
         },
       });
 

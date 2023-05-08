@@ -63,6 +63,10 @@
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpChartListByPage,
         columns,
+        defSort: {
+          field: 'createDate',
+          order: 'descend',
+        },
         formConfig: {
           schemas: searchFormSchema,
           baseColProps: {

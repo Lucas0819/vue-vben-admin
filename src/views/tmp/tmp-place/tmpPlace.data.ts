@@ -1,5 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { areaRecord } from '@/api/demo/cascader';
 
 const { t } = useI18n();
 
@@ -93,8 +94,20 @@ export const searchFormSchema: FormSchema[] = [
   {
     field: 'areaId',
     label: '所属区域',
-    component: 'Input',
-    componentProps: { placeholder: placeholderText },
+    component: 'ApiCascader',
+    componentProps: {
+      api: areaRecord,
+      apiParamKey: 'parentCode',
+      dataField: 'data',
+      labelField: 'name',
+      valueField: 'code',
+      initFetchParams: {
+        parentCode: '',
+      },
+      isLeaf: (record) => {
+        return !(record.levelType < 3);
+      },
+    },
   },
   {
     field: 'address',
