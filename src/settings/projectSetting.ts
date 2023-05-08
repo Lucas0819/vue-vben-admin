@@ -52,7 +52,7 @@ const setting: ProjectConfig = {
   showLogo: true,
 
   // Whether to show footer
-  showFooter: true,
+  showFooter: false,
 
   // Header configuration
   headerSetting: {
