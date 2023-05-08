@@ -239,6 +239,13 @@ export default [
     },
   },
   {
+    url: '/basic-api/upms/dict_enum/all',
+    method: 'get',
+    response: () => {
+      return [];
+    },
+  },
+  {
     url: '/basic-api/getPermCode',
     timeout: 200,
     method: 'get',
