@@ -17,7 +17,7 @@ export default defineApplicationConfig({
     server: {
       proxy: {
         '/basic-api': {
-          target: 'http://192.168.0.249:32030',
+          target: 'http://8.146.200.64:32020',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/basic-api`), ''),
@@ -25,7 +25,7 @@ export default defineApplicationConfig({
           // secure: false
         },
         '/upload': {
-          target: 'http://192.168.0.249:32030',
+          target: 'http://8.146.200.64:32020',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),

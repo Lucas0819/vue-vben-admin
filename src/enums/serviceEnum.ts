@@ -9,4 +9,4 @@ export enum serviceEnum {
 }
 export const LOGIN_SECRET = 'seerseerseerseer';
 
-export const ENTERPRISE_LOGIN_SCOPE = 'riten_enterprise:riten_enterprise';
+export const ENTERPRISE_LOGIN_SCOPE = 'ticket:ticket';

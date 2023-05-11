@@ -123,7 +123,7 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: '18600000001',
+    account: 'admin',
     password: '123456',
   });
 
