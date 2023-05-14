@@ -178,6 +178,9 @@ const setting: ProjectConfig = {
   // Whether to cancel the http request that has been sent but not responded when switching the interface.
   // If it is enabled, I want to overwrite a single interface. Can be set in a separate interface
   removeAllHttpPending: false,
+
+  // minio bucket name
+  fileBucket: 'doupiao-',
 };
 
 export default setting;

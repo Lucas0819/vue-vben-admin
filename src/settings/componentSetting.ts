@@ -28,10 +28,16 @@ export default {
       const { field, order } = sortInfo;
       if (field && order) {
         return {
+          orders: [
+            {
+              asc: order === 'ascend',
+              column: field,
+            },
+          ],
           // The sort field passed to the backend you
-          field,
+          // field,
           // Sorting method passed to the background asc/desc
-          order,
+          // order,
         };
       } else {
         return {};
