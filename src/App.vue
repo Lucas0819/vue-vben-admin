@@ -1,7 +1,9 @@
 <template>
   <ConfigProvider :locale="getAntdLocale">
     <AppProvider>
-      <RouterView />
+      <DndProvider :backend="HTML5Backend">
+        <RouterView />
+      </DndProvider>
     </AppProvider>
   </ConfigProvider>
 </template>
@@ -11,6 +13,8 @@
   import { AppProvider } from '@/components/Application';
   import { useTitle } from '@/hooks/web/useTitle';
   import { useLocale } from '@/locales/useLocale';
+  import { DndProvider } from 'vue3-dnd';
+  import { HTML5Backend } from 'react-dnd-html5-backend';
   import 'dayjs/locale/zh-cn';
 
   // support Multi-language

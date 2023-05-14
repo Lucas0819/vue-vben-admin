@@ -1,109 +1,470 @@
 <template>
-  <PageWrapper title="票纸设计">
-    <CollapseContainer title="添加票纸设计">
-      <BasicForm @register="register" @submit="handleSubmit" />
-    </CollapseContainer>
-  </PageWrapper>
+  <div>
+    <a-card title="票纸设计" class="!m-5" :bordered="false">
+      <PageToolbox class="mb-5">
+        <a-button
+          type="primary"
+          size="small"
+          class="mr-2"
+          preIcon="ant-design:qrcode-outlined"
+          :loading="btnLoading"
+          @click="addItemQr"
+        >
+          添加二维码
+        </a-button>
+        <a-button
+          type="primary"
+          size="small"
+          class="mr-2"
+          preIcon="ant-design:plus-outlined"
+          :loading="btnLoading"
+          @click="addItemText"
+        >
+          添加信息
+        </a-button>
+        <a-button
+          type="primary"
+          size="small"
+          class="mr-2"
+          preIcon="ant-design:save-outlined"
+          :loading="btnLoading"
+          @click="submitTmpPaper"
+        >
+          保存
+        </a-button>
+        <a-button
+          type="primary"
+          size="small"
+          class="mr-2"
+          preIcon="ant-design:printer-outlined"
+          :loading="btnLoading"
+        >
+          打印测试
+        </a-button>
+      </PageToolbox>
+      <div ref="dropRef" class="container">
+        <TmpPaperItem
+          v-for="item in elementList"
+          :key="item._key"
+          :item="item"
+          :get-paper-size="getPaperSize"
+          @move:box="moveBox"
+          @on:qr-width-change="qrWidthResizeHandler"
+          @on:qr-width-changed="updateItemKey"
+          @on:edit="editItem"
+          @on:remove="removeItem"
+        />
+        <TmpPaperDragLayer :get-paper-size="getPaperSize" />
+      </div>
+    </a-card>
+    <a-card title="描述" class="!m-5" :bordered="false">
+      <a-textarea v-model="remarks" />
+    </a-card>
+    <BasicModal @register="modalRegister" @ok="submit" title="自定义信息显示配置">
+      <BasicForm @register="formRegister" />
+    </BasicModal>
+  </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
-  import { BasicForm, useForm } from '/@/components/Form';
-  import { CollapseContainer } from '/@/components/Container';
-  import { PageWrapper } from '/@/components/Page';
-  import { formSchema } from '/@/views/tmp/tmp-paper/tmpPaper.data';
-  import { useI18n } from '/@/hooks/web/useI18n';
+  import { defineComponent, nextTick, ref, unref } from 'vue';
+  import { PageToolbox } from '/@/components/Page';
   import { createTmpPaper, findOne, updateTmpPaper } from '/@/api/tmp/tmpPaper';
   import { useRouter } from 'vue-router';
   import { onMountedOrActivated } from '@vben/hooks';
-  import { useMessage } from '/@/hooks/web/useMessage';
   import { useTabs } from '/@/hooks/web/useTabs';
   import { isNotEmpty } from '@/utils/is';
+  import { useDrop } from 'vue3-dnd';
+  import TmpPaperItem from './TmpPaperItem.vue';
+  import { Card } from 'ant-design-vue';
+  import { buildUUID } from '@/utils/uuid';
+  import TmpPaperDragLayer from '@/views/tmp/tmp-paper/TmpPaperDragLayer.vue';
+  import {
+    calcPaperPosition,
+    calcPaperPositionInside,
+    defaultQrCodeItem,
+    defaultTextItem,
+    defaultTickFaceDataForBOCA,
+    defaultTickFaceDataForTSC,
+    defaultTmpPaperItem,
+    translatePaperTemplate,
+  } from '@/views/tmp/tmp-paper/tmpPaper';
+  import { TmpPaperElItem } from '@/api/tmp/model/tmpPaperModel';
+  import { BasicModal, useModal } from '@/components/Modal';
+  import { BasicForm, FormSchema, useForm } from '@/components/Form';
+  import { TmpPaperElTemplateEnum } from '@/enums/tmp/tmpPaperEnum';
+  import { useMessage } from '@/hooks/web/useMessage';
+  import { useI18n } from '@/hooks/web/useI18n';
 
   export default defineComponent({
     components: {
       BasicForm,
-      CollapseContainer,
-      PageWrapper,
+      BasicModal,
+      TmpPaperDragLayer,
+      ACard: Card,
+      PageToolbox,
+      TmpPaperItem,
     },
     setup() {
-      const { t } = useI18n();
       const recordId = ref('');
-      const router = useRouter();
-      const { query } = unref(router.currentRoute);
+      const printType = ref('');
+      const remarks = ref('');
+      const { currentRoute } = useRouter();
+      const { query } = unref(currentRoute);
       const isUpdate = ref(false);
+      const isUpdateItem = ref(false);
+      const dropRef = ref<HTMLDivElement | null>(null);
+
       if (isNotEmpty(query.id)) {
         recordId.value = query.id;
         isUpdate.value = true;
+      } else {
+        printType.value = query.type;
+        remarks.value = query.remarks;
       }
 
-      const { setTitle, closeCurrent } = useTabs();
+      const elementList = ref<TmpPaperElItem[]>([]);
 
-      const [register, { resetFields, setFieldsValue, validate }] = useForm({
-        autoFocusFirstItem: true,
-        labelWidth: 200,
-        baseColProps: {
-          span: 24,
-        },
-        wrapperCol: {
-          span: 12,
-        },
-        actionColOptions: {
-          span: 24,
-          style: 'text-align: left; margin-left: 200px;',
-        },
-        resetButtonOptions: {
-          text: t('common.resetText'),
-        },
-        submitButtonOptions: {
-          text: t('common.saveText'),
-        },
-        schemas: formSchema,
-      });
-
+      const data = ref<TmpPaperItem>({});
       onMountedOrActivated(async () => {
         if (!unref(isUpdate)) {
           setTitle('票纸设计-新增');
-          return;
+          generateDefaultData();
+        } else {
+          setTitle('票纸设计-编辑');
+          data.value = await findOne(recordId.value);
+          try {
+            data.value.ticketFaceDataParse = JSON.parse(data.value.ticketFaceData);
+          } catch (e) {
+            console.log(e);
+          }
         }
-        await resetFields();
-        const data = await findOne(recordId.value);
-        setTitle('票纸设计-' + data.name);
-        setFieldsValue(data);
+        if (isNotEmpty(data.value.ticketFaceDataParse?.ticketElementList)) {
+          elementList.value =
+            data.value.ticketFaceDataParse?.ticketElementList.map((item) => ({
+              ...item,
+              _id: buildUUID(),
+              _key: buildUUID(),
+              title: translatePaperTemplate(item.caption),
+            })) ?? [];
+        }
       });
 
-      async function handleSubmit() {
-        const values = await validate();
-        if (unref(isUpdate)) {
-          values.id = unref(recordId);
-          await updateTmpPaper(values);
-        } else {
-          await createTmpPaper(values);
+      const generateDefaultData = () => {
+        const tmpPaperItem = defaultTmpPaperItem;
+        tmpPaperItem.remarks = unref(remarks);
+        tmpPaperItem.ticketFaceDataParse =
+          printType.value === 'tsc' ? defaultTickFaceDataForTSC : defaultTickFaceDataForBOCA;
+        tmpPaperItem.ticketFaceData = JSON.stringify(tmpPaperItem.ticketFaceDataParse);
+        data.value = tmpPaperItem;
+      };
+
+      const moveBox = (id: string, elmLef: number, elmTop: number) => {
+        // 每次移动，重新调整key，防止无法拖拽
+        const item = elementList.value.find((item) => item._id === id);
+        isNotEmpty(item) && Object.assign(item, { _key: buildUUID(), elmLef, elmTop });
+        updateItemKey(id);
+      };
+
+      const qrWidthResizeHandler = (id: string, elmWidth: number) => {
+        const item = elementList.value.find((item) => item._id === id);
+        isNotEmpty(item) && Object.assign(item, { elmWidth, elmHeight: elmWidth });
+      };
+
+      const updateItemKey = (id) => {
+        const item = elementList.value.find((item) => item._id === id);
+        isNotEmpty(item) && Object.assign(item, { _key: buildUUID() });
+      };
+
+      const [collectedProps, dropConnector] = useDrop(() => ({
+        accept: 'BOX',
+        collect(monitor) {
+          return {
+            item: monitor.getItem(),
+            elementType: monitor.getItem()?.elementType,
+          };
+        },
+        drop(item: TmpPaperElItem, monitor) {
+          const dropEl = dropRef.value;
+          if (!dropEl) return;
+          const { left, top } = calcPaperPosition(
+            item.elmLef,
+            item.elmTop,
+            monitor.getDifferenceFromInitialOffset(),
+          );
+          // 防止移出边界
+          const { x, y } = calcPaperPositionInside(
+            left,
+            top,
+            item.elmWidth ?? 0,
+            item.elmHeight ?? 0,
+            dropEl.offsetWidth,
+            dropEl.offsetHeight,
+          );
+          moveBox(item._id ?? '', x, y);
+          return {};
+        },
+      }));
+
+      onMountedOrActivated(() => {
+        dropConnector(dropRef);
+      });
+
+      const { setTitle } = useTabs();
+
+      const getPaperSize = (): { width: number; height: number } => {
+        return {
+          width: dropRef.value?.offsetWidth ?? 0,
+          height: dropRef.value?.offsetHeight ?? 0,
+        };
+      };
+
+      const elementTextTypeList = Object.keys(TmpPaperElTemplateEnum).map((key) => {
+        return {
+          label: TmpPaperElTemplateEnum[key],
+          value: key,
+          key,
+        };
+      });
+
+      const fontSizeList = Array.from({ length: 29 }, (x, i) => ({
+        label: i + 12 + 'px',
+        value: i + 12,
+        key: 'font_size_' + i,
+      }));
+
+      const schemas: FormSchema[] = [
+        {
+          field: 'captionType',
+          component: 'Select',
+          label: '信息类型',
+          defaultValue: '${customMsg}',
+          componentProps: {
+            options: elementTextTypeList,
+            onChange: (value) => {
+              if (value === '${customMsg}') {
+                const { caption } = getFieldsValue();
+                if (Object.keys(TmpPaperElTemplateEnum).includes(caption)) {
+                  setFieldsValue({ caption: '' });
+                  clearValidate();
+                }
+              } else {
+                setFieldsValue({ caption: value });
+              }
+            },
+          },
+        },
+        {
+          field: 'caption',
+          component: 'Input',
+          label: '自定义信息内容',
+          rules: [
+            {
+              required: true,
+              message: '请输入自定义信息内容',
+            },
+          ],
+          show: () => {
+            return getFieldsValue()?.captionType === '${customMsg}';
+          },
+        },
+        {
+          field: 'fontName',
+          component: 'Select',
+          label: '字体',
+          defaultValue: 'SIMHEI',
+          componentProps: {
+            options: [
+              {
+                label: '黑体',
+                value: 'SIMHEI',
+                key: 'SIMHEI',
+              },
+              {
+                label: '宋体',
+                value: 'STZHONGS',
+                key: 'STZHONGS',
+              },
+              {
+                label: '仿宋',
+                value: 'LISHU',
+                key: 'LISHU',
+              },
+            ],
+          },
+        },
+        {
+          field: 'fontHeight',
+          component: 'Select',
+          label: '字号',
+          defaultValue: 12,
+          componentProps: {
+            options: fontSizeList,
+          },
+        },
+        {
+          field: 'fontBold',
+          component: 'Select',
+          label: '字重',
+          defaultValue: 'true',
+          componentProps: {
+            options: [
+              {
+                label: '加粗',
+                value: 'true',
+                key: 'font_bold_bolder',
+              },
+              {
+                label: '正常',
+                value: 'false',
+                key: 'font_bold_normal',
+              },
+            ],
+          },
+        },
+      ];
+      const [
+        formRegister,
+        { submit, validate, clearValidate, setFieldsValue, getFieldsValue, resetFields },
+      ] = useForm({
+        layout: 'vertical',
+        baseColProps: {
+          span: 24,
+        },
+        schemas: schemas,
+        showActionButtonGroup: false,
+        submitFunc: customSubmitFunc,
+      });
+
+      const [modalRegister, { openModal, closeModal }] = useModal();
+
+      const currentItem = ref<TmpPaperElItem | null>(null);
+      async function customSubmitFunc() {
+        try {
+          const values = await validate();
+          values.title = translatePaperTemplate(values.caption);
+          values.fontBold = values.fontBold === 'true';
+          if (unref(isUpdateItem)) {
+            currentItem.value && Object.assign(currentItem.value, values);
+            updateItemKey(currentItem.value?._id);
+            resetFields();
+          } else {
+            Object.assign(
+              values,
+              {
+                _id: buildUUID(),
+                _key: buildUUID(),
+              },
+              defaultTextItem,
+            );
+            elementList.value.push(values);
+          }
+          closeModal();
+        } catch (error) {
+          //
         }
-        await handleSuccess();
-        await closeCurrent();
-        router.back();
       }
 
+      const editItem = (item: TmpPaperElItem) => {
+        currentItem.value = item;
+        isUpdateItem.value = true;
+        openModal(true);
+        nextTick(() =>
+          setFieldsValue({
+            ...item,
+            captionType: Object.keys(TmpPaperElTemplateEnum).includes(item.caption)
+              ? item.caption
+              : '${customMsg}',
+            fontBold: item.fontBold ? 'true' : 'false',
+          }),
+        );
+      };
+      const removeItem = (id: string) => {
+        const index = elementList.value.findIndex((item) => item._id === id);
+        if (index === -1) return;
+        elementList.value.splice(index, 1);
+      };
+
+      const addItemQr = () => {
+        const item = Object.assign(
+          {
+            _id: buildUUID(),
+            _key: buildUUID(),
+          },
+          defaultQrCodeItem,
+        );
+        elementList.value.push(item);
+      };
+      const addItemText = () => {
+        isUpdateItem.value = false;
+        openModal(true);
+      };
+
+      const btnLoading = ref(false);
+
+      const submitTmpPaper = async () => {
+        data.value.remarks = remarks.value;
+        data.value.ticketFaceDataParse.elementList = elementList.value;
+        data.value.ticketFaceData = JSON.stringify(data.value.ticketFaceDataParse);
+        btnLoading.value = true;
+        unref(isUpdate) ? await doUpdateTmpPaper() : await doSaveTmpPaper();
+        btnLoading.value = false;
+        handleSuccess();
+      };
+      const doSaveTmpPaper = async () => {
+        await createTmpPaper(data.value);
+      };
+      const doUpdateTmpPaper = async () => {
+        await updateTmpPaper(data.value);
+      };
+
+      const { t } = useI18n();
       function handleSuccess() {
-        return new Promise((resolve) => {
-          const { createSuccessModal } = useMessage();
-          createSuccessModal({
-            title: t('sys.api.operationSuccess'),
-            content: unref(isUpdate)
-              ? t('sys.api.updateSuccessMsg', ['票纸设计'])
-              : t('sys.api.createSuccessMsg', ['票纸设计']),
-            closable: false,
-            okText: t('common.back'),
-            onOk: resolve,
-          });
+        const { createSuccessModal } = useMessage();
+        createSuccessModal({
+          title: t('sys.api.operationSuccess'),
+          content: unref(isUpdate)
+            ? t('sys.api.updateSuccessMsg', ['票纸设计'])
+            : t('sys.api.createSuccessMsg', ['票纸设计']),
+          closable: false,
+          okText: t('common.okText'),
         });
       }
 
       return {
-        register,
-        handleSubmit,
+        elementList,
+        dropRef,
+        collectedProps,
+        getPaperSize,
+        moveBox,
+        qrWidthResizeHandler,
+        updateItemKey,
+        modalRegister,
+        formRegister,
+        submit,
+        submitTmpPaper,
+        editItem,
+        addItemQr,
+        addItemText,
+        removeItem,
+        remarks,
+        btnLoading,
       };
     },
   });
 </script>
+<style scoped lang="less">
+  .tmp-paper-form {
+    background: @component-background;
+  }
+
+  .container {
+    position: relative;
+    width: 756px;
+    height: 302px;
+    border: 1px solid black;
+    background: url('../../../assets/images/tmp-paper/bg-ticket.jpg') no-repeat;
+    background-size: cover;
+    user-select: none;
+  }
+</style>

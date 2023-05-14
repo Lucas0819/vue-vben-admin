@@ -4,11 +4,26 @@
     <BasicTable @register="registerTable">
       <template #tableTitle>
         <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
-        <a-button type="primary" @click="handleCreate"> 创建票纸设计 </a-button>
+        <a-dropdown>
+          <a-button type="primary" preIcon="ant-design:plus-outlined">
+            创建票纸设计
+            <DownOutlined />
+          </a-button>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <a href="javascript:;" @click="handleCreate('tsc')">TSC系列打印机 </a>
+              </a-menu-item>
+              <a-menu-item>
+                <a href="javascript:;" @click="handleCreate('boca')">BOCA系列打印机</a>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'ticketFaceData'">
-          <Link @click="() => handleEdit(record)">{{ record.ticketFaceData }}</Link>
+        <template v-if="column.key === 'remarks'">
+          <Link @click="() => handleEdit(record)">{{ record.remarks || '暂未填写' }}</Link>
         </template>
         <template v-if="column.key === 'action'">
           <TableAction
@@ -32,17 +47,26 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteTmpPaper, getTmpPaperListByPage } from '/@/api/tmp/tmpPaper';
-  import { useRouter } from 'vue-router';
-  import { Typography } from 'ant-design-vue';
+  import { Dropdown, Menu, Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
+  import { DownOutlined } from '@ant-design/icons-vue';
+  import { useGo } from '@/hooks/web/usePage';
 
   export default defineComponent({
     name: 'TmpPaperManagement',
-    components: { BasicTable, TableAction, Link: Typography.Link, PageWrapper },
+    components: {
+      BasicTable,
+      TableAction,
+      Link: Typography.Link,
+      PageWrapper,
+      ADropdown: Dropdown,
+      AMenu: Menu,
+      AMenuItem: Menu.Item,
+      DownOutlined,
+    },
     setup() {
       const { t } = useI18n();
-      const router = useRouter();
 
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpPaperListByPage,
@@ -78,12 +102,17 @@
         return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
       });
 
-      function handleCreate() {
-        router.push(PageEnum.TMP_TMP_PAPER_FORM);
+      const go = useGo();
+
+      function handleCreate(type: string) {
+        go({
+          path: PageEnum.TMP_TMP_PAPER_FORM,
+          query: { type, remarks: `测试:${type}${new Date().getTime()}` },
+        });
       }
 
       function handleEdit(record: Recordable) {
-        router.push({
+        go({
           path: PageEnum.TMP_TMP_PAPER_FORM,
           query: { id: record.id },
         });

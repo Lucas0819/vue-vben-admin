@@ -14,8 +14,11 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '描述',
-    dataIndex: 'ticketFaceData',
-    sorter: true,
+    key: 'remarks',
+    dataIndex: 'remarks',
+    customRender: ({ record }) => {
+      return record.remarks || '暂未填写';
+    },
   },
   {
     title: '票面宽度',
