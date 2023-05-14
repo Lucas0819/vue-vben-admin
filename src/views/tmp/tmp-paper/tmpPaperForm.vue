@@ -42,7 +42,11 @@
           打印测试
         </a-button>
       </PageToolbox>
-      <div ref="dropRef" class="container">
+      <div
+        ref="dropRef"
+        class="container"
+        :style="{ backgroundImage: `url('${defaultTicketBgData}')` }"
+      >
         <TmpPaperItem
           v-for="item in elementList"
           :key="item._key"
@@ -58,7 +62,7 @@
       </div>
     </a-card>
     <a-card title="描述" class="!m-5" :bordered="false">
-      <a-textarea v-model="remarks" />
+      <a-textarea v-model:value="remarks" />
     </a-card>
     <BasicModal @register="modalRegister" @ok="submit" title="自定义信息显示配置">
       <BasicForm @register="formRegister" />
@@ -95,6 +99,8 @@
   import { TmpPaperElTemplateEnum } from '@/enums/tmp/tmpPaperEnum';
   import { useMessage } from '@/hooks/web/useMessage';
   import { useI18n } from '@/hooks/web/useI18n';
+  import projectSetting from '@/settings/projectSetting';
+  import { downloadFileUrl } from '@/api/sys/file';
 
   export default defineComponent({
     components: {
@@ -114,6 +120,8 @@
       const isUpdate = ref(false);
       const isUpdateItem = ref(false);
       const dropRef = ref<HTMLDivElement | null>(null);
+      const defaultTicketBg = projectSetting.fileBucket + 'bg_ticket.jpg';
+      const defaultTicketBgData = ref(downloadFileUrl(defaultTicketBg));
 
       if (isNotEmpty(query.id)) {
         recordId.value = query.id;
@@ -133,6 +141,10 @@
         } else {
           setTitle('票纸设计-编辑');
           data.value = await findOne(recordId.value);
+          remarks.value = data.value.remarks ?? '';
+          if (isNotEmpty(remarks.value)) {
+            setTitle(`票纸设计-${remarks.value}`);
+          }
           try {
             data.value.ticketFaceDataParse = JSON.parse(data.value.ticketFaceData);
           } catch (e) {
@@ -404,15 +416,17 @@
 
       const submitTmpPaper = async () => {
         data.value.remarks = remarks.value;
-        data.value.ticketFaceDataParse.elementList = elementList.value;
+        data.value.ticketFaceDataParse.ticketElementList = elementList.value;
         data.value.ticketFaceData = JSON.stringify(data.value.ticketFaceDataParse);
+        data.value.bgImg = defaultTicketBgData;
         btnLoading.value = true;
         unref(isUpdate) ? await doUpdateTmpPaper() : await doSaveTmpPaper();
         btnLoading.value = false;
         handleSuccess();
       };
       const doSaveTmpPaper = async () => {
-        await createTmpPaper(data.value);
+        data.value.id = await createTmpPaper(data.value);
+        isUpdate.value = true;
       };
       const doUpdateTmpPaper = async () => {
         await updateTmpPaper(data.value);
@@ -449,6 +463,7 @@
         removeItem,
         remarks,
         btnLoading,
+        defaultTicketBgData,
       };
     },
   });
@@ -463,7 +478,8 @@
     width: 756px;
     height: 302px;
     border: 1px solid black;
-    background: url('../../../assets/images/tmp-paper/bg-ticket.jpg') no-repeat;
+    //background: url('../../../assets/images/tmp-paper/bg-ticket.jpg') no-repeat;
+    background-repeat: no-repeat;
     background-size: cover;
     user-select: none;
   }

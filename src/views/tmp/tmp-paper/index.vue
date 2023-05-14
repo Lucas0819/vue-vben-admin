@@ -3,7 +3,16 @@
     <PageWrapper title="票纸设计列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
       <template #tableTitle>
-        <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
+        <a-button
+          type="primary"
+          danger
+          :disabled="canBatchDelete"
+          class="mr-2"
+          @click="batchDelete"
+          preIcon="ant-design:delete-outlined"
+        >
+          删除</a-button
+        >
         <a-dropdown>
           <a-button type="primary" preIcon="ant-design:plus-outlined">
             创建票纸设计
@@ -46,12 +55,13 @@
   import { columns, searchFormSchema } from './tmpPaper.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { deleteTmpPaper, getTmpPaperListByPage } from '/@/api/tmp/tmpPaper';
+  import { batchDeleteTmpPaper, deleteTmpPaper, getTmpPaperListByPage } from '/@/api/tmp/tmpPaper';
   import { Dropdown, Menu, Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useGo } from '@/hooks/web/usePage';
+  import { onMountedOrActivated } from '@vben/hooks';
 
   export default defineComponent({
     name: 'TmpPaperManagement',
@@ -70,6 +80,7 @@
 
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpPaperListByPage,
+        immediate: false,
         columns,
         defSort: {
           field: 'createDate',
@@ -93,10 +104,13 @@
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
+        clickToRowSelect: false,
         rowSelection: {
           type: 'checkbox',
         },
       });
+
+      onMountedOrActivated(reload);
 
       const canBatchDelete = computed(() => {
         return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
@@ -128,6 +142,26 @@
         }
       }
 
+      function batchDelete() {
+        const { createConfirm } = useMessage();
+        createConfirm({
+          iconType: 'warning',
+          title: '操作确认',
+          content: '确定进行批量删除操作吗？',
+          okText: '删除',
+          onOk: async () => {
+            try {
+              setTableLoading(true);
+              const ids = getSelectRowKeys();
+              await batchDeleteTmpPaper(ids);
+              handleSuccess();
+            } finally {
+              setTableLoading(false);
+            }
+          },
+        });
+      }
+
       function handleSuccess() {
         const { createMessage } = useMessage();
         createMessage.success(t('sys.api.operationSuccess'));
@@ -141,6 +175,7 @@
         handleDelete,
         handleSuccess,
         canBatchDelete,
+        batchDelete,
       };
     },
   });
