@@ -24,12 +24,12 @@ export function uploadApi(
       url: Api.UploadFile,
       onUploadProgress,
     },
-    {
-      ...params,
-      urlPrefix,
-    },
+    params,
+    { urlPrefix },
   );
 }
+
+export const uploadFileUrl = (): string => defHttp.getUrl({ url: Api.UploadFile }, { urlPrefix });
 
 export const downloadFileUrl = (fileName: string): string =>
   defHttp.getUrl({ url: Api.DownloadFile.replace('{fileName}', fileName) }, { urlPrefix });

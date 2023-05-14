@@ -15,12 +15,12 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   import { Upload } from 'ant-design-vue';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { uploadFileUrl } from '@/api/sys/file';
 
   export default defineComponent({
     name: 'TinymceImageUpload',
@@ -38,7 +38,7 @@
     setup(props, { emit }) {
       let uploading = false;
 
-      const { uploadUrl } = useGlobSetting();
+      const uploadUrl = uploadFileUrl();
       const { t } = useI18n();
       const { prefixCls } = useDesign('tinymce-img-upload');
 

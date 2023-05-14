@@ -1,11 +1,11 @@
-import { MenuTypeEnum, MenuModeEnum, TriggerEnum, MixSidebarTriggerEnum } from '/@/enums/menuEnum';
+import { MenuModeEnum, MenuTypeEnum, MixSidebarTriggerEnum, TriggerEnum } from '/@/enums/menuEnum';
 import {
   ContentEnum,
   PermissionModeEnum,
-  ThemeEnum,
   RouterTransitionEnum,
-  SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
+  SettingButtonPositionEnum,
+  ThemeEnum,
 } from '/@/enums/appEnum';
 
 import { CacheTypeEnum } from '/@/enums/cacheEnum';
@@ -134,6 +134,8 @@ export interface ProjectConfig {
   closeMessageOnSwitch: boolean;
   // Whether to cancel the http request that has been sent but not responded when switching the interface.
   removeAllHttpPending: boolean;
+  // minio bucket name
+  fileBucket: string;
 }
 
 export interface GlobConfig {
@@ -141,10 +143,10 @@ export interface GlobConfig {
   title: string;
   // Service interface url
   apiUrl: string;
-  // Upload url
-  uploadUrl?: string;
   //  Service interface url prefix
   urlPrefix?: string;
+  upmsUrlPrefix?: string;
+  ticketUrlPrefix?: string;
   // Project abbreviation
   shortName: string;
 }
@@ -155,6 +157,8 @@ export interface GlobEnvConfig {
   VITE_GLOB_API_URL: string;
   // Service interface url prefix
   VITE_GLOB_API_URL_PREFIX?: string;
-  // Upload url
-  VITE_GLOB_UPLOAD_URL?: string;
+  // Service interface url prefix
+  VITE_GLOB_API_UPMS_URL_PREFIX?: string;
+  // Service interface url prefix
+  VITE_GLOB_API_TICKET_URL_PREFIX?: string;
 }

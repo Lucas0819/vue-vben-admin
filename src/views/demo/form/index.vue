@@ -56,8 +56,8 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref } from 'vue';
-  import { BasicForm, FormSchema, ApiSelect } from '/@/components/Form/index';
+  import { computed, defineComponent, ref, unref } from 'vue';
+  import { ApiSelect, BasicForm, FormSchema } from '/@/components/Form/index';
   import { CollapseContainer } from '/@/components/Container';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
@@ -68,7 +68,7 @@
   import { Select } from 'ant-design-vue';
   import { cloneDeep } from 'lodash-es';
   import { areaRecord } from '/@/api/demo/cascader';
-  import { uploadApi } from '/@/api/sys/upload';
+  import { uploadApi } from '/@/api/sys/file';
 
   const valueSelectA = ref<string[]>([]);
   const valueSelectB = ref<string[]>([]);

@@ -1,13 +1,13 @@
 import type {
-  AxiosRequestConfig,
-  AxiosInstance,
-  AxiosResponse,
   AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
+import axios from 'axios';
 import type { RequestOptions, Result, UploadFileParams } from '/#/axios';
 import type { CreateAxiosOptions } from './axiosTransform';
-import axios from 'axios';
 import qs from 'qs';
 import { AxiosCanceler } from './axiosCancel';
 import { isFunction } from '/@/utils/is';
@@ -125,7 +125,21 @@ export class VAxios {
   /**
    * @description:  File Upload
    */
-  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams) {
+  uploadFile<T = any>(
+    config: AxiosRequestConfig,
+    params: UploadFileParams,
+    options?: RequestOptions,
+  ) {
+    const transform = this.getTransform();
+
+    const { requestOptions } = this.options;
+
+    const opt: RequestOptions = Object.assign({}, requestOptions, options);
+
+    const { beforeRequestHook } = transform || {};
+    if (beforeRequestHook && isFunction(beforeRequestHook)) {
+      config = beforeRequestHook(config, opt);
+    }
     const formData = new window.FormData();
     const customFilename = params.name || 'file';
 
@@ -243,5 +257,29 @@ export class VAxios {
           reject(e);
         });
     });
+  }
+
+  getUrl(config: AxiosRequestConfig, options?: RequestOptions): string {
+    let conf: CreateAxiosOptions = cloneDeep(config);
+    // cancelToken 如果被深拷贝，会导致最外层无法使用cancel方法来取消请求
+    if (config.cancelToken) {
+      conf.cancelToken = config.cancelToken;
+    }
+
+    const transform = this.getTransform();
+
+    const { requestOptions } = this.options;
+
+    const opt: RequestOptions = Object.assign({}, requestOptions, options);
+
+    const { beforeRequestHook } = transform || {};
+    if (beforeRequestHook && isFunction(beforeRequestHook)) {
+      conf = beforeRequestHook(conf, opt);
+    }
+    conf.requestOptions = opt;
+
+    conf = this.supportFormData(conf);
+
+    return conf.url ?? '';
   }
 }
