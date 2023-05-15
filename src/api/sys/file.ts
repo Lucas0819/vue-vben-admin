@@ -5,8 +5,8 @@ import { AxiosProgressEvent } from 'axios';
 import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
-  UploadFile = '/file/upload',
-  DownloadFile = '/file/download/{fileName}',
+  UploadFile = ServiceProxyEnum.UPMS + '/file/upload',
+  DownloadFile = ServiceProxyEnum.UPMS + '/file/download/{fileName}',
 }
 
 /**
@@ -22,15 +22,10 @@ export function uploadApi(
       onUploadProgress,
     },
     params,
-    { serviceProxy: ServiceProxyEnum.UPMS },
   );
 }
 
-export const uploadFileUrl = (): string =>
-  defHttp.getUrl({ url: Api.UploadFile }, { serviceProxy: ServiceProxyEnum.UPMS });
+export const uploadFileUrl = (): string => defHttp.getUrl({ url: Api.UploadFile });
 
 export const downloadFileUrl = (fileName: string): string =>
-  defHttp.getUrl(
-    { url: Api.DownloadFile.replace('{fileName}', fileName) },
-    { serviceProxy: ServiceProxyEnum.UPMS },
-  );
+  defHttp.getUrl({ url: Api.DownloadFile.replace('{fileName}', fileName) });

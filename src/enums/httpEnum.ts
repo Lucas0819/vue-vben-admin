@@ -35,7 +35,8 @@ export enum ContentTypeEnum {
  * 具体前缀配置在环境变量内
  */
 export enum ServiceProxyEnum {
-  AUTH = '__auth__',
-  UPMS = '__upms__',
-  TICKET = '__ticket__',
+  AUTH = '/auth',
+  UPMS = '/upms',
+  TICKET = '/ticket',
+  TICKET_GATEWAY = '/ticket_gateway',
 }

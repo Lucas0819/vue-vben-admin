@@ -1,5 +1,3 @@
-import { ServiceProxyEnum } from '@/enums/httpEnum';
-
 export type ErrorMessageMode = 'none' | 'modal' | 'message' | undefined;
 export type SuccessMessageMode = ErrorMessageMode;
 
@@ -19,8 +17,6 @@ export interface RequestOptions {
   apiUrl?: string;
   // 请求拼接路径
   urlPrefix?: string;
-  // 请求后端的网关代理前缀(默认为ticket)
-  serviceProxy?: ServiceProxyEnum;
   // Error message prompt type
   errorMessageMode?: ErrorMessageMode;
   // Success message prompt type

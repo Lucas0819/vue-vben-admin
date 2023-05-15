@@ -10,8 +10,8 @@ import { VAxios } from './Axios';
 import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { ContentTypeEnum, RequestEnum, ResultEnum, ServiceProxyEnum } from '/@/enums/httpEnum';
-import { isEmpty, isNotEmpty, isNull, isString, isUnDef } from '/@/utils/is';
+import { ContentTypeEnum, RequestEnum, ResultEnum } from '/@/enums/httpEnum';
+import { isEmpty, isNull, isString, isUnDef } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
 import { deepMerge, setObjToUrlParams } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
@@ -98,29 +98,8 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const {
-      apiUrl,
-      joinPrefix,
-      joinParamsToUrl,
-      formatDate,
-      joinTime = true,
-      urlPrefix,
-      serviceProxy,
-    } = options;
+    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
 
-    if (isNotEmpty(serviceProxy)) {
-      switch (serviceProxy) {
-        case ServiceProxyEnum.AUTH:
-          config.url = (globSetting.authUrlPrefix ?? '') + config.url;
-          break;
-        case ServiceProxyEnum.UPMS:
-          config.url = (globSetting.upmsUrlPrefix ?? '') + config.url;
-          break;
-        case ServiceProxyEnum.TICKET:
-          config.url = (globSetting.ticketUrlPrefix ?? '') + config.url;
-          break;
-      }
-    }
     if (joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;
     }
@@ -282,8 +261,6 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           apiUrl: globSetting.apiUrl,
           // 接口拼接地址
           urlPrefix: urlPrefix,
-          // 默认访问后端ticket服务
-          serviceProxy: ServiceProxyEnum.TICKET,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求
