@@ -145,6 +145,7 @@ export interface GlobConfig {
   apiUrl: string;
   //  Service interface url prefix
   urlPrefix?: string;
+  authUrlPrefix?: string;
   upmsUrlPrefix?: string;
   ticketUrlPrefix?: string;
   // Project abbreviation
@@ -157,6 +158,8 @@ export interface GlobEnvConfig {
   VITE_GLOB_API_URL: string;
   // Service interface url prefix
   VITE_GLOB_API_URL_PREFIX?: string;
+  // Service interface url prefix
+  VITE_GLOB_API_AUTH_URL_PREFIX?: string;
   // Service interface url prefix
   VITE_GLOB_API_UPMS_URL_PREFIX?: string;
   // Service interface url prefix

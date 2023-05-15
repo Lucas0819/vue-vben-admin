@@ -1,8 +1,9 @@
 import { defHttp } from '/@/utils/http/axios';
 import { getDictModel } from '/@/api/sys/model/dictModel';
+import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
-  GetAllDictList = '/upms/dict_enum/all',
+  GetAllDictList = '/dict_enum/all',
 }
 
 /**
@@ -10,5 +11,8 @@ enum Api {
  */
 
 export const getAllDictList = () => {
-  return defHttp.get<getDictModel>({ url: Api.GetAllDictList });
+  return defHttp.get<getDictModel>(
+    { url: Api.GetAllDictList },
+    { serviceProxy: ServiceProxyEnum.UPMS },
+  );
 };

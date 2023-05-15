@@ -1,16 +1,13 @@
 import { UploadApiResult } from './model/uploadModel';
 import { defHttp } from '/@/utils/http/axios';
 import { UploadFileParams } from '/#/axios';
-import { useGlobSetting } from '/@/hooks/setting';
 import { AxiosProgressEvent } from 'axios';
+import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
   UploadFile = '/file/upload',
   DownloadFile = '/file/download/{fileName}',
 }
-
-const globSetting = useGlobSetting();
-const urlPrefix = globSetting.upmsUrlPrefix;
 
 /**
  * @description: Upload interface
@@ -25,11 +22,15 @@ export function uploadApi(
       onUploadProgress,
     },
     params,
-    { urlPrefix },
+    { serviceProxy: ServiceProxyEnum.UPMS },
   );
 }
 
-export const uploadFileUrl = (): string => defHttp.getUrl({ url: Api.UploadFile }, { urlPrefix });
+export const uploadFileUrl = (): string =>
+  defHttp.getUrl({ url: Api.UploadFile }, { serviceProxy: ServiceProxyEnum.UPMS });
 
 export const downloadFileUrl = (fileName: string): string =>
-  defHttp.getUrl({ url: Api.DownloadFile.replace('{fileName}', fileName) }, { urlPrefix });
+  defHttp.getUrl(
+    { url: Api.DownloadFile.replace('{fileName}', fileName) },
+    { serviceProxy: ServiceProxyEnum.UPMS },
+  );

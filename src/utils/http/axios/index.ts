@@ -1,7 +1,8 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
-import type { AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
@@ -9,16 +10,15 @@ import { VAxios } from './Axios';
 import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
-import { isString, isUnDef, isNull, isEmpty } from '/@/utils/is';
+import { ContentTypeEnum, RequestEnum, ResultEnum, ServiceProxyEnum } from '/@/enums/httpEnum';
+import { isEmpty, isNotEmpty, isNull, isString, isUnDef } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
-import { setObjToUrlParams, deepMerge } from '/@/utils';
+import { deepMerge, setObjToUrlParams } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { joinTimestamp, formatRequestDate } from './helper';
+import { formatRequestDate, joinTimestamp } from './helper';
 import { useUserStore, useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
-import axios from 'axios';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -98,8 +98,29 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
+    const {
+      apiUrl,
+      joinPrefix,
+      joinParamsToUrl,
+      formatDate,
+      joinTime = true,
+      urlPrefix,
+      serviceProxy,
+    } = options;
 
+    if (isNotEmpty(serviceProxy)) {
+      switch (serviceProxy) {
+        case ServiceProxyEnum.AUTH:
+          config.url = (globSetting.authUrlPrefix ?? '') + config.url;
+          break;
+        case ServiceProxyEnum.UPMS:
+          config.url = (globSetting.upmsUrlPrefix ?? '') + config.url;
+          break;
+        case ServiceProxyEnum.TICKET:
+          config.url = (globSetting.ticketUrlPrefix ?? '') + config.url;
+          break;
+      }
+    }
     if (joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;
     }
@@ -178,7 +199,7 @@ const transform: AxiosTransform = {
   /**
    * @description: 响应错误处理
    */
-  responseInterceptorsCatch: (axiosInstance: AxiosResponse, error: any) => {
+  responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
     const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);
@@ -261,6 +282,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           apiUrl: globSetting.apiUrl,
           // 接口拼接地址
           urlPrefix: urlPrefix,
+          // 默认访问后端ticket服务
+          serviceProxy: ServiceProxyEnum.TICKET,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求

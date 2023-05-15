@@ -29,3 +29,13 @@ export enum ContentTypeEnum {
   // form-data  upload
   FORM_DATA = 'multipart/form-data;charset=UTF-8',
 }
+
+/**
+ * 请求后端的网关代理前缀标识
+ * 具体前缀配置在环境变量内
+ */
+export enum ServiceProxyEnum {
+  AUTH = '__auth__',
+  UPMS = '__upms__',
+  TICKET = '__ticket__',
+}
