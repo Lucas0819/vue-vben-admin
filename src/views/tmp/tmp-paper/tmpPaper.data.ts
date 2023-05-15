@@ -41,7 +41,7 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'ticketFaceData',
+    field: 'remarks',
     label: '票纸描述',
     component: 'Input',
     componentProps: { placeholder: placeholderText },
