@@ -1,10 +1,6 @@
-docker login 220.202.55.167:19004 -u riten -p Riten@2022
+docker login 8.146.200.64:5000 -u doupiao -p doupiao@2023
 
-APP='220.202.55.167:19004/riten-monitor-ui-master:1.0.4'
-
-rm -rf dist
-
-npm install --registry https://registry.npm.taobao.org
+APP='8.146.200.64:5000/dp-master-ui-test:1.0.0'
 
 npm run build
 
@@ -16,4 +12,4 @@ docker push $APP
 
 docker rmi $APP
 
-#docker logout 192.168.0.2:19004
+docker logout 8.146.200.64:5000
