@@ -4,7 +4,6 @@ import {
   TmpPaperListGetResultModel,
   TmpPaperPageParams,
 } from './model/tmpPaperModel';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
   TmpPaperPage = '/tmp_paper/page',
@@ -18,11 +17,7 @@ enum Api {
 export const getTmpPaperListByPage = (params: TmpPaperPageParams) =>
   defHttp.get<TmpPaperListGetResultModel>({ url: Api.TmpPaperPage, params });
 
-export const findOne = (id) =>
-  defHttp.get<TmpPaperItem>(
-    { url: Api.FindOne.replace('{id}', id) },
-    { serviceProxy: ServiceProxyEnum.TICKET },
-  );
+export const findOne = (id) => defHttp.get<TmpPaperItem>({ url: Api.FindOne.replace('{id}', id) });
 
 export const createTmpPaper = (params?: TmpPaperItem) =>
   defHttp.post({ url: Api.CreateTmpPaper, params });
