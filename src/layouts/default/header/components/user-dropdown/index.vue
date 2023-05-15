@@ -39,7 +39,7 @@
   import { Dropdown, Menu } from 'ant-design-vue';
   import type { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
 
-  import { defineComponent, computed } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   import { DOC_URL } from '/@/settings/siteSetting';
 
@@ -54,6 +54,7 @@
   import { openWindow } from '/@/utils';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+  import { downloadFileUrl } from '@/api/sys/file';
 
   type MenuEvent = 'logout' | 'doc' | 'lock';
 
@@ -77,7 +78,7 @@
 
       const getUserInfo = computed(() => {
         const { realName = '', avatar, desc } = userStore.getUserInfo || {};
-        return { realName, avatar: avatar || headerImg, desc };
+        return { realName, avatar: avatar ? downloadFileUrl(avatar) : headerImg, desc };
       });
 
       const [register, { openModal }] = useModal();
