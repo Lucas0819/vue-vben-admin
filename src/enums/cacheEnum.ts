@@ -9,7 +9,11 @@ export const USER_INFO_KEY = 'USER__INFO__';
 // current tenant id key
 export const CURRENT_TENANT_ID_KEY = 'CURRENT__TENANT__ID__';
 
+// dict key
 export const DICT_ENUM_KEY = 'DICT__ENUM__KEY__';
+
+// canton key
+export const CANTON_ENUM_KEY = 'CANTON__ENUM__KEY__';
 
 // role info key
 export const ROLES_KEY = 'ROLES__KEY__';

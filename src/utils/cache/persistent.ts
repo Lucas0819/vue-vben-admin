@@ -7,6 +7,7 @@ import { Memory } from './memory';
 import {
   APP_LOCAL_CACHE_KEY,
   APP_SESSION_CACHE_KEY,
+  CANTON_ENUM_KEY,
   CURRENT_TENANT_ID_KEY,
   DICT_ENUM_KEY,
   LOCK_INFO_KEY,
@@ -20,12 +21,14 @@ import { DEFAULT_CACHE_TIME } from '/@/settings/encryptionSetting';
 import { toRaw } from 'vue';
 import { omit, pick } from 'lodash-es';
 import { DictModel } from '/@/api/sys/model/dictModel';
+import { CantonModel } from '@/api/sys/model/cantonModel';
 
 interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined;
   [USER_INFO_KEY]: UserInfo;
   [CURRENT_TENANT_ID_KEY]: string | null | undefined;
   [DICT_ENUM_KEY]: DictModel[];
+  [CANTON_ENUM_KEY]: CantonModel[];
   [ROLES_KEY]: string[];
   [LOCK_INFO_KEY]: LockInfo;
   [PROJ_CFG_KEY]: ProjectConfig;

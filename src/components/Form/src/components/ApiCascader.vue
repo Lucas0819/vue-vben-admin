@@ -28,6 +28,8 @@
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
   import { LoadingOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { CantonLevelEnum } from '@/enums/cantonLevelEnum';
+  import { CantonParams } from '@/api/sys/model/cantonModel';
 
   interface Option {
     value: string;
@@ -52,10 +54,10 @@
       },
       numberToString: propTypes.bool,
       resultField: propTypes.string.def(''),
-      labelField: propTypes.string.def('label'),
-      valueField: propTypes.string.def('value'),
+      labelField: propTypes.string.def('areaName'),
+      valueField: propTypes.string.def('areaId'),
       childrenField: propTypes.string.def('children'),
-      asyncFetchParamKey: propTypes.string.def('parentCode'),
+      levelField: propTypes.string.def('areaLevel'),
       immediate: propTypes.bool.def(true),
       // init fetch params
       initFetchParams: {
@@ -117,6 +119,7 @@
         if (!api || !isFunction(api)) return;
         apiData.value = [];
         loading.value = true;
+        isFirstLoad.value = false;
         try {
           const res = await api(props.initFetchParams);
           if (Array.isArray(res)) {
@@ -140,9 +143,17 @@
         const api = props.api;
         if (!api || !isFunction(api)) return;
         try {
-          const res = await api({
-            [props.asyncFetchParamKey]: Reflect.get(targetOption, 'value'),
-          });
+          const params: CantonParams = {};
+          const areaLevel = Reflect.get(targetOption, props.levelField);
+          const areaId = Reflect.get(targetOption, 'value');
+          if (areaLevel === CantonLevelEnum.LEVEL_1) {
+            params.areaLevel = CantonLevelEnum.LEVEL_2;
+            params.belongtoProvinceId = parseInt(areaId);
+          } else if (areaLevel === CantonLevelEnum.LEVEL_2) {
+            params.areaLevel = CantonLevelEnum.LEVEL_3;
+            params.belongtoCityId = parseInt(areaId);
+          }
+          const res = await api(params);
           if (Array.isArray(res)) {
             const children = generatorOptions(res);
             targetOption.children = children;

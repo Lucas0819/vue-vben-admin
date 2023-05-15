@@ -5,7 +5,8 @@
 export enum serviceEnum {
   AUTH = '/auth',
   UPMS = '/upms',
-  BASE = '/base',
+  TICKET = '/ticket',
+  TICKET_GATEWAY = '/ticket_gateway',
 }
 export const LOGIN_SECRET = 'seerseerseerseer';
 

@@ -15,6 +15,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
 import { useDictStore } from '/@/store/modules/dict';
+import { useCantonStore } from '@/store/modules/canton';
 
 interface UserState {
   userInfo: Nullable<UserBaseInfoVO>;
@@ -119,6 +120,10 @@ export const useUserStore = defineStore({
       // get dict
       const dictStore = useDictStore();
       dictStore.getDictListAction();
+
+      // get canton
+      const cantonStore = useCantonStore();
+      cantonStore.getCantonListAction();
 
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {

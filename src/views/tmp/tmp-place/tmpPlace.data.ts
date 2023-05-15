@@ -1,8 +1,9 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { areaRecord } from '@/api/demo/cascader';
 import { h } from 'vue';
 import { Button } from 'ant-design-vue';
+import { getCantonList } from '@/api/sys/canton';
+import { CantonLevelEnum } from '@/enums/cantonLevelEnum';
 
 const { t } = useI18n();
 
@@ -94,14 +95,15 @@ export const searchFormSchema: FormSchema[] = [
     label: '所属区域',
     component: 'ApiCascader',
     componentProps: {
-      api: areaRecord,
-      apiParamKey: 'parentCode',
-      dataField: 'data',
-      labelField: 'name',
-      valueField: 'code',
-      showSearch: true,
+      api: getCantonList,
+      initFetchParams: {
+        areaLevel: CantonLevelEnum.LEVEL_1,
+      },
+      labelField: 'areaName',
+      valueField: 'areaId',
+      levelField: 'areaLevel',
       isLeaf: (record) => {
-        return !(record.levelType < 3);
+        return record.areaLevel === CantonLevelEnum.LEVEL_3;
       },
     },
   },

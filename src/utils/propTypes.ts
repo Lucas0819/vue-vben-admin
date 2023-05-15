@@ -34,7 +34,4 @@ class propTypes extends newPropTypes {
   }
 }
 
-newPropTypes.string;
-propTypes.string;
-
 export { propTypes, newPropTypes };
