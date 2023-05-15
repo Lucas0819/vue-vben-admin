@@ -5,14 +5,16 @@ import {
   TmpPlacePageParams,
   TmpPlaceParams,
 } from './model/tmpPlaceModel';
+import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
-  TmpPlacePage = '/tmpPlace/getTmpPlacePage',
-  GetAllTmpPlaceList = '/tmpPlace/getAllTmpPlaceList',
-  FindOne = '/tmpPlace/findOne/{id}',
-  CreateTmpPlace = '/tmpPlace/createTmpPlace',
-  UpdateTmpPlace = '/tmpPlace/updateTmpPlace',
-  DeleteTmpPlace = '/tmpPlace/deleteTmpPlace/{id}',
+  TmpPlacePage = ServiceProxyEnum.TICKET + '/tmp_place/type/{type}/page',
+  GetAllTmpPlaceList = ServiceProxyEnum.TICKET + '/tmp_place/getAllTmpPlaceList',
+  FindOne = ServiceProxyEnum.TICKET + '/tmp_place/{id}/detail',
+  CreateTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/save',
+  UpdateTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/modify',
+  DeleteTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/{id}/remove',
+  BatchDeleteTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/batch_remove',
 }
 
 export const getTmpPlaceListByPage = (params: TmpPlacePageParams) =>
@@ -31,3 +33,6 @@ export const updateTmpPlace = (params?: TmpPlaceItem) =>
 
 export const deleteTmpPlace = (id: string) =>
   defHttp.delete({ url: Api.DeleteTmpPlace.replace('{id}', id) });
+
+export const batchDeleteTmpPlace = (ids: string[]) =>
+  defHttp.delete({ url: Api.BatchDeleteTmpPlace, params: { ids } });

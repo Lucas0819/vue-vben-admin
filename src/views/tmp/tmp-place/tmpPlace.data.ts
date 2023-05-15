@@ -12,19 +12,17 @@ export const columns: BasicColumn[] = [
   {
     title: 'ID',
     dataIndex: 'id',
-    width: 120,
+    width: 80,
     defaultHidden: true,
   },
   {
     title: '地址名称',
     dataIndex: 'name',
-    width: 120,
     sorter: true,
   },
   {
     title: '票图名称',
     dataIndex: 'tmpChart', // .name
-    width: 120,
   },
   {
     title: '使用次数',
@@ -34,7 +32,6 @@ export const columns: BasicColumn[] = [
   {
     title: '所属区域',
     dataIndex: 'areaName',
-    width: 120,
   },
   {
     title: '所属机构',
@@ -45,7 +42,6 @@ export const columns: BasicColumn[] = [
   {
     title: '详细地址',
     dataIndex: 'address',
-    width: 120,
     sorter: true,
   },
   {
@@ -62,20 +58,20 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '修改时间',
-    dataIndex: 'updateDate',
-    width: 120,
+    dataIndex: 'updateTime',
+    width: 160,
     sorter: true,
   },
   {
     title: '创建时间',
-    dataIndex: 'createDate',
-    width: 120,
+    dataIndex: 'createTime',
+    width: 160,
     sorter: true,
     defaultSortOrder: 'descend',
   },
   {
     title: '创建人',
-    dataIndex: 'createBy',
+    dataIndex: 'creator',
     width: 120,
   },
 ];
@@ -133,6 +129,9 @@ export const formSchema: FormSchema[] = [
         { label: '票票龙5', value: '5' },
       ],
     },
+    itemProps: {
+      extra: '提示：票图模板保存后不可修改',
+    },
   },
   {
     field: 'name',
@@ -144,7 +143,18 @@ export const formSchema: FormSchema[] = [
     field: 'areaId',
     label: '所属区域',
     required: false,
-    component: 'Input',
+    component: 'ApiCascader',
+    componentProps: {
+      api: areaRecord,
+      apiParamKey: 'parentCode',
+      dataField: 'data',
+      labelField: 'name',
+      valueField: 'code',
+      showSearch: true,
+      isLeaf: (record) => {
+        return !(record.levelType < 3);
+      },
+    },
   },
   {
     field: 'field1',
@@ -169,13 +179,13 @@ export const formSchema: FormSchema[] = [
   {
     field: 'longitude',
     label: '地图经度',
-    required: false,
+    required: true,
     component: 'Input',
   },
   {
     field: 'latitude',
     label: '地图纬度',
-    required: false,
+    required: true,
     component: 'Input',
   },
   {

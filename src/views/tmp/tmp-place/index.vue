@@ -3,8 +3,18 @@
     <PageWrapper title="活动地址-有座列表" :contentStyle="{ margin: 0 }" />
     <BasicTable @register="registerTable">
       <template #tableTitle>
-        <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
-        <a-button type="primary" @click="handleCreate"> 创建活动地址-有座 </a-button>
+        <a-button
+          type="primary"
+          danger
+          :disabled="canBatchDelete"
+          class="mr-2"
+          @click="batchDelete"
+          preIcon="ant-design:delete-outlined"
+          >删除</a-button
+        >
+        <a-button type="primary" @click="handleCreate" preIcon="ant-design:plus-outlined">
+          创建活动地址-有座
+        </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'name'">
@@ -37,7 +47,7 @@
   import { columns, searchFormSchema } from './tmpPlace.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { deleteTmpPlace, getTmpPlaceListByPage } from '/@/api/tmp/tmpPlace';
+  import { batchDeleteTmpPlace, deleteTmpPlace, getTmpPlaceListByPage } from '/@/api/tmp/tmpPlace';
   import { useRouter } from 'vue-router';
   import { Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
@@ -110,6 +120,26 @@
         }
       }
 
+      function batchDelete() {
+        const { createConfirm } = useMessage();
+        createConfirm({
+          iconType: 'warning',
+          title: '操作确认',
+          content: '确定进行批量删除操作吗？',
+          okText: '删除',
+          onOk: async () => {
+            try {
+              setTableLoading(true);
+              const ids = getSelectRowKeys();
+              await batchDeleteTmpPlace(ids);
+              handleSuccess();
+            } finally {
+              setTableLoading(false);
+            }
+          },
+        });
+      }
+
       function handleSuccess() {
         const { createMessage } = useMessage();
         createMessage.success(t('sys.api.operationSuccess'));
@@ -123,6 +153,7 @@
         handleDelete,
         handleSuccess,
         canBatchDelete,
+        batchDelete,
       };
     },
   });
