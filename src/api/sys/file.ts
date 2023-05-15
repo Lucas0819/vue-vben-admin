@@ -2,11 +2,11 @@ import { UploadApiResult } from './model/uploadModel';
 import { defHttp } from '/@/utils/http/axios';
 import { UploadFileParams } from '/#/axios';
 import { AxiosProgressEvent } from 'axios';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  UploadFile = ServiceProxyEnum.UPMS + '/file/upload',
-  DownloadFile = ServiceProxyEnum.UPMS + '/file/download/{fileName}',
+  UploadFile = ServiceEnum.UPMS + '/file/upload',
+  DownloadFile = ServiceEnum.UPMS + '/file/download/{fileName}',
 }
 
 /**

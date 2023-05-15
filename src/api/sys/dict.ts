@@ -1,9 +1,9 @@
 import { defHttp } from '/@/utils/http/axios';
 import { getDictModel } from '/@/api/sys/model/dictModel';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  GetAllDictList = ServiceProxyEnum.UPMS + '/dict_enum/all',
+  GetAllDictList = ServiceEnum.UPMS + '/dict_enum/all',
 }
 
 /**

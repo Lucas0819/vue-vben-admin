@@ -1,9 +1,9 @@
 import { defHttp } from '@/utils/http/axios';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
 import { CantonModel, CantonParams } from '@/api/sys/model/cantonModel';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  GetCantonList = ServiceProxyEnum.TICKET_GATEWAY + '/canton/cantons',
+  GetCantonList = ServiceEnum.TICKET_GATEWAY + '/canton/cantons',
 }
 
 export const getCantonList = (params: CantonParams) =>

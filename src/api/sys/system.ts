@@ -13,28 +13,28 @@ import {
   StaffParams,
 } from './model/systemModel';
 import { defHttp } from '/@/utils/http/axios';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
   // 员工
-  StaffPage = ServiceProxyEnum.TICKET_GATEWAY + '/tenant_staff/page',
-  IsAccountExist = ServiceProxyEnum.TICKET_GATEWAY + '/system/accountExist',
+  StaffPage = ServiceEnum.TICKET_GATEWAY + '/tenant_staff/page',
+  IsAccountExist = ServiceEnum.TICKET_GATEWAY + '/system/accountExist',
   // 组织机构
-  DeptList = ServiceProxyEnum.UPMS + '/common/organize/tree',
-  CreateDept = ServiceProxyEnum.TICKET_GATEWAY + '/organize',
-  UpdateDept = ServiceProxyEnum.TICKET_GATEWAY + '/organize',
-  DeleteDept = ServiceProxyEnum.TICKET_GATEWAY + '/organize/{id}',
+  DeptList = ServiceEnum.UPMS + '/common/organize/tree',
+  CreateDept = ServiceEnum.TICKET_GATEWAY + '/organize',
+  UpdateDept = ServiceEnum.TICKET_GATEWAY + '/organize',
+  DeleteDept = ServiceEnum.TICKET_GATEWAY + '/organize/{id}',
   // 角色
-  RolePageList = ServiceProxyEnum.TICKET_GATEWAY + '/role/page',
-  RoleAuthIdList = ServiceProxyEnum.TICKET_GATEWAY + '/role/{id}/auth_ids',
-  CreateRole = ServiceProxyEnum.TICKET_GATEWAY + '/role',
-  UpdateRole = ServiceProxyEnum.TICKET_GATEWAY + '/role',
-  UpdateRoleAuth = ServiceProxyEnum.TICKET_GATEWAY + '/role/auth',
-  DeleteRole = ServiceProxyEnum.TICKET_GATEWAY + '/role/{id}',
+  RolePageList = ServiceEnum.TICKET_GATEWAY + '/role/page',
+  RoleAuthIdList = ServiceEnum.TICKET_GATEWAY + '/role/{id}/auth_ids',
+  CreateRole = ServiceEnum.TICKET_GATEWAY + '/role',
+  UpdateRole = ServiceEnum.TICKET_GATEWAY + '/role',
+  UpdateRoleAuth = ServiceEnum.TICKET_GATEWAY + '/role/auth',
+  DeleteRole = ServiceEnum.TICKET_GATEWAY + '/role/{id}',
 
-  setRoleStatus = ServiceProxyEnum.TICKET_GATEWAY + '/system/setRoleStatus',
-  MenuTreeList = ServiceProxyEnum.TICKET_GATEWAY + '/tenant/auth_tree',
-  GetAllRoleList = ServiceProxyEnum.TICKET_GATEWAY + '/system/getAllRoleList',
+  setRoleStatus = ServiceEnum.TICKET_GATEWAY + '/system/setRoleStatus',
+  MenuTreeList = ServiceEnum.TICKET_GATEWAY + '/tenant/auth_tree',
+  GetAllRoleList = ServiceEnum.TICKET_GATEWAY + '/system/getAllRoleList',
 }
 
 export const getStaffPage = (params: StaffParams) =>

@@ -5,16 +5,16 @@ import {
   TmpPlacePageParams,
   TmpPlaceParams,
 } from './model/tmpPlaceModel';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  TmpPlacePage = ServiceProxyEnum.TICKET + '/tmp_place/type/{type}/page',
-  GetAllTmpPlaceList = ServiceProxyEnum.TICKET + '/tmp_place/getAllTmpPlaceList',
-  FindOne = ServiceProxyEnum.TICKET + '/tmp_place/{id}/detail',
-  CreateTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/save',
-  UpdateTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/modify',
-  DeleteTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/{id}/remove',
-  BatchDeleteTmpPlace = ServiceProxyEnum.TICKET + '/tmp_place/batch_remove',
+  TmpPlacePage = ServiceEnum.TICKET + '/tmp_place/type/{type}/page',
+  GetAllTmpPlaceList = ServiceEnum.TICKET + '/tmp_place/getAllTmpPlaceList',
+  FindOne = ServiceEnum.TICKET + '/tmp_place/{id}/detail',
+  CreateTmpPlace = ServiceEnum.TICKET + '/tmp_place/save',
+  UpdateTmpPlace = ServiceEnum.TICKET + '/tmp_place/modify',
+  DeleteTmpPlace = ServiceEnum.TICKET + '/tmp_place/{id}/remove',
+  BatchDeleteTmpPlace = ServiceEnum.TICKET + '/tmp_place/batch_remove',
 }
 
 export const getTmpPlaceListByPage = (params: TmpPlacePageParams) =>

@@ -2,7 +2,7 @@
  * @description: microservice set
  */
 
-export enum serviceEnum {
+export enum ServiceEnum {
   AUTH = '/auth',
   UPMS = '/upms',
   TICKET = '/ticket',

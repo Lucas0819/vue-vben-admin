@@ -2,12 +2,12 @@ import { defHttp } from '/@/utils/http/axios';
 import { GetUserInfoModel, LoginParams, LoginResultModel } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
-import { ServiceProxyEnum } from '@/enums/httpEnum';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  Login = ServiceProxyEnum.AUTH + '/oauth/token',
+  Login = ServiceEnum.AUTH + '/oauth/token',
   Logout = '/logout',
-  GetUserInfo = ServiceProxyEnum.UPMS + '/common/user/info',
+  GetUserInfo = ServiceEnum.UPMS + '/common/user/info',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
 }
