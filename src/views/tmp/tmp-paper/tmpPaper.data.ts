@@ -29,8 +29,6 @@ export const columns: BasicColumn[] = [
     title: '票面高度',
     dataIndex: 'ticketFaceHeight',
     width: 120,
-    sorter: true,
-    defaultSortOrder: 'descend',
   },
   {
     title: '创建时间',

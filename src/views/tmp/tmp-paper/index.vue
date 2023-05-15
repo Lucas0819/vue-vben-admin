@@ -82,10 +82,6 @@
         api: getTmpPaperListByPage,
         immediate: false,
         columns,
-        defSort: {
-          field: 'createDate',
-          order: 'descend',
-        },
         formConfig: {
           schemas: searchFormSchema,
           baseColProps: {
