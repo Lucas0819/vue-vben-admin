@@ -5,9 +5,9 @@ import { ErrorMessageMode } from '/#/axios';
 import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
-  Login = '/oauth/token',
+  Login = ServiceProxyEnum.AUTH + '/oauth/token',
   Logout = '/logout',
-  GetUserInfo = '/common/user/info',
+  GetUserInfo = ServiceProxyEnum.UPMS + '/common/user/info',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
 }
@@ -27,7 +27,6 @@ export function loginApi(params: LoginParams, headers: any, mode: ErrorMessageMo
       isTransformResponse: false,
       withToken: false,
       errorMessageMode: mode,
-      serviceProxy: ServiceProxyEnum.AUTH,
     },
   );
 }
@@ -36,10 +35,7 @@ export function loginApi(params: LoginParams, headers: any, mode: ErrorMessageMo
  * @description: getUserInfo
  */
 export function getUserInfo() {
-  return defHttp.get<GetUserInfoModel>(
-    { url: Api.GetUserInfo },
-    { errorMessageMode: 'none', serviceProxy: ServiceProxyEnum.UPMS },
-  );
+  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {

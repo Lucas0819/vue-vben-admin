@@ -4,14 +4,15 @@ import {
   TmpPaperListGetResultModel,
   TmpPaperPageParams,
 } from './model/tmpPaperModel';
+import { ServiceProxyEnum } from '@/enums/httpEnum';
 
 enum Api {
-  TmpPaperPage = '/tmp_paper/page',
-  FindOne = '/tmp_paper/{id}/detail',
-  CreateTmpPaper = '/tmp_paper/save',
-  UpdateTmpPaper = '/tmp_paper/modify',
-  DeleteTmpPaper = '/tmp_paper/{id}/remove',
-  BathDeleteTmpPaper = '/tmp_paper/batch_del',
+  TmpPaperPage = ServiceProxyEnum.TICKET + '/tmp_paper/page',
+  FindOne = ServiceProxyEnum.TICKET + '/tmp_paper/{id}/detail',
+  CreateTmpPaper = ServiceProxyEnum.TICKET + '/tmp_paper/save',
+  UpdateTmpPaper = ServiceProxyEnum.TICKET + '/tmp_paper/modify',
+  DeleteTmpPaper = ServiceProxyEnum.TICKET + '/tmp_paper/{id}/remove',
+  BathDeleteTmpPaper = ServiceProxyEnum.TICKET + '/tmp_paper/batch_del',
 }
 
 export const getTmpPaperListByPage = (params: TmpPaperPageParams) =>
