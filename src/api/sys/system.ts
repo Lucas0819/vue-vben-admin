@@ -20,7 +20,7 @@ enum Api {
   StaffPage = ServiceProxyEnum.TICKET_GATEWAY + '/tenant_staff/page',
   IsAccountExist = ServiceProxyEnum.TICKET_GATEWAY + '/system/accountExist',
   // 组织机构
-  DeptList = ServiceProxyEnum.TICKET_GATEWAY + '/common/organize/tree',
+  DeptList = ServiceProxyEnum.UPMS + '/common/organize/tree',
   CreateDept = ServiceProxyEnum.TICKET_GATEWAY + '/organize',
   UpdateDept = ServiceProxyEnum.TICKET_GATEWAY + '/organize',
   DeleteDept = ServiceProxyEnum.TICKET_GATEWAY + '/organize/{id}',
