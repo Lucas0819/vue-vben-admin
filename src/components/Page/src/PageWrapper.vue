@@ -3,6 +3,7 @@
     <PageHeader
       :ghost="ghost"
       :title="title"
+      :subTitle="subTitle"
       v-bind="omit($attrs, 'class')"
       ref="headerRef"
       v-if="getShowHeader"
@@ -34,14 +35,14 @@
 </template>
 <script lang="ts">
   import {
+    computed,
     CSSProperties,
+    defineComponent,
     PropType,
     provide,
-    defineComponent,
-    computed,
-    watch,
     ref,
     unref,
+    watch,
   } from 'vue';
 
   import PageFooter from './PageFooter.vue';
@@ -59,6 +60,7 @@
     inheritAttrs: false,
     props: {
       title: propTypes.string,
+      subTitle: propTypes.string,
       dense: propTypes.bool,
       ghost: propTypes.bool,
       content: propTypes.string,
