@@ -8,10 +8,16 @@ import {
   trackTransform,
   windowToCanvas,
 } from './seatUtil';
-import { isDef, isEmpty, isNullOrUnDef } from '/@/utils/is';
+import { isDef, isEmpty, isNotEmpty, isNullOrUnDef } from '/@/utils/is';
 import { cloneDeep } from 'lodash-es';
-import { LabelText, RuleStyle, ShapeItem, TmpShapeItem } from '@/utils/seat/seat';
-import { SeatAddProps, SelectTypeEnum } from '@/utils/seat/typing';
+import {
+  LabelText,
+  RuleStyle,
+  SeatAddProps,
+  SelectTypeEnum,
+  ShapeItem,
+  TmpShapeItem,
+} from '@/utils/seat/seat';
 
 /**
  * 改写自：seat-add12121.js
@@ -76,8 +82,8 @@ function cvsSizeInit() {
   seatCvs = document.getElementById('seatCvs');
   currWidth = seatCvs.offsetWidth;
   currHeight = seatCvs.offsetHeight;
-  seatCvs.width = currWidth;
-  seatCvs.height = currHeight;
+  // seatCvs.width = currWidth;
+  // seatCvs.height = currHeight;
   //初始化矩阵转换; context为 getContext("2d")所得的CanvasRenderingContext2D对象。
   seatCtx = trackTransform(seatCvs.getContext('2d'));
 }
@@ -359,8 +365,9 @@ function seatCvsEventInit() {
     drawSeat();
     //清除上次滑动轨迹
     _lineTrajectory = [];
-    // TODO @Lucas 隐藏选择框
-    // $('#selectRule').hide();
+    if (isNotEmpty(selectRule.value)) {
+      selectRule.value.visible = false;
+    }
   };
 
   //chrome firefox浏览器兼容  滚轮缩放事件
@@ -606,7 +613,7 @@ function select() {
     const _trueSelectPoint2 = windowToCanvas(seatCvs, e.clientX, e.clientY);
     const trueSelectPoint2 = seatCtx.transformedPoint(_trueSelectPoint2.x, _trueSelectPoint2.y);
     //选择方式
-    if (selectType.value == 'square') {
+    if (selectType.value == SelectTypeEnum.SQUARE) {
       //矩形选择
       //鼠标滑选时显示的矩形框
       const selectRect: TmpShapeItem = {
@@ -693,7 +700,7 @@ function select() {
           visible: true,
         };
       }
-    } else if (selectType.value == 'trajectory') {
+    } else if (selectType.value == SelectTypeEnum.TRAJECTORY) {
       //轨迹选择
       seatCtx.fillStyle = seatBorderColor;
       seatCtx.fillRect(

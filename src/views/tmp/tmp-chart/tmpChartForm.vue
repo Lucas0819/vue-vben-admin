@@ -3,7 +3,7 @@
     <CollapseContainer title="添加活动地址-票图">
       <BasicForm @register="register" @submit="handleSubmit" />
     </CollapseContainer>
-    <TmpChartSplitManagement v-if="isUpdate" :default-name="data?.name" />
+    <TmpChartSplitManagement v-if="isUpdate" :temp-chart-id="recordId" />
   </PageWrapper>
 </template>
 
@@ -110,6 +110,7 @@
       return {
         isUpdate,
         data,
+        recordId,
         register,
         handleSubmit,
       };

@@ -47,7 +47,7 @@
       Link: Typography.Link,
     },
     props: {
-      defaultName: String,
+      tempChartId: String,
     },
     setup(props) {
       const { t } = useI18n();
@@ -81,7 +81,7 @@
       function handleCreate() {
         go({
           path: PageEnum.TMP_TMP_CHART_SPLIT_SEAT,
-          query: { name: props.defaultName },
+          query: { tempChartId: props.tempChartId },
         });
       }
 
