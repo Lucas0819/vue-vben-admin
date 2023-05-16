@@ -147,21 +147,23 @@ export const formSchema: FormSchema[] = [
     required: false,
     component: 'ApiCascader',
     componentProps: {
-      api: areaRecord,
-      apiParamKey: 'parentCode',
-      dataField: 'data',
-      labelField: 'name',
-      valueField: 'code',
-      showSearch: true,
+      api: getCantonList,
+      initFetchParams: {
+        areaLevel: CantonLevelEnum.LEVEL_1,
+      },
+      labelField: 'areaName',
+      valueField: 'areaId',
+      levelField: 'areaLevel',
       isLeaf: (record) => {
-        return !(record.levelType < 3);
+        return record.areaLevel === CantonLevelEnum.LEVEL_3;
       },
     },
   },
   {
-    field: 'field1',
+    field: 'locatorAction',
     component: 'Input',
     label: ' ',
+    slot: 'locatorAction',
     render: () => {
       return h(
         Button,
