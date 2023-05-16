@@ -9,9 +9,9 @@ import {
   windowToCanvas,
 } from './seatUtil';
 import { isDef, isEmpty, isNullOrUnDef } from '/@/utils/is';
-import { useMessage } from '/@/hooks/web/useMessage';
 import { cloneDeep } from 'lodash-es';
 import { LabelText, RuleStyle, ShapeItem, TmpShapeItem } from '@/utils/seat/seat';
+import { SeatAddProps, SelectTypeEnum } from '@/utils/seat/typing';
 
 /**
  * 改写自：seat-add12121.js
@@ -24,8 +24,8 @@ let seatCvs; //canvas.context和jcanvas
 
 //可配置变量
 //初始行列数
-const rowsNum = 10; //排数
-const colsNum = 10; //列数
+let rowsNum = 10; //排数
+let colsNum = 10; //列数
 const seatColor = '#EEEEEE'; //非座位默认颜色
 const seatSetColor = '#AAAAAA'; //设定的座位默认颜色
 const seatBorderColor = '#CCCCCC'; //座位默认边框颜色
@@ -40,6 +40,8 @@ let maxScale = 2.4; //最大缩放比例(值已无效,改为自动计算极限�
 const scaleInterval = 0.1; //每次缩放间距
 const seatRatioOfScreenX = 0.25; //屏幕横向至少保持1/4的座位,无法移出画布
 const seatRatioOfScreenY = 0.44; //屏幕纵向至少保持1/4的座位,无法移出画布
+
+let seatAddProps: SeatAddProps;
 
 //不可配置变量
 let mousePointLastX, mousePointLastY; //鼠标上次移动点坐标
@@ -63,11 +65,8 @@ let stageShapeMiddleLine; //舞台中心线
 let moveStageStatus = false; //移动舞台状态
 let stageShowStatus = true; //显示舞台状态
 
-// let tid; //窗口改变时事件延迟句柄
-const { createMessage } = useMessage();
-
 // 按钮选择状态
-export const selectType = ref('square'); // 选择方式, square: 矩形选择 || trajectory: 轨迹
+export const selectType = ref(SelectTypeEnum.SQUARE); // 选择方式, square: 矩形选择 || trajectory: 轨迹
 
 export const selectRule = ref<RuleStyle>(); // 选择内容提示
 
@@ -732,10 +731,7 @@ function select() {
 
 //提示信息
 function changeMsg(text, delay = 5) {
-  createMessage.config({
-    maxCount: 1,
-  });
-  createMessage.info('提示: ' + text, delay);
+  seatAddProps.setTips(text, delay);
 }
 
 //设定/删除已选定的座位 true:设定,false:删除
@@ -899,68 +895,18 @@ function addResizeEventListener() {
 }
 
 //生成画布按钮事件
-export const createLayer = function () {
-  // TODO @Lucas 弹窗方法实现
-  // layer.open({
-  //   type: 1,
-  //   area: ['350px', '250px'], //宽高
-  //   title: '生成画布',
-  //   shade: 0.1,
-  //   content: $('#createBtnPanel'),
-  //   btn: ['确定', '取消'],
-  //   yes: function (index, layero) {
-  //     if (!$('#name').val()) {
-  //       layer.msg(
-  //         '结构名称未填写',
-  //         {
-  //           icon: 2,
-  //           time: 2000,
-  //           shade: [0.4, '#000'],
-  //           shadeClose: true,
-  //         },
-  //         function () {
-  //           $('#name').focus();
-  //         },
-  //       );
-  //       return;
-  //     }
-  //     if (hasHistory()) {
-  //       layer.confirm(
-  //         '重新生成将清空已绘制的座位，确定这样做吗？（如果只修改结构名称，请关闭此页面，进入修改页面修改！）',
-  //         { icon: 3, title: '警告' },
-  //         function (index2) {
-  //           const _rowsNum = parseInt($('#rowsNum').val());
-  //           const _colsNum = parseInt($('#colsNum').val());
-  //           //行列初始化
-  //           rowsNum = _rowsNum && !isNaN(_rowsNum) && _rowsNum > 10 ? _rowsNum : 10;
-  //           colsNum = _colsNum && !isNaN(_colsNum) && _colsNum > 10 ? _colsNum : 10;
-  //           //初始化上帝视角
-  //           godPerspectives();
-  //           //初始化座位
-  //           initSeat();
-  //           //重绘所有
-  //           drawSeat();
-  //           layer.close(index2);
-  //           layer.close(index);
-  //         },
-  //       );
-  //     } else {
-  //       const _rowsNum = parseInt($('#rowsNum').val());
-  //       const _colsNum = parseInt($('#colsNum').val());
-  //       //行列初始化
-  //       rowsNum = _rowsNum && !isNaN(_rowsNum) && _rowsNum > 10 ? _rowsNum : 10;
-  //       colsNum = _colsNum && !isNaN(_colsNum) && _colsNum > 10 ? _colsNum : 10;
-  //       //初始化上帝视角
-  //       godPerspectives();
-  //       //初始化座位
-  //       initSeat();
-  //       //重绘所有
-  //       drawSeat();
-  //       layer.close(index);
-  //     }
-  //   },
-  //   btn2: function (index, layero) {},
-  // });
+export const reInitSeatAdd = function (_rowsNum: number, _colsNum: number) {
+  _rowsNum = _rowsNum ?? 10;
+  _colsNum = _rowsNum ?? 10;
+  //行列初始化
+  rowsNum = _rowsNum >= 10 ? _rowsNum : 10;
+  colsNum = _rowsNum >= 10 ? _colsNum : 10;
+  //初始化上帝视角
+  godPerspectives();
+  //初始化座位
+  initSeat();
+  //重绘所有
+  drawSeat();
 };
 
 //移动舞台按钮事件
@@ -1018,6 +964,14 @@ export const moveStage = function () {
   };
 };
 
+// 重置比例
+export const resizeProportion = function () {
+  godPerspectives();
+  keepLabelAndTextFixed();
+  drawSeat();
+  changeMsg('已恢复上帝视角');
+};
+
 //撤销按钮点击事件
 export const revocation = function () {
   // TODO @Lucas 按钮处理
@@ -1040,6 +994,7 @@ export const revocation = function () {
     drawSeat();
     changeMsg('已经后退到上一步操作');
   }
+  seatAddProps?.setBtnAvailable?.(true);
 };
 
 //保存按钮点击事件
@@ -1118,12 +1073,27 @@ export const revocation = function () {
 // };
 
 //选择方式切换
-export const changeSelectType = function (type: string) {
+export const changeSelectType = function (type: SelectTypeEnum) {
   selectType.value = type;
   changeMsg('鼠标左键滑选，轨迹选择性能低，需匀速慢慢滑动', 15);
 };
 
-export const initSeatAdd = function () {
+export const getStagePosition = () => {
+  return stageShapeMiddleLine.linePosition;
+};
+
+export const getSeatDetail = () => {
+  const result: string[] = [];
+  for (const i in shapes) {
+    if (shapes[i].isSeat) {
+      result.push(i + '|0|0|0|0|0|0'); //index|座位行|座位列|颜色|预留|预留|预留
+    }
+  }
+  return result;
+};
+
+export const initSeatAdd = function (props: SeatAddProps) {
+  seatAddProps = props;
   // 添加窗口变化监听事件
   addResizeEventListener();
   //初始化所有画板大小(此方法需要在所有操作之前执行)
@@ -1136,6 +1106,4 @@ export const initSeatAdd = function () {
   drawSeat();
   //初始化票图画板事件
   seatCvsEventInit();
-  // 创建票图，打开生成信息弹窗
-  createLayer();
 };

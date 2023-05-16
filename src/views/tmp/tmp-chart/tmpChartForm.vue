@@ -3,7 +3,7 @@
     <CollapseContainer title="添加活动地址-票图">
       <BasicForm @register="register" @submit="handleSubmit" />
     </CollapseContainer>
-    <TmpChartSplitManagement />
+    <TmpChartSplitManagement v-if="isUpdate" :default-name="data?.name" />
   </PageWrapper>
 </template>
 
@@ -21,6 +21,7 @@
   import { useTabs } from '/@/hooks/web/useTabs';
   import { isNotEmpty } from '@/utils/is';
   import TmpChartSplitManagement from '/@/views/tmp/tmp-chart-split/index.vue';
+  import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
 
   export default defineComponent({
     components: {
@@ -32,6 +33,7 @@
     setup() {
       const { t } = useI18n();
       const recordId = ref('');
+      const data = ref<TmpChartItem | null>(null);
       const router = useRouter();
       const { query } = unref(router.currentRoute);
       const isUpdate = ref(false);
@@ -70,8 +72,8 @@
           return;
         }
         await resetFields();
-        const data = await findOne(recordId.value);
-        setTitle('活动地址-票图-' + data.name);
+        data.value = await findOne(recordId.value);
+        setTitle('活动地址-票图-' + data.value?.name);
         setFieldsValue(data);
       });
 
@@ -81,6 +83,8 @@
           values.id = unref(recordId);
           await updateTmpChart(values);
         } else {
+          // 默认未发布
+          values.isRelease = false;
           await createTmpChart(values);
         }
         await handleSuccess();
@@ -104,6 +108,8 @@
       }
 
       return {
+        isUpdate,
+        data,
         register,
         handleSubmit,
       };

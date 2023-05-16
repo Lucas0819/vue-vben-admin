@@ -19,19 +19,19 @@ export type TmpChartSplitParams = {
 export type TmpChartSplitPageParams = BasicPageParams & TmpChartSplitParams;
 
 export interface TmpChartSplitItem {
-  id: string;
-  remarks: string;
+  id?: string;
+  remarks?: string;
   // createBy: User;
-  createDate: Date;
-  updateDate: Date;
-  tempChartId: string;
-  name: string;
-  initRow: number;
-  initColumn: number;
-  stagePosition: number;
-  splitCss: string;
-  desJson: string;
-  tmpChartName: string;
+  createDate?: Date;
+  updateDate?: Date;
+  tempChartId?: string;
+  name?: string;
+  initRow?: number;
+  initColumn?: number;
+  stagePosition?: number;
+  splitCss?: string;
+  desJson?: string;
+  tmpChartName?: string;
 }
 
 export type TmpChartSplitListGetResultModel = BasicFetchResult<TmpChartSplitItem>;

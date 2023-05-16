@@ -1,71 +1,61 @@
 <template>
-  <div>
-    <BasicTable @register="registerTable" style="padding: 3px" class="mt-4">
-      <template #tableTitle>
-        <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
-        <a-button type="primary" @click="handleCreate"> 创建票图结构模板 </a-button>
+  <BasicTable @register="registerTable" style="padding: 3px" class="mt-4">
+    <template #tableTitle>
+      <a-button type="primary" danger :disabled="canBatchDelete" class="mr-2">删除</a-button>
+      <a-button type="primary" @click="handleCreate"> 创建票图结构模板 </a-button>
+    </template>
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'name'">
+        <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'name'">
-          <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
-        </template>
-        <template v-if="column.key === 'action'">
-          <TableAction
-            :actions="[
-              {
-                label: '删除',
-                color: 'error',
-                popConfirm: {
-                  title: '是否确认删除该项吗？',
-                  placement: 'left',
-                  confirm: handleDelete.bind(null, record),
-                },
+      <template v-if="column.key === 'action'">
+        <TableAction
+          :actions="[
+            {
+              label: '删除',
+              color: 'error',
+              popConfirm: {
+                title: '是否确认删除该项吗？',
+                placement: 'left',
+                confirm: handleDelete.bind(null, record),
               },
-            ]"
-          />
-        </template>
+            },
+          ]"
+        />
       </template>
-    </BasicTable>
-    <TmpChartSplitDrawer @register="registerDrawer" @success="handleSuccess" />
-  </div>
+    </template>
+  </BasicTable>
 </template>
 <script lang="ts">
   import { computed, defineComponent } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
 
-  import { columns, searchFormSchema } from './tmpChartSplit.data';
+  import { columns } from './tmpChartSplit.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { deleteTmpChartSplit, getTmpChartSplitListByPage } from '/@/api/tmp/tmpChartSplit';
-  import { useRouter } from 'vue-router';
   import { Typography } from 'ant-design-vue';
   import { PageEnum } from '/@/enums/pageEnum';
-  import TmpChartSplitDrawer from '/@/views/tmp/tmp-chart-split/TmpChartSplitDrawer.vue';
-  import { useDrawer } from '/@/components/Drawer';
+  import { useGo } from '@/hooks/web/usePage';
 
   export default defineComponent({
     name: 'TmpChartSplitManagement',
     components: {
-      TmpChartSplitDrawer,
       BasicTable,
       TableAction,
       Link: Typography.Link,
     },
-    setup() {
+    props: {
+      defaultName: String,
+    },
+    setup(props) {
       const { t } = useI18n();
-      const router = useRouter();
+      const go = useGo();
 
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpChartSplitListByPage,
         columns,
-        formConfig: {
-          schemas: searchFormSchema,
-          baseColProps: {
-            span: 6,
-            style: { paddingLeft: '5px', paddingRight: '25px' },
-          },
-        },
         useSearchForm: false,
         showTableSetting: false,
         bordered: true,
@@ -84,19 +74,19 @@
         },
       });
 
-      const [registerDrawer, { openDrawer }] = useDrawer();
-
       const canBatchDelete = computed(() => {
         return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
       });
 
       function handleCreate() {
-        openDrawer(true);
-        // router.push(PageEnum.TMP_TMP_CHART_SPLIT_FORM);
+        go({
+          path: PageEnum.TMP_TMP_CHART_SPLIT_SEAT,
+          query: { name: props.defaultName },
+        });
       }
 
       function handleEdit(record: Recordable) {
-        router.push({
+        go({
           path: PageEnum.TMP_TMP_CHART_SPLIT_SEAT,
           query: { id: record.id },
         });
@@ -120,7 +110,6 @@
 
       return {
         registerTable,
-        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

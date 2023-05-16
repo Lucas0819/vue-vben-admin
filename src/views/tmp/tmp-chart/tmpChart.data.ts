@@ -1,6 +1,8 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { areaRecord } from '@/api/demo/cascader';
+import { getCantonList } from '@/api/sys/canton';
+import { CantonLevelEnum } from '@/enums/cantonLevelEnum';
+import { uploadApi } from '@/api/sys/file';
 
 const { t } = useI18n();
 
@@ -68,14 +70,15 @@ export const searchFormSchema: FormSchema[] = [
     label: '所属区域',
     component: 'ApiCascader',
     componentProps: {
-      api: areaRecord,
-      apiParamKey: 'parentCode',
-      dataField: 'data',
-      labelField: 'name',
-      valueField: 'code',
-      showSearch: true,
+      api: getCantonList,
+      initFetchParams: {
+        areaLevel: CantonLevelEnum.LEVEL_1,
+      },
+      labelField: 'areaName',
+      valueField: 'areaId',
+      levelField: 'areaLevel',
       isLeaf: (record) => {
-        return !(record.levelType < 3);
+        return record.areaLevel === CantonLevelEnum.LEVEL_3;
       },
     },
   },
@@ -95,23 +98,19 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    field: 'isPhotoUrl',
-    component: 'CheckboxGroup',
-    label: '特殊选项',
-    componentProps: {
-      options: [
-        {
-          label: '是否有预览图',
-          value: '1',
-        },
-      ],
-    },
-    rules: [{ required: false }],
+    field: 'isSplit',
+    component: 'Checkbox',
+    label: '是否有预览图',
+    defaultValue: false,
   },
   {
-    field: 'photourl',
+    field: 'photoUrl',
     label: '预览图',
     required: false,
-    component: 'Input',
+    component: 'Upload',
+    componentProps: {
+      api: uploadApi,
+      maxNumber: 1,
+    },
   },
 ];

@@ -5,14 +5,15 @@ import {
   TmpChartSplitPageParams,
   TmpChartSplitParams,
 } from './model/tmpChartSplitModel';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  TmpChartSplitPage = '/tmpChartSplit/getTmpChartSplitPage',
-  GetAllTmpChartSplitList = '/tmpChartSplit/getAllTmpChartSplitList',
-  FindOne = '/tmpChartSplit/findOne/{id}',
-  CreateTmpChartSplit = '/tmpChartSplit/createTmpChartSplit',
-  UpdateTmpChartSplit = '/tmpChartSplit/updateTmpChartSplit',
-  DeleteTmpChartSplit = '/tmpChartSplit/deleteTmpChartSplit/{id}',
+  TmpChartSplitPage = ServiceEnum.TICKET + '/tmp_chart_split/page',
+  GetAllTmpChartSplitList = ServiceEnum.TICKET + '/tmp_chart_split/getAllTmpChartSplitList',
+  FindOne = ServiceEnum.TICKET + '/tmp_chart_split/{id}/detail',
+  CreateTmpChartSplit = ServiceEnum.TICKET + '/tmp_chart_split/save',
+  UpdateTmpChartSplit = ServiceEnum.TICKET + '/tmp_chart_split/modify',
+  DeleteTmpChartSplit = ServiceEnum.TICKET + '/tmp_chart_split/{id}/remove',
 }
 
 export const getTmpChartSplitListByPage = (params: TmpChartSplitPageParams) =>

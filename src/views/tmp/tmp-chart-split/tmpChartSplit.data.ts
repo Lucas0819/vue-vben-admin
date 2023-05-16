@@ -49,51 +49,32 @@ export const searchFormSchema: FormSchema[] = [];
 
 export const formSchema: FormSchema[] = [
   {
-    field: 'tempChartId',
-    label: 'temp_chart_id',
-    required: false,
+    field: 'tmpChartName',
+    label: '结构名称',
+    required: true,
     component: 'Input',
-  },
-  {
-    field: 'name',
-    label: '楼层',
-    required: false,
-    component: 'Input',
+    componentProps: {
+      placeholder: '请输入结构名称',
+    },
   },
   {
     field: 'initRow',
     label: '行数',
     required: false,
-    component: 'Input',
+    component: 'InputNumber',
+    defaultValue: 10,
+    componentProps: {
+      placeholder: '正整数,默认为:10',
+    },
   },
   {
     field: 'initColumn',
     label: '列数',
     required: false,
-    component: 'Input',
-  },
-  {
-    field: 'stagePosition',
-    label: '舞台位置,-1为没有舞台,其他数字为所在列的后面,此处列数从1开始',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'splitCss',
-    label: '多结构CSS',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'desJson',
-    label: '明细JSON',
-    required: false,
-    component: 'Input',
-  },
-  {
-    field: 'tmpChartName',
-    label: 'tmpChartName',
-    required: false,
-    component: 'Input',
+    component: 'InputNumber',
+    defaultValue: 10,
+    componentProps: {
+      placeholder: '正整数,默认为:10',
+    },
   },
 ];

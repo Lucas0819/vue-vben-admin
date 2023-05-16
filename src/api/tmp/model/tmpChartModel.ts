@@ -9,7 +9,7 @@ export type TmpChartParams = {
   name?: string;
   areaId?: string;
   isSplit?: string;
-  photourl?: string;
+  photoUrl?: string;
   isRelease?: number;
   areaName?: string;
   cnt?: number;
@@ -26,7 +26,7 @@ export interface TmpChartItem {
   name: string;
   areaId: string;
   isSplit: string;
-  photourl: string;
+  photoUrl: string;
   isRelease: number;
   areaName: string;
   cnt: number;

@@ -44,14 +44,11 @@
   import { columns, searchFormSchema } from './tmpChart.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { deleteTmpChart, getAllTmpChartList, getTmpChartListByPage } from '/@/api/tmp/tmpChart';
+  import { deleteTmpChart, getTmpChartListByPage } from '/@/api/tmp/tmpChart';
   import { useRouter } from 'vue-router';
   import { Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
-  import { onMountedOrActivated } from '@vben/hooks';
-  import { isEmpty } from '/@/utils/is';
-  import { TmpChartItem } from '/@/api/tmp/model/tmpChartModel';
 
   export default defineComponent({
     name: 'TmpChartManagement',
@@ -92,12 +89,6 @@
 
       const canBatchDelete = computed(() => {
         return !(getSelectRowKeys() && getSelectRowKeys().length > 0);
-      });
-
-      onMountedOrActivated(async () => {
-        const list = await getAllTmpChartList();
-        if (isEmpty(list as TmpChartItem[])) return;
-        list.find((item) => item.id === '1');
       });
 
       function handleCreate() {
