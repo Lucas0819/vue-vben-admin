@@ -19,6 +19,10 @@ enum Api {
   // 员工
   StaffPage = ServiceEnum.TICKET_GATEWAY + '/tenant_staff/page',
   IsAccountExist = ServiceEnum.TICKET_GATEWAY + '/system/accountExist',
+  StaffDetail = ServiceEnum.TICKET_GATEWAY + '/tenant_staff/{id}/detail',
+  CreateStaff = ServiceEnum.TICKET_GATEWAY + '/tenant_staff',
+  UpdateStaff = ServiceEnum.TICKET_GATEWAY + '/tenant_staff',
+  DeleteStaff = ServiceEnum.TICKET_GATEWAY + '/tenant_staff/{id}',
   // 组织机构
   DeptList = ServiceEnum.UPMS + '/common/organize/tree',
   CreateDept = ServiceEnum.TICKET_GATEWAY + '/organize',
@@ -34,11 +38,21 @@ enum Api {
 
   setRoleStatus = ServiceEnum.TICKET_GATEWAY + '/system/setRoleStatus',
   MenuTreeList = ServiceEnum.TICKET_GATEWAY + '/tenant/auth_tree',
-  GetAllRoleList = ServiceEnum.TICKET_GATEWAY + '/system/getAllRoleList',
+  GetAllRoleList = ServiceEnum.TICKET_GATEWAY + '/role/list',
 }
 
 export const getStaffPage = (params: StaffParams) =>
   defHttp.get<StaffListGetResultModel>({ url: Api.StaffPage, params });
+
+export const getStaffDetail = (id) =>
+  defHttp.get<StaffParams>({ url: Api.StaffDetail.replace('{id}', id) });
+
+export const createStaff = (params?: StaffParams) => defHttp.post({ url: Api.CreateStaff, params });
+
+export const updateStaff = (params?: StaffParams) => defHttp.put({ url: Api.UpdateStaff, params });
+
+export const deleteStaff = (params: string) =>
+  defHttp.delete({ url: Api.DeleteStaff.replace('{id}', params) });
 
 export const getDeptList = (params?: DeptListItem) =>
   defHttp.get<DeptListGetResultModel>({ url: Api.DeptList, params });

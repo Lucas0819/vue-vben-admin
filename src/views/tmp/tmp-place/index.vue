@@ -19,6 +19,32 @@
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'name'">
           <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
+          <template v-if="record.remarks">
+            <br />
+            <span style="color: #a94442">{{ record.remarks }}</span>
+          </template>
+        </template>
+        <template v-if="column.key === 'tmpChartName'">
+          <Link
+            @click="() => handleEditTmpChart(record)"
+            style="color: #55585a; text-decoration: underline"
+            >{{ record.tmpChartName }}</Link
+          >
+          <template v-if="record.tmpChartRemarks">
+            <br />
+            <span style="color: #a94442">{{ record.tmpChartRemarks }}</span>
+          </template>
+        </template>
+        <template v-if="column.key === 'activeName'">
+          <Link
+            @click="() => openActiveModal(record)"
+            style="color: #55585a; text-decoration: underline"
+            v-if="record.activeName"
+            >{{ record.activeName }}次</Link
+          >
+        </template>
+        <template v-if="column.key === 'areaId'">
+          <span>{{ translateCantonData(parseInt(record.areaId)) }}</span>
         </template>
         <template v-if="column.key === 'action'">
           <TableAction
@@ -52,6 +78,7 @@
   import { Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
+  import { translateCantonData } from '@/utils/canton';
 
   export default defineComponent({
     name: 'TmpPlaceManagement',
@@ -83,11 +110,6 @@
         // },
         rowSelection: {
           type: 'checkbox',
-        },
-        beforeFetch(info) {
-          if (info.areaId) {
-            info.areaId = info.areaId.join(',');
-          }
         },
       });
 
@@ -142,6 +164,22 @@
         reload();
       }
 
+      function handleEditTmpChart(record: Recordable) {
+        if (!record.tmpChartId) {
+          return;
+        }
+        router.push({
+          path: PageEnum.TMP_TMP_CHART_FORM,
+          query: { id: record.tmpChartId },
+        });
+      }
+
+      // 查看当前活动地址 活动列表
+      function openActiveModal(record: Recordable) {
+        console.error(record);
+        // TODO
+      }
+
       return {
         registerTable,
         handleCreate,
@@ -150,6 +188,9 @@
         handleSuccess,
         canBatchDelete,
         batchDelete,
+        translateCantonData,
+        handleEditTmpChart,
+        openActiveModal,
       };
     },
   });

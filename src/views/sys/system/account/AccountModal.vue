@@ -8,7 +8,8 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { accountFormSchema } from './account.data';
-  import { getDeptList } from '/@/api/sys/system';
+  import { getDeptList, getStaffDetail, createStaff, updateStaff } from '/@/api/sys/system';
+  import { isArray } from '@/utils/is';
 
   export default defineComponent({
     name: 'AccountModal',
@@ -34,10 +35,13 @@
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
-          rowId.value = data.record.id;
-          setFieldsValue({
-            ...data.record,
+          rowId.value = data.rowId;
+          await resetFields();
+          data.value = await getStaffDetail(rowId.value);
+          data.value.roleIds = data.value.roleList.map((item) => {
+            return item.id;
           });
+          setFieldsValue(data.value);
         }
 
         const treeData = await getDeptList();
@@ -47,7 +51,7 @@
             show: !unref(isUpdate),
           },
           {
-            field: 'dept',
+            field: 'orgId',
             componentProps: { treeData },
           },
         ]);
@@ -59,8 +63,18 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
+          if (!isArray(values.roleIds)) {
+            values.roleIds = values.roleIds.split(',').map((item) => {
+              return item;
+            });
+          }
+          // values.orgId = parseInt(values.orgId);
+          if (unref(isUpdate)) {
+            values.id = unref(rowId);
+            await updateStaff(values);
+          } else {
+            await createStaff(values);
+          }
           closeModal();
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {

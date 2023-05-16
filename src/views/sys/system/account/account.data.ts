@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import { getAllRoleList, isAccountExist } from '/@/api/sys/system';
+import { getAllRoleList } from '/@/api/sys/system';
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { translateDictData } from '/@/utils/dict';
 
@@ -44,25 +44,38 @@ export const searchFormSchema: FormSchema[] = [
 
 export const accountFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'username',
     label: '用户名',
     component: 'Input',
-    helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
+    // helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
     rules: [
       {
         required: true,
         message: '请输入用户名',
       },
+    ],
+  },
+  {
+    field: 'phone',
+    label: '手机号',
+    component: 'Input',
+    required: true,
+    rules: [
       {
-        validator(_, value) {
-          return new Promise((resolve, reject) => {
-            isAccountExist(value)
-              .then(() => resolve())
-              .catch((err) => {
-                reject(err.message || '验证失败');
-              });
-          });
+        required: true,
+        // @ts-ignore
+        validator: async (rule, value) => {
+          if (!value) {
+            /* eslint-disable-next-line */
+            return Promise.reject('请输入手机号');
+          }
+          const phoneReg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
+          if (!phoneReg.test(value)) {
+            return Promise.reject('请输入正确的手机号');
+          }
+          return Promise.resolve();
         },
+        trigger: 'blur',
       },
     ],
   },
@@ -75,22 +88,22 @@ export const accountFormSchema: FormSchema[] = [
   },
   {
     label: '角色',
-    field: 'role',
+    field: 'roleIds',
     component: 'ApiSelect',
     componentProps: {
       api: getAllRoleList,
-      labelField: 'roleName',
-      valueField: 'roleValue',
+      labelField: 'name',
+      valueField: 'id',
     },
     required: true,
   },
   {
-    field: 'dept',
+    field: 'orgId',
     label: '所属部门',
     component: 'TreeSelect',
     componentProps: {
       fieldNames: {
-        label: 'deptName',
+        label: 'name',
         key: 'id',
         value: 'id',
       },
@@ -99,7 +112,7 @@ export const accountFormSchema: FormSchema[] = [
     required: true,
   },
   {
-    field: 'nickname',
+    field: 'name',
     label: '昵称',
     component: 'Input',
     required: true,
@@ -110,6 +123,25 @@ export const accountFormSchema: FormSchema[] = [
     field: 'email',
     component: 'Input',
     required: true,
+    rules: [
+      {
+        required: true,
+        // @ts-ignore
+        validator: async (rule, value) => {
+          if (!value) {
+            /* eslint-disable-next-line */
+            return Promise.reject('请输入手机号');
+          }
+          const emailReg =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          if (!emailReg.test(value)) {
+            return Promise.reject('请输入正确的手机号');
+          }
+          return Promise.resolve();
+        },
+        trigger: 'blur',
+      },
+    ],
   },
 
   {

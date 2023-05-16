@@ -41,7 +41,7 @@
   import { defineComponent, reactive } from 'vue';
 
   import { BasicTable, TableAction, useTable } from '/@/components/Table';
-  import { getStaffPage } from '/@/api/sys/system';
+  import { getStaffPage, deleteStaff } from '/@/api/sys/system';
   import { PageWrapper } from '/@/components/Page';
   import DeptTree from './DeptTree.vue';
 
@@ -58,33 +58,34 @@
       const go = useGo();
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});
-      const [registerTable, { reload, updateTableDataRecord }] = useTable({
-        title: '账号列表',
-        api: getStaffPage,
-        rowKey: 'id',
-        columns,
-        formConfig: {
-          baseColProps: {
-            span: 6,
-            style: { paddingLeft: '5px', paddingRight: '25px' },
+      const [registerTable, { reload, updateTableDataRecord, setLoading: setTableLoading }] =
+        useTable({
+          title: '账号列表',
+          api: getStaffPage,
+          rowKey: 'id',
+          columns,
+          formConfig: {
+            baseColProps: {
+              span: 6,
+              style: { paddingLeft: '5px', paddingRight: '25px' },
+            },
+            schemas: searchFormSchema,
+            autoSubmitOnEnter: true,
           },
-          schemas: searchFormSchema,
-          autoSubmitOnEnter: true,
-        },
-        useSearchForm: true,
-        showTableSetting: true,
-        bordered: true,
-        handleSearchInfoFn(info) {
-          console.log('handleSearchInfoFn', info);
-          return info;
-        },
-        actionColumn: {
-          width: 80,
-          title: '操作',
-          dataIndex: 'action',
-          // slots: { customRender: 'action' },
-        },
-      });
+          useSearchForm: true,
+          showTableSetting: true,
+          bordered: true,
+          handleSearchInfoFn(info) {
+            console.log('handleSearchInfoFn', info);
+            return info;
+          },
+          actionColumn: {
+            width: 80,
+            title: '操作',
+            dataIndex: 'action',
+            // slots: { customRender: 'action' },
+          },
+        });
 
       function handleCreate() {
         openModal(true, {
@@ -93,15 +94,20 @@
       }
 
       function handleEdit(record: Recordable) {
-        console.log(record);
         openModal(true, {
-          record,
+          rowId: record.id,
           isUpdate: true,
         });
       }
 
-      function handleDelete(record: Recordable) {
-        console.log(record);
+      async function handleDelete(record: Recordable) {
+        try {
+          setTableLoading(true);
+          await deleteStaff(record.id);
+          handleSuccess({ isUpdate: false });
+        } finally {
+          setTableLoading(false);
+        }
       }
 
       function handleSuccess({ isUpdate, values }) {

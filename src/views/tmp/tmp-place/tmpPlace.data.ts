@@ -23,16 +23,16 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '票图名称',
-    dataIndex: 'tmpChart', // .name
+    dataIndex: 'tmpChartName', // .name
   },
   {
     title: '使用次数',
-    dataIndex: 'cnt',
+    dataIndex: 'activeNum',
     width: 120,
   },
   {
     title: '所属区域',
-    dataIndex: 'areaName',
+    dataIndex: 'areaId',
   },
   {
     title: '所属机构',
@@ -96,12 +96,13 @@ export const searchFormSchema: FormSchema[] = [
     component: 'ApiCascader',
     componentProps: {
       api: getCantonList,
-      initFetchParams: {
-        areaLevel: CantonLevelEnum.LEVEL_1,
-      },
+      // initFetchParams: {
+      //   areaLevel: CantonLevelEnum.LEVEL_1,
+      // },
       labelField: 'areaName',
       valueField: 'areaId',
       levelField: 'areaLevel',
+      showSearch: true,
       isLeaf: (record) => {
         return record.areaLevel === CantonLevelEnum.LEVEL_3;
       },
