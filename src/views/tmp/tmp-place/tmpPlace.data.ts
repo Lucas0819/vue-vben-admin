@@ -135,6 +135,10 @@ export const formSchema: FormSchema[] = [
     itemProps: {
       extra: '提示：票图模板保存后不可修改',
     },
+    // 编辑状态下不可用
+    dynamicDisabled: ({ values }) => {
+      return !!values.id;
+    },
   },
   {
     field: 'name',
@@ -155,6 +159,7 @@ export const formSchema: FormSchema[] = [
       labelField: 'areaName',
       valueField: 'areaId',
       levelField: 'areaLevel',
+      showSearch: true,
       isLeaf: (record) => {
         return record.areaLevel === CantonLevelEnum.LEVEL_3;
       },

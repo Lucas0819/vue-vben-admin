@@ -90,10 +90,6 @@
       const [registerTable, { reload, setLoading: setTableLoading, setTableData }] = useTable({
         api: getOfficeListByPage,
         columns,
-        defSort: {
-          field: 'createDate',
-          order: 'descend',
-        },
         beforeFetch(info) {
           if (info.settlementRatio === 'all') {
             info.settlementRatio = undefined;

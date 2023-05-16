@@ -5,14 +5,15 @@ import {
   OfficePageParams,
   OfficeParams,
 } from './model/officeModel';
+import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
-  OfficePage = '/office/getOfficePage',
-  GetAllOfficeList = '/office/getAllOfficeList',
-  FindOne = '/office/findOne/{id}',
-  CreateOffice = '/office/createOffice',
-  UpdateOffice = '/office/updateOffice',
-  DeleteOffice = '/office/deleteOffice/{id}',
+  OfficePage = ServiceEnum.TICKET_GATEWAY + '/tenant/page',
+  GetAllOfficeList = ServiceEnum.TICKET_GATEWAY + '/tenant/list',
+  FindOne = ServiceEnum.TICKET_GATEWAY + '/tenant/{id}/detail',
+  CreateOffice = ServiceEnum.TICKET_GATEWAY + '/tenant',
+  UpdateOffice = ServiceEnum.TICKET_GATEWAY + '/tenant',
+  DeleteOffice = ServiceEnum.TICKET_GATEWAY + '/tenant/{id}',
 }
 
 export const getOfficeListByPage = (params: OfficePageParams) =>

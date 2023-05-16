@@ -31,9 +31,9 @@ export const columns: BasicColumn[] = [
     title: '上级商户',
     dataIndex: 'parent',
     width: 150,
-    customRender: ({ record }) => {
-      return record.parent.name;
-    },
+    // customRender: ({ record }) => {
+    //   return record.parent.name;
+    // },
   },
   {
     title: '结算比例',

@@ -122,6 +122,9 @@
 
       async function handleSubmit() {
         const values = await validate();
+        if (values.areaId && values.areaId.length > 0) {
+          values.areaId = values.areaId[values.areaId.length - 1];
+        }
         if (unref(isUpdate)) {
           values.id = unref(recordId);
           await updateTmpPlace(values);

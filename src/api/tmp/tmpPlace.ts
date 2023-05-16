@@ -18,7 +18,7 @@ enum Api {
 }
 
 export const getTmpPlaceListByPage = (params: TmpPlacePageParams) =>
-  defHttp.get<TmpPlaceListGetResultModel>({ url: Api.TmpPlacePage, params });
+  defHttp.get<TmpPlaceListGetResultModel>({ url: Api.TmpPlacePage.replace('{type}', '1'), params });
 
 export const getAllTmpPlaceList = (params?: TmpPlaceParams) =>
   defHttp.get<TmpPlaceItem[]>({ url: Api.GetAllTmpPlaceList, params });
