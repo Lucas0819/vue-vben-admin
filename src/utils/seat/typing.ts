@@ -23,6 +23,14 @@ export interface SeatProps {
   stageShow?: boolean;
   // 设置座位信息并重绘
   setSeatData?: (shapes: ShapeItem[]) => void;
+  // 座位号绘制信息
+  setStructNo?: (
+    rowsNo: SeatNoItem[],
+    colsNo: SeatNoItem[],
+    viewType: StructNoViewTypeEnum,
+  ) => void;
+  // 打开设置座位号弹窗
+  openStructNoModal?: () => void;
   // 提示文字
   setTips?: (tips: string, delay: number) => void;
   // 显示/隐藏规则框
@@ -77,4 +85,11 @@ export interface RuleStyle {
   style?: StyleValue;
   html?: string;
   visible: boolean;
+}
+
+// 2.座位号-显示模式
+export const enum StructNoViewTypeEnum {
+  ALL = 'all',
+  ONLY_ROWS = 'rows',
+  ONLY_COLS = 'cols',
 }

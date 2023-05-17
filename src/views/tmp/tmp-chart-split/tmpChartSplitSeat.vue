@@ -18,7 +18,7 @@
         </RadioGroup>
       </template>
       <div class="p-5 flex-1 flex flex-col overflow-hidden">
-        <PageToolbox class="mb-5">
+        <PageToolbox class="mb-5" v-if="step == StepEnum.STEP_ONE">
           <div class="h-10 flex flex-row items-center">
             <a-button
               type="primary"
@@ -115,6 +115,68 @@
             <Alert :message="tips" type="info" class="flex-1 !ml-2" show-icon v-if="showTips" />
           </div>
         </PageToolbox>
+        <PageToolbox class="mb-5" v-else-if="step == StepEnum.STEP_TWO">
+          <div class="h-10 flex flex-row items-center">
+            <a-button
+              type="primary"
+              size="small"
+              class="mr-2"
+              preIcon="ant-design:qrcode-outlined"
+              :loading="btnLoading"
+              @click="openResizeCanvasModal"
+            >
+              全局设置
+            </a-button>
+            <a-button
+              type="primary"
+              size="small"
+              class="mr-2"
+              preIcon="ant-design:printer-outlined"
+              :loading="btnLoading"
+              @click="resizeProportion"
+            >
+              重置比例
+            </a-button>
+            <a-button
+              type="primary"
+              size="small"
+              class="mr-2"
+              preIcon="ant-design:printer-outlined"
+              :loading="btnLoading"
+              @click="revocation"
+            >
+              撤销
+            </a-button>
+            <a-button
+              type="primary"
+              size="small"
+              class="mr-2"
+              preIcon="ant-design:printer-outlined"
+              :loading="btnLoading"
+              @click="saveRecordData"
+            >
+              保存
+            </a-button>
+            <div class="flex-1 mx-2">
+              <Alert
+                :message="tips"
+                type="info"
+                class="flex-1 !ml-2 !mr-2"
+                show-icon
+                v-if="showTips"
+              />
+            </div>
+            <RadioGroup
+              v-model:value="structNoViewType"
+              size="small"
+              @change="handleChangeStructNoViewType"
+            >
+              <RadioButton value="all">显示全部</RadioButton>
+              <RadioButton value="rows"> 显示排号</RadioButton>
+              <RadioButton value="cols">显示列号</RadioButton>
+            </RadioGroup>
+          </div>
+        </PageToolbox>
 
         <canvas id="seatCvs" class="seat-cvs flex-1 overflow-hidden">
           <div class="absolute" v-show="selectRule?.visible" :style="selectRule?.style">
@@ -123,6 +185,7 @@
         </canvas>
       </div>
     </PageWrapper>
+    <!-- 1.修改结构弹窗 -->
     <BasicModal @register="modalRegister" @ok="handleResizeCanvas">
       <BasicForm @register="formRegister">
         <template #appendRow="{ model, field }">
@@ -138,6 +201,10 @@
           </ARow>
         </template>
       </BasicForm>
+    </BasicModal>
+    <!-- 2.修改座位号弹窗 -->
+    <BasicModal @register="noModalRegister" @ok="handleSubmitNo">
+      <BasicForm @register="noFormRegister" />
     </BasicModal>
   </div>
 </template>
@@ -172,7 +239,6 @@
     reInitSeat,
     resizeProportion,
     revocation,
-    setSeatData,
   } from '@/utils/seat/seatInit';
   import {
     Alert,
@@ -188,8 +254,8 @@
   import { useLoading } from '@/components/Loading';
   import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
   import { propTypes } from '@/utils/propTypes';
-  import { SelectTypeEnum } from '@/utils/seat/typing';
-  import { initSeatByNo } from '@/utils/seat/seatNo';
+  import { SelectTypeEnum, StructNoViewTypeEnum } from '@/utils/seat/typing';
+  import { destroySeatByNo, initSeatByNo, setStructNoViewType } from '@/utils/seat/seatNo';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useGo } from '@/hooks/web/usePage';
   import BasicForm from '@/components/Form/src/BasicForm.vue';
@@ -282,14 +348,13 @@
   const getAndSetSeatDataByStep = () => {
     switch (unref(step)) {
       case StepEnum.STEP_ONE:
-        // 初始化座位结构JS
+        destroySeatByNo();
         initSeatByStruct({
           seatCtx,
           seatCvs,
           rowsNum: recordData.value.initRow ?? 10,
           colsNum: recordData.value.initColumn ?? 10,
           seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
-          setSeatData: setSeatData,
           setTips: setTips,
           setRuleVisible: () => {},
           setBtnAvailable: () => {},
@@ -303,7 +368,7 @@
           rowsNum: recordData.value.initRow ?? 10,
           colsNum: recordData.value.initColumn ?? 10,
           seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
-          setSeatData: setSeatData,
+          openStructNoModal: openStructNoModal,
           setTips: setTips,
           setRuleVisible: () => {},
           setBtnAvailable: () => {},
@@ -315,7 +380,7 @@
     }
   };
 
-  // 座位结构
+  // 1.座位结构
   const [modalRegister, { setModalProps, openModal }] = useModal();
 
   const openResizeCanvasModal = () => {
@@ -424,6 +489,36 @@
     showActionButtonGroup: false,
   });
 
+  // 2.座位号
+  const structNoViewType = ref<propTypes.string>(StructNoViewTypeEnum.ALL);
+  const handleChangeStructNoViewType = () => {
+    setStructNoViewType(unref(structNoViewType));
+  };
+  const [noModalRegister, { setModalProps: setNoModalProps, openModal: openNoModal }] = useModal();
+  const [
+    noFormRegister,
+    // {
+    //   setFieldsValue: setNoFieldsValue,
+    //   clearValidate: clearNoValidate,
+    //   validateFields: validateNoFields,
+    // },
+  ] = useForm({
+    schemas: formSchema,
+    baseColProps: {
+      span: 24,
+    },
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    showActionButtonGroup: false,
+  });
+  // 批量修改座位号弹窗
+  const openStructNoModal = () => {
+    setNoModalProps({ title: '修改' });
+    openNoModal(true);
+  };
+  const handleSubmitNo = () => {};
+
+  // 操作文字提示
   const tips = ref('');
   const showTips = ref(false);
   let showTipsTimeout;
@@ -438,7 +533,6 @@
   };
 
   // 新增|更新数据
-  // TODO @Lucas 1.更新数据 2.新增数据后页面重定向
   const [openFullLoading, closeFullLoading] = useLoading({
     tip: '加载中...',
   });

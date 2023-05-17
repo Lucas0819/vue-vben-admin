@@ -8,7 +8,13 @@ import {
   trackTransform,
   windowToCanvas,
 } from './seatUtil';
-import { LabelText, SeatProps, ShapeItem } from '@/utils/seat/typing';
+import {
+  LabelText,
+  SeatNoItem,
+  SeatProps,
+  ShapeItem,
+  StructNoViewTypeEnum,
+} from '@/utils/seat/typing';
 import { useThrottleFn } from '@vueuse/core';
 import { isNotEmpty } from '@/utils/is';
 
@@ -26,6 +32,10 @@ let seatCvs; //canvas.context和jcanvas
 //初始行列数
 let rowsNum = 10; //排数
 let colsNum = 10; //列数
+let rowsNo: SeatNoItem[] = [];
+let colsNo: SeatNoItem[] = [];
+let structNoViewType = StructNoViewTypeEnum.ALL; // 座位号显示模式
+
 // const seatColor = '#EEEEEE'; //非座位默认颜色
 // const seatSetColor = '#AAAAAA'; //设定的座位默认颜色
 const seatBorderColor = '#CCCCCC'; //座位默认边框颜色
@@ -204,7 +214,7 @@ function initStageData(stagePosition?: number) {
 }
 
 //根据初始化的座位绘制票图以及所有初始化的图形,画前清空画板
-function drawSeat() {
+export function drawSeat() {
   //清空画布
   seatCtx.clearRect(0, 0, currWidth, currHeight);
   //绘制座位
@@ -228,6 +238,14 @@ function drawSeat() {
     buildPath(stageShape);
     //绘制舞台位置文字
     buildText(stageShapeText);
+  }
+  if (structNoViewType === StructNoViewTypeEnum.ALL) {
+    rowsNo.forEach(buildText);
+    colsNo.forEach(buildText);
+  } else if (structNoViewType === StructNoViewTypeEnum.ONLY_ROWS) {
+    rowsNo.forEach(buildText);
+  } else if (structNoViewType === StructNoViewTypeEnum.ONLY_COLS) {
+    colsNo.forEach(buildText);
   }
 }
 
@@ -472,8 +490,7 @@ function drag() {
  * 舞台移动-鼠标移动监听事件
  * @param ev
  */
-function stageMoveMousemoveEvent(ev) {
-  const e = ev || event;
+function stageMoveMousemoveEvent(e) {
   const x = e.clientX;
   const y = e.clientY;
   //转换坐标
@@ -550,9 +567,6 @@ export const reInitSeat = function (_rowsNum: number, _colsNum: number) {
   drawSeat();
 };
 
-// TODO 追加行列
-export const appendStruct = function (_addRowsNum, _addColsNum) {};
-
 export const initSeat = function (props: SeatProps) {
   if (isNotEmpty(props.rowsNum)) {
     rowsNum = props.rowsNum > 10 ? props.rowsNum : 10;
@@ -585,8 +599,16 @@ export const initSeat = function (props: SeatProps) {
 // 设置座位数据，进行绘制
 export const setSeatData = function (_shapes: ShapeItem[]) {
   shapes = _shapes;
-  //重绘所有
-  drawSeat();
+};
+
+export const setStructNo = function (
+  _rowsNo: SeatNoItem[],
+  _colsNo: SeatNoItem[],
+  _viewType: StructNoViewTypeEnum,
+) {
+  rowsNo = _rowsNo;
+  colsNo = _colsNo;
+  structNoViewType = _viewType;
 };
 
 //移动舞台按钮事件

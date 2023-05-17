@@ -11,6 +11,7 @@ import {
 import { isDef, isEmpty, isNotEmpty, isNullOrUnDef } from '/@/utils/is';
 import { cloneDeep } from 'lodash-es';
 import { RuleStyle, SeatProps, SelectTypeEnum, ShapeItem, TmpShapeItem } from '@/utils/seat/typing';
+import { drawSeat, setSeatData } from '@/utils/seat/seatInit';
 
 /**
  * 改写自：seat-add12121.js & seat-modify12121.js
@@ -158,7 +159,7 @@ export function initSeatDataByStruct() {
 //       }
 //     }
 //   }
-//   seatProps.setSeatData?.(shapes);
+//   setSeatData(shapes);
 // }
 
 //点的位置是否在图形上,返回行列信息,不在返回null
@@ -191,27 +192,33 @@ function onKeydown({ ctrlKey, key }) {
   } else if (key === 'Enter') {
     //回车触发事件,设置座位
     setSeatStatus(true);
-    seatProps.setSeatData?.(shapes);
+    setSeatData(shapes);
+    drawSeat();
   } else if (key === 'Delete') {
     //删除触发事件,清除座位
     setSeatStatus(false);
-    seatProps.setSeatData?.(shapes);
+    setSeatData(shapes);
+    drawSeat();
   } else if (key === 'ArrowUp') {
     //上移
     moveSeats(1);
-    seatProps.setSeatData?.(shapes);
+    setSeatData(shapes);
+    drawSeat();
   } else if (key === 'ArrowRight') {
     //右移
     moveSeats(2);
-    seatProps.setSeatData?.(shapes);
+    setSeatData(shapes);
+    drawSeat();
   } else if (key === 'ArrowDown') {
     //下移
     moveSeats(3);
-    seatProps.setSeatData?.(shapes);
+    setSeatData(shapes);
+    drawSeat();
   } else if (key === 'ArrowLeft') {
     //左移
     moveSeats(4);
-    seatProps.setSeatData?.(shapes);
+    setSeatData(shapes);
+    drawSeat();
   }
 }
 
@@ -247,7 +254,6 @@ function selectMousedownEvent(e) {
  * @param e
  */
 function selectMousemoveEvent(e) {
-  console.error('on mousemove');
   //下次选择时是否清空之前已选状态
   if (selectInitStatus) {
     selectRects.forEach((item) => {
@@ -260,8 +266,10 @@ function selectMousemoveEvent(e) {
     selectInitStatus = false;
   }
   _selectRects = [];
-  //重绘所有
-  seatProps.setSeatData?.(shapes);
+  // 设置座位
+  setSeatData(shapes);
+  // 重绘所有
+  drawSeat();
   //获取到画板矩阵
   const seatTransform = seatCtx.getTransform();
   const _trueSelectPoint = windowToCanvas(seatCvs, mousePointLastX, mousePointLastY);
@@ -398,8 +406,10 @@ function selectMouseupEvent() {
   seatCvs.removeEventListener('mousemove', selectMousemoveEvent);
   selectRects.push(..._selectRects.filter((item) => !hasShapeItem(selectRects, item)));
 
-  //重绘所有
-  seatProps.setSeatData?.(shapes);
+  // 设置座位
+  setSeatData(shapes);
+  // 重绘所有
+  drawSeat();
   //清除上次滑动轨迹
   _lineTrajectory = [];
   if (isNotEmpty(selectRule.value)) {
@@ -450,12 +460,10 @@ function select() {
   if (clickSeat) {
     //判断是否是按ctrl批量选择状态
     if (!selectBatchStatus) {
-      console.error('need reset: ', selectRects);
       selectRects.forEach((item) => {
         const shape = getShapeItem(shapes, item);
         if (isDef(shape)) {
           shape.borderColor = seatBorderColor;
-          console.error('reset: ', shape);
         }
       });
       selectRects = [];
@@ -465,8 +473,10 @@ function select() {
     selectedShape.borderColor = seatBorderSelectedColor;
     //放入到选中状态的图形数组中
     selectRects.push(selectedShape);
-    //重绘所有
-    seatProps.setSeatData?.(shapes);
+    // 设置座位
+    setSeatData(shapes);
+    // 重绘所有
+    drawSeat();
   }
   _lastSelectRects = [];
   _selectRects = [];
@@ -630,15 +640,6 @@ export const getSeatDetail = () => {
   return result;
 };
 
-export const getSeatShapes = () => {
-  return shapes.filter((item) => item.isSeat);
-};
-
-export const setSeatShapes = (_shapes: ShapeItem[]) => {
-  shapes = _shapes;
-  seatProps.setSeatData?.(shapes);
-};
-
 export const initSeatByStruct = function (props: SeatProps) {
   seatProps = props;
   seatCvs = props.seatCvs;
@@ -664,8 +665,10 @@ export const initSeatByStruct = function (props: SeatProps) {
   seatCvsEventInit();
   //初始化座位
   initSeatDataByStruct();
-  // 绘制座位
-  seatProps.setSeatData?.(shapes);
+  // 设置座位
+  setSeatData(shapes);
+  // 重绘所有
+  drawSeat();
 };
 
 export const destroySeatByStruct = function () {
@@ -673,6 +676,8 @@ export const destroySeatByStruct = function () {
   seatCvsEventDestroy();
   // 移除座位
   shapes = [];
-  // 绘制空座位
-  seatProps.setSeatData?.(shapes);
+  // 设置座位
+  setSeatData(shapes);
+  // 重绘所有
+  drawSeat();
 };
