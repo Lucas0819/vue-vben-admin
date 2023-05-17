@@ -56,7 +56,7 @@
 
       const { setTitle, closeCurrent } = useTabs();
 
-      const [register, { resetFields, setFieldsValue, validate }] = useForm({
+      const [register, { resetFields, setFieldsValue, validate, updateSchema }] = useForm({
         autoFocusFirstItem: true,
         labelWidth: 200,
         baseColProps: {
@@ -79,12 +79,20 @@
       });
 
       onMountedOrActivated(async () => {
+        // 编辑状态下，票图模板不可修改
+        updateSchema({
+          field: 'tmpChartId',
+          componentProps: {
+            disabled: unref(isUpdate),
+          },
+        });
         if (!unref(isUpdate)) {
           setTitle('活动地址-有座-新增');
           return;
         }
         await resetFields();
         data.value = await findOne(recordId.value);
+        data.value.areaId = data.value.areaId.split(',');
         setTitle('活动地址-有座-' + data.value?.remarks);
         setFieldsValue(data.value);
       });

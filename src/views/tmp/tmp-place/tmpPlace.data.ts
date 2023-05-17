@@ -4,6 +4,7 @@ import { h } from 'vue';
 import { Button } from 'ant-design-vue';
 import { getCantonList } from '@/api/sys/canton';
 import { CantonLevelEnum } from '@/enums/cantonLevelEnum';
+import { getAllTmpChartList } from '@/api/tmp/tmpChart';
 
 const { t } = useI18n();
 
@@ -33,6 +34,7 @@ export const columns: BasicColumn[] = [
   {
     title: '所属区域',
     dataIndex: 'areaId',
+    width: 120,
   },
   {
     title: '所属机构',
@@ -120,24 +122,15 @@ export const formSchema: FormSchema[] = [
   {
     field: 'tmpChartId',
     label: '票图模板',
-    required: false,
-    component: 'Select',
-    defaultValue: '1',
+    required: true,
+    component: 'ApiSelect',
     componentProps: {
-      options: [
-        { label: '票票龙2', value: '1' },
-        { label: '票票龙2', value: '2' },
-        { label: '票票龙3', value: '3' },
-        { label: '票票龙4', value: '4' },
-        { label: '票票龙5', value: '5' },
-      ],
+      api: getAllTmpChartList,
+      labelField: 'name,remarks',
+      valueField: 'id',
     },
     itemProps: {
       extra: '提示：票图模板保存后不可修改',
-    },
-    // 编辑状态下不可用
-    dynamicDisabled: ({ values }) => {
-      return !!values.id;
     },
   },
   {

@@ -9,7 +9,7 @@ import { ServiceEnum } from '@/enums/serviceEnum';
 
 enum Api {
   TmpChartPage = ServiceEnum.TICKET + '/tmp_chart/page',
-  GetAllTmpChartList = ServiceEnum.TICKET + '/tmp_chart/getAllTmpChartList',
+  GetAllTmpChartList = ServiceEnum.TICKET + '/tmp_chart/list',
   FindOne = ServiceEnum.TICKET + '/tmp_chart/{id}/detail',
   CreateTmpChart = ServiceEnum.TICKET + '/tmp_chart/save',
   UpdateTmpChart = ServiceEnum.TICKET + '/tmp_chart/modify',
