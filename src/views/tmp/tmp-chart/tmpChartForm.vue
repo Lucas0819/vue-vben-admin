@@ -22,6 +22,7 @@
   import { isNotEmpty } from '@/utils/is';
   import TmpChartSplitManagement from '/@/views/tmp/tmp-chart-split/index.vue';
   import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
+  import { useGo } from '@/hooks/web/usePage';
 
   export default defineComponent({
     components: {
@@ -34,15 +35,16 @@
       const { t } = useI18n();
       const recordId = ref('');
       const data = ref<TmpChartItem | null>(null);
-      const router = useRouter();
-      const { query } = unref(router.currentRoute);
+      const { currentRoute } = useRouter();
+      const { query } = unref(currentRoute);
+      const go = useGo();
       const isUpdate = ref(false);
       if (isNotEmpty(query.id)) {
         recordId.value = query.id;
         isUpdate.value = true;
       }
 
-      const { setTitle, closeCurrent } = useTabs();
+      const { setTitle } = useTabs();
 
       const [register, { resetFields, setFieldsValue, validate }] = useForm({
         autoFocusFirstItem: true,
@@ -74,7 +76,7 @@
         await resetFields();
         data.value = await findOne(recordId.value);
         setTitle('活动地址-票图-' + data.value?.name);
-        setFieldsValue(data);
+        setFieldsValue(data.value);
       });
 
       async function handleSubmit() {
@@ -85,11 +87,14 @@
         } else {
           // 默认未发布
           values.isRelease = false;
-          await createTmpChart(values);
+          recordId.value = await createTmpChart(values);
         }
         await handleSuccess();
-        await closeCurrent();
-        router.back();
+        if (!unref(isUpdate)) {
+          go({
+            query: { id: recordId.value },
+          });
+        }
       }
 
       function handleSuccess() {
@@ -101,8 +106,11 @@
               ? t('sys.api.updateSuccessMsg', ['活动地址-票图'])
               : t('sys.api.createSuccessMsg', ['活动地址-票图']),
             closable: false,
-            okText: t('common.back'),
-            onOk: resolve,
+            okText: t('common.okText'),
+            onOk: () => {
+              resolve();
+              return Promise.resolve();
+            },
           });
         });
       }

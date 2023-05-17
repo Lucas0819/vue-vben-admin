@@ -49,7 +49,7 @@ export const searchFormSchema: FormSchema[] = [];
 
 export const formSchema: FormSchema[] = [
   {
-    field: 'tmpChartName',
+    field: 'name',
     label: '结构名称',
     required: true,
     component: 'Input',

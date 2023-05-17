@@ -1,15 +1,15 @@
 <template>
   <div>
     <PageWrapper
-      :title="tmpChart?.name"
-      :sub-title="recordData?.name"
+      :title="recordData?.tmpChartName ?? '票图'"
+      :sub-title="recordData?.name ?? '票图结构'"
       contentBackground
       contentClass="flex flex-col"
       contentFullHeight
       fixedHeight
     >
-      <template #extra v-if="isUpdate">
-        <RadioGroup v-model:value="step" @click="handleChangeStep">
+      <template #headerContent v-if="isUpdate">
+        <RadioGroup v-model:value="step" @change="getAndSetSeatDataByStep">
           <RadioButton value="1">1.修改结构</RadioButton>
           <RadioButton value="2">2.定义座位号<span class="text-red-500">(必填)</span></RadioButton>
           <RadioButton value="3"
@@ -147,31 +147,37 @@
   import { hasHistory } from '@/utils/seat/seatUtil';
   import {
     changeSelectType,
+    destroySeatByAdd,
     getSeatDetail,
-    getStagePosition,
-    initSeatAdd,
-    moveStage,
-    reInitSeatAdd,
-    resizeProportion,
-    revocation,
+    initSeatByAdd,
     selectRule,
     selectType,
   } from '@/utils/seat/seatAdd';
+  import {
+    getStagePosition,
+    initSeat,
+    moveStage,
+    reInitSeat,
+    resizeProportion,
+    revocation,
+    setSeatData,
+  } from '@/utils/seat/seatInit';
   import { Alert, Dropdown, Menu, RadioButton, RadioGroup } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useLoading } from '@/components/Loading';
   import { t } from '@/hooks/web/useI18n';
   import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
   import { propTypes } from '@/utils/propTypes';
-  import { SelectTypeEnum } from '@/utils/seat/seat';
+  import { SelectTypeEnum } from '@/utils/seat/typing';
 
   const { createConfirm, createInfoModal } = useMessage();
   const recordId = ref('');
-  const recordData = ref<TmpChartSplitItem>();
+  const recordData = ref<TmpChartSplitItem>({});
   const router = useRouter();
   const { query } = unref(router.currentRoute);
   const isUpdate = ref(false);
   const btnLoading = ref(false);
+  let seatCtx, seatCvs;
 
   const { setTitle, closeCurrent } = useTabs();
 
@@ -190,24 +196,35 @@
     if (isNotEmpty(query.id)) {
       // 编辑
       isUpdate.value = true;
+      recordId.value = query.id;
       recordData.value = await findOne(recordId.value);
-      // await doFindTmpChart(recordData.value?.tempChartId);
+      await doFindTmpChart(recordData.value?.tempChartId);
     } else {
       // 根据票图模板新增
-      // await doFindTmpChart(query.tempChartId);
-      // recordData.value.name = tmpChart.value?.name;
+      await doFindTmpChart(query.tempChartId);
+      // 结构模板的默认名称
+      recordData.value.name = tmpChart.value?.name;
+      recordData.value.tempChartId = query.tempChartId;
+      recordData.value.tmpChartName = tmpChart.value?.name;
     }
-    initSeatAdd({
+
+    // 座位图结构初始化
+    const { seatCtx: _seatCtx, seatCvs: _seatCvs } = initSeat({
+      rowsNum: recordData.value?.initRow ?? 10,
+      colsNum: recordData.value?.initColumn ?? 10,
+      stagePosition: recordData.value?.stagePosition,
       setTips: setTips,
       setRuleVisible: () => {},
       setBtnAvailable: () => {},
     });
+    seatCtx = _seatCtx;
+    seatCvs = _seatCvs;
+    // 根据具体的步骤，获取座位信息并绘制
+    getAndSetSeatDataByStep();
+
     if (!unref(isUpdate)) {
       openResizeCanvasModal();
       return;
-    }
-    if (isNotEmpty(recordData.value?.tempChartId)) {
-      await doFindTmpChart(recordData.value?.tempChartId);
     }
     setTitle('票图结构模板-' + recordData.value?.name);
   };
@@ -229,10 +246,37 @@
   };
 
   // 步骤切换
-  const step = ref<propTypes.string>('1');
-  const handleChangeStep = () => {};
-  // 座位结构
+  const step = ref<propTypes.string>(StepEnum.STEP_ONE);
+  const enum StepEnum {
+    STEP_ONE = '1',
+    STEP_TWO = '2',
+    STEP_THREE = '3',
+  }
+  const getAndSetSeatDataByStep = () => {
+    switch (unref(step)) {
+      case StepEnum.STEP_ONE:
+        // 初始化座位结构JS
+        initSeatByAdd({
+          seatCtx,
+          seatCvs,
+          rowsNum: recordData.value?.initRow ?? 10,
+          colsNum: recordData.value?.initColumn ?? 10,
+          setSeatData: setSeatData,
+          setTips: setTips,
+          setRuleVisible: () => {},
+          setBtnAvailable: () => {},
+        });
+        break;
+      case StepEnum.STEP_TWO:
+        destroySeatByAdd();
+        break;
+      case StepEnum.STEP_THREE:
+        destroySeatByAdd();
+        break;
+    }
+  };
 
+  // 座位结构
   const [modalRegister, { setModalProps, openModal }] = useModal();
 
   const openResizeCanvasModal = () => {
@@ -240,7 +284,7 @@
     openModal(true);
     nextTick(() => {
       setFieldsValue({
-        tmpChartName: recordData.value?.name,
+        name: recordData.value?.name,
         initRow: recordData.value?.initRow ?? 10,
         initColumn: recordData.value?.initColumn ?? 10,
       });
@@ -267,12 +311,11 @@
 
   const resizeCanvas = (value) => {
     openModal(false);
-    if (isNotEmpty(recordData.value)) {
-      recordData.value.name = value.name;
-      recordData.value.initRow = value.initRow;
-      recordData.value.initColumn = value.initColumn;
-    }
-    reInitSeatAdd(value.initRow, value.initColumn);
+    recordData.value.name = value.name;
+    recordData.value.initRow = value.initRow;
+    recordData.value.initColumn = value.initColumn;
+    reInitSeat(value.initRow, value.initColumn);
+    getAndSetSeatDataByStep();
   };
 
   const [formRegister, { setFieldsValue, clearValidate, validateFields }] = useForm({
@@ -284,8 +327,6 @@
     wrapperCol: { span: 20 },
     showActionButtonGroup: false,
   });
-
-  // 定义座位号
 
   const tips = ref('');
   const showTips = ref(false);
@@ -300,6 +341,8 @@
     }, delay * 1000);
   };
 
+  // 新增|更新数据
+  // TODO @Lucas 1.更新数据 2.新增数据后页面重定向
   const [openFullLoading, closeFullLoading] = useLoading({
     tip: '加载中...',
   });
@@ -315,10 +358,8 @@
       createMessage.error('没有已选定座位');
       return;
     }
-    if (isNotEmpty(recordData.value)) {
-      recordData.value.stagePosition = stagePosition;
-      recordData.value.desJson = JSON.stringify({ seatDetail });
-    }
+    recordData.value.stagePosition = stagePosition;
+    recordData.value.desJson = JSON.stringify({ seatDetail });
     try {
       await createTmpChartSplit(unref(recordData));
       createMessage.success(t('sys.api.operationSuccess'));

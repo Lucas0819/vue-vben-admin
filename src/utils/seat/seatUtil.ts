@@ -6,7 +6,7 @@
  */
 import { cloneDeep } from 'lodash-es';
 import { isEmpty } from '/@/utils/is';
-import { ShapeItem, TmpShapeItem } from '@/utils/seat/seat';
+import { ShapeItem, TmpShapeItem } from '@/utils/seat/typing';
 
 //使用SvgAPI进行扩展,SVG的API比canvas更加全面
 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -309,4 +309,19 @@ export const getReset = function (btnObjs) {
     // });
   }
   return resetObj;
+};
+
+/**
+ * 设置是否可以进行操作
+ * 场景拖拽时，不允许操作
+ * @param seatCvs
+ * @param actionDisable
+ */
+export const setSeatActionDisable = function (seatCvs, actionDisable: boolean) {
+  console.error('setSeatActionDisable', actionDisable);
+  seatCvs.__action_disable__ = actionDisable;
+};
+
+export const getSeatActionDisable = function (seatCvs) {
+  return !!seatCvs.__action_disable__;
 };
