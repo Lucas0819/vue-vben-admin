@@ -6,15 +6,22 @@ export enum SelectTypeEnum {
   TRAJECTORY = 'trajectory',
 }
 
-export interface SeatAddProps {
+export interface SeatProps {
   // 初始行
   rowsNum?: number;
   // 初始列
   colsNum?: number;
   // 初始舞台位置
   stagePosition?: number;
+  // 画布句柄
   seatCtx?: CustomCanvasRenderingContext2D;
+  // 画布DOM
   seatCvs?: any;
+  // 座位信息
+  seatDetail?: string[];
+  // 是否展示舞台
+  stageShow?: boolean;
+  // 设置座位信息并重绘
   setSeatData?: (shapes: ShapeItem[]) => void;
   // 提示文字
   setTips?: (tips: string, delay: number) => void;
@@ -36,6 +43,8 @@ export interface ShapeItem {
   lineWidth: number; //border
   borderColor?: string; //border color
   fillColor: string; //fill color
+  fillColorName?: string; //fill color name
+  detail?: string; // 座位信息，'10|1|1|0|10|0|0'
   isSeat?: boolean; //是否被设定为座位
   r?: number | number[];
   inter?: number;
@@ -46,6 +55,14 @@ export interface TmpShapeItem extends Omit<ShapeItem, 'index' | 'lineWidth'> {
   _x: number;
   _y: number;
   lineWidth?: number; //border
+}
+
+export interface SeatNoItem {
+  x?: number;
+  y?: number;
+  text?: string;
+  font?: string;
+  color?: string;
 }
 
 export interface LabelText {

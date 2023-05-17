@@ -8,7 +8,7 @@ import {
   trackTransform,
   windowToCanvas,
 } from './seatUtil';
-import { LabelText, SeatAddProps, ShapeItem } from '@/utils/seat/typing';
+import { LabelText, SeatProps, ShapeItem } from '@/utils/seat/typing';
 import { useThrottleFn } from '@vueuse/core';
 import { isNotEmpty } from '@/utils/is';
 
@@ -41,7 +41,7 @@ const scaleInterval = 0.1; //每次缩放间距
 const seatRatioOfScreenX = 0.25; //屏幕横向至少保持1/4的座位,无法移出画布
 const seatRatioOfScreenY = 0.44; //屏幕纵向至少保持1/4的座位,无法移出画布
 
-let seatAddProps: SeatAddProps;
+let seatProps: SeatProps;
 
 //不可配置变量
 let mousePointLastX, mousePointLastY; //鼠标上次移动点坐标
@@ -157,24 +157,29 @@ function initSeatLabelData() {
 
 /**
  * 舞台数据初始化
- * @param linePosition
+ * @param stagePosition
  */
-function initStageData(linePosition?: number) {
+function initStageData(stagePosition?: number) {
   //判断是否显示舞台
   if (stageShowStatus) {
+    // 舞台中心-默认值 | 数据加载
+    let x =
+      Math.round(colsNum / 2) * (seatSizeWidth + seatInterval) +
+      seatMarginLeft -
+      seatInterval * 0.5;
+    if (isNotEmpty(stagePosition)) {
+      x = stagePosition * (seatSizeWidth + seatInterval) + seatMarginLeft - seatInterval * 0.5;
+    }
     //舞台中心线
     stageShapeMiddleLine = {
       type: 'dashLine',
-      x:
-        Math.round(colsNum / 2) * (seatSizeWidth + seatInterval) +
-        seatMarginLeft -
-        seatInterval * 0.5,
+      x,
       y: seatSizeHeight * 1.5,
       height: seatHeightTotal,
       lineWidth: seatInterval * 0.1, //border
       borderColor: seatBorderColor,
       inter: seatInterval * 0.5, //虚线的间隔
-      linePosition: linePosition ?? Math.round(colsNum / 2), //舞台中线位置
+      linePosition: Math.round(colsNum / 2), //舞台中线位置
     };
     //舞台位置
     stageShape = {
@@ -502,7 +507,7 @@ function stageMoveMousemoveEvent(ev) {
 
 //提示信息
 function changeMsg(text, delay = 5) {
-  seatAddProps.setTips?.(text, delay);
+  seatProps.setTips?.(text, delay);
 }
 
 //窗口大小改变后的操作
@@ -545,14 +550,17 @@ export const reInitSeat = function (_rowsNum: number, _colsNum: number) {
   drawSeat();
 };
 
-export const initSeat = function (props: SeatAddProps) {
+// TODO 追加行列
+export const appendStruct = function (_addRowsNum, _addColsNum) {};
+
+export const initSeat = function (props: SeatProps) {
   if (isNotEmpty(props.rowsNum)) {
     rowsNum = props.rowsNum > 10 ? props.rowsNum : 10;
   }
   if (isNotEmpty(props.colsNum)) {
     colsNum = props.colsNum > 10 ? props.colsNum : 10;
   }
-  seatAddProps = props;
+  seatProps = props;
   // 添加窗口变化监听事件
   addResizeEventListener();
   //初始化所有画板大小(此方法需要在所有操作之前执行)

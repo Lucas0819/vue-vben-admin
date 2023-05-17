@@ -4,44 +4,29 @@ export const columns: BasicColumn[] = [
   {
     title: 'ID',
     dataIndex: 'id',
-    width: 120,
-    defaultHidden: true,
-  },
-  {
-    title: 'id',
-    dataIndex: 'tempChartId',
-    width: 120,
+    width: 200,
     defaultHidden: true,
   },
   {
     title: '结构名称',
     dataIndex: 'name',
-    width: 120,
-  },
-  {
-    title: '行数',
-    dataIndex: 'initRow',
-    width: 120,
-  },
-  {
-    title: '列数',
-    dataIndex: 'initColumn',
-    width: 120,
   },
   {
     title: '所含区域',
-    dataIndex: 'stagePosition',
+    dataIndex: 'remarks',
     width: 120,
   },
   {
-    title: '多结构CSS',
+    title: '行X列',
+    dataIndex: 'initRow',
+    width: 120,
+    customRender: ({ record }) => {
+      return `${record.initRow ?? 0}X${record.initColumn ?? 0}`;
+    },
+  },
+  {
+    title: '结构定位',
     dataIndex: 'splitCss',
-    width: 120,
-  },
-  {
-    title: '明细JSON',
-    dataIndex: 'desJson',
-    width: 120,
   },
 ];
 
@@ -59,7 +44,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     field: 'initRow',
-    label: '行数',
+    label: '排数',
     required: false,
     component: 'InputNumber',
     defaultValue: 10,
@@ -76,5 +61,17 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       placeholder: '正整数,默认为:10',
     },
+  },
+  {
+    field: 'originRow',
+    label: '原始行数',
+    component: 'Input',
+    show: false,
+  },
+  {
+    field: 'originColumn',
+    label: '原始列数',
+    component: 'Input',
+    show: false,
   },
 ];

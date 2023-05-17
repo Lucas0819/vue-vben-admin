@@ -124,7 +124,20 @@
       </div>
     </PageWrapper>
     <BasicModal @register="modalRegister" @ok="handleResizeCanvas">
-      <BaseForm @register="formRegister" />
+      <BasicForm @register="formRegister">
+        <template #appendRow="{ model, field }">
+          <ARow class="items-center">
+            <ACol span="4" class="text-center">{{ model.originRow }} + </ACol>
+            <ACol span="20"><AInputNumber v-model:value="model[field]" /></ACol>
+          </ARow>
+        </template>
+        <template #appendColumn="{ model, field }">
+          <ARow class="items-center">
+            <ACol span="4" class="text-center">{{ model.originColumn }} + </ACol>
+            <ACol span="20"><AInputNumber v-model:value="model[field]" /></ACol>
+          </ARow>
+        </template>
+      </BasicForm>
     </BasicModal>
   </div>
 </template>
@@ -135,24 +148,23 @@
   import { useTabs } from '/@/hooks/web/useTabs';
   import { onMountedOrActivated } from '@vben/hooks';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { createTmpChartSplit, findOne } from '/@/api/tmp/tmpChartSplit';
+  import { createTmpChartSplit, findOne, updateTmpChartSplit } from '/@/api/tmp/tmpChartSplit';
   import { findOne as findTmpChart } from '/@/api/tmp/tmpChart';
   import { TmpChartSplitItem } from '/@/api/tmp/model/tmpChartSplitModel';
   import BasicModal from '@/components/Modal/src/BasicModal.vue';
   import { useModal } from '@/components/Modal';
-  import BaseForm from '@/views/form-design/examples/baseForm.vue';
   import { useForm } from '@/components/Form';
   import { formSchema } from './tmpChartSplit.data';
   import { PageToolbox, PageWrapper } from '/@/components/Page';
-  import { hasHistory } from '@/utils/seat/seatUtil';
+  import { clearHistory, hasHistory } from '@/utils/seat/seatUtil';
   import {
     changeSelectType,
-    destroySeatByAdd,
+    destroySeatByStruct,
     getSeatDetail,
-    initSeatByAdd,
+    initSeatByStruct,
     selectRule,
     selectType,
-  } from '@/utils/seat/seatAdd';
+  } from '@/utils/seat/seatStruct';
   import {
     getStagePosition,
     initSeat,
@@ -162,15 +174,27 @@
     revocation,
     setSeatData,
   } from '@/utils/seat/seatInit';
-  import { Alert, Dropdown, Menu, RadioButton, RadioGroup } from 'ant-design-vue';
+  import {
+    Alert,
+    Col as ACol,
+    Dropdown,
+    InputNumber as AInputNumber,
+    Menu,
+    RadioButton,
+    RadioGroup,
+    Row as ARow,
+  } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useLoading } from '@/components/Loading';
-  import { t } from '@/hooks/web/useI18n';
   import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
   import { propTypes } from '@/utils/propTypes';
   import { SelectTypeEnum } from '@/utils/seat/typing';
+  import { initSeatByNo } from '@/utils/seat/seatNo';
+  import { useI18n } from '@/hooks/web/useI18n';
+  import { useGo } from '@/hooks/web/usePage';
+  import BasicForm from '@/components/Form/src/BasicForm.vue';
 
-  const { createConfirm, createInfoModal } = useMessage();
+  const { createConfirm, createInfoModal, createMessage } = useMessage();
   const recordId = ref('');
   const recordData = ref<TmpChartSplitItem>({});
   const router = useRouter();
@@ -179,6 +203,8 @@
   const btnLoading = ref(false);
   let seatCtx, seatCvs;
 
+  const { t } = useI18n();
+  const go = useGo();
   const { setTitle, closeCurrent } = useTabs();
 
   const initData = async () => {
@@ -198,7 +224,7 @@
       isUpdate.value = true;
       recordId.value = query.id;
       recordData.value = await findOne(recordId.value);
-      await doFindTmpChart(recordData.value?.tempChartId);
+      await doFindTmpChart(recordData.value.tempChartId);
     } else {
       // 根据票图模板新增
       await doFindTmpChart(query.tempChartId);
@@ -210,9 +236,9 @@
 
     // 座位图结构初始化
     const { seatCtx: _seatCtx, seatCvs: _seatCvs } = initSeat({
-      rowsNum: recordData.value?.initRow ?? 10,
-      colsNum: recordData.value?.initColumn ?? 10,
-      stagePosition: recordData.value?.stagePosition,
+      rowsNum: recordData.value.initRow ?? 10,
+      colsNum: recordData.value.initColumn ?? 10,
+      stagePosition: recordData.value.stagePosition,
       setTips: setTips,
       setRuleVisible: () => {},
       setBtnAvailable: () => {},
@@ -226,11 +252,12 @@
       openResizeCanvasModal();
       return;
     }
-    setTitle('票图结构模板-' + recordData.value?.name);
+    setTitle('票图结构模板-' + recordData.value.name);
   };
 
   onMountedOrActivated(initData);
 
+  // 所属票图查询
   const tmpChart = ref<TmpChartItem | null>(null);
   const doFindTmpChart = async (id: string | undefined) => {
     return new Promise((resolve) => {
@@ -256,11 +283,12 @@
     switch (unref(step)) {
       case StepEnum.STEP_ONE:
         // 初始化座位结构JS
-        initSeatByAdd({
+        initSeatByStruct({
           seatCtx,
           seatCvs,
-          rowsNum: recordData.value?.initRow ?? 10,
-          colsNum: recordData.value?.initColumn ?? 10,
+          rowsNum: recordData.value.initRow ?? 10,
+          colsNum: recordData.value.initColumn ?? 10,
+          seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
           setSeatData: setSeatData,
           setTips: setTips,
           setRuleVisible: () => {},
@@ -268,10 +296,21 @@
         });
         break;
       case StepEnum.STEP_TWO:
-        destroySeatByAdd();
+        destroySeatByStruct();
+        initSeatByNo({
+          seatCtx,
+          seatCvs,
+          rowsNum: recordData.value.initRow ?? 10,
+          colsNum: recordData.value.initColumn ?? 10,
+          seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
+          setSeatData: setSeatData,
+          setTips: setTips,
+          setRuleVisible: () => {},
+          setBtnAvailable: () => {},
+        });
         break;
       case StepEnum.STEP_THREE:
-        destroySeatByAdd();
+        destroySeatByStruct();
         break;
     }
   };
@@ -283,15 +322,45 @@
     setModalProps({ title: '生成画布' });
     openModal(true);
     nextTick(() => {
-      setFieldsValue({
-        name: recordData.value?.name,
-        initRow: recordData.value?.initRow ?? 10,
-        initColumn: recordData.value?.initColumn ?? 10,
-      });
+      if (unref(isUpdate)) {
+        // 不允许修改原有行列数
+        updateSchema([
+          {
+            field: 'initRow',
+            label: '排数',
+            slot: 'appendRow',
+            helpMessage: '排数不可修改',
+            required: false,
+            component: 'InputNumber',
+            defaultValue: 0,
+          },
+          {
+            field: 'initColumn',
+            label: '列数',
+            slot: 'appendColumn',
+            helpMessage: '列数不可修改',
+            required: false,
+            component: 'InputNumber',
+            defaultValue: 0,
+          },
+        ]);
+        setFieldsValue({
+          name: recordData.value.name,
+          originRow: recordData.value.initRow ?? 10,
+          originColumn: recordData.value.initColumn ?? 10,
+          initRow: 0,
+          initColumn: 0,
+        });
+      } else {
+        setFieldsValue({
+          name: recordData.value.name,
+          initRow: recordData.value.initRow ?? 10,
+          initColumn: recordData.value.initColumn ?? 10,
+        });
+      }
       clearValidate();
     });
   };
-
   const handleResizeCanvas = async () => {
     const value = await validateFields();
     if (!hasHistory()) {
@@ -308,17 +377,44 @@
       },
     });
   };
-
   const resizeCanvas = (value) => {
     openModal(false);
     recordData.value.name = value.name;
-    recordData.value.initRow = value.initRow;
-    recordData.value.initColumn = value.initColumn;
-    reInitSeat(value.initRow, value.initColumn);
+    if (unref(isUpdate)) {
+      // 追加行、列，更新座位数据
+      const rowsNum = recordData.value.initRow ?? 10;
+      const colsNum = recordData.value.initColumn ?? 10;
+      const appendRowsNum = value.initRow ?? 0;
+      const appendColsNum = value.initColumn ?? 0;
+      const newRowsNum = rowsNum + appendRowsNum;
+      const newColsNum = colsNum + appendColsNum;
+      recordData.value.initRow = newRowsNum;
+      recordData.value.initColumn = newColsNum;
+      reInitSeat(newRowsNum, newColsNum);
+      //追加列时修改原有座位下标
+      if (appendRowsNum > 0) {
+        let seatDetail = getSeatDetail();
+        seatDetail = seatDetail.map((seat) => {
+          const index = seat.split('|')[0];
+          const oldRow = Math.floor(index / colsNum);
+          const oldCol = index % colsNum;
+          const newSeatIndex = oldRow * newColsNum + oldCol;
+          seat = newSeatIndex + seat.substring(seat.indexOf('|'));
+          return seat;
+        });
+        const desJson = JSON.parse(recordData.value.desJson ?? '{}');
+        desJson.seatDetail = seatDetail;
+        recordData.value.desJson = JSON.stringify(desJson);
+      }
+    } else {
+      recordData.value.initRow = value.initRow;
+      recordData.value.initColumn = value.initColumn;
+      reInitSeat(value.initRow, value.initColumn);
+    }
     getAndSetSeatDataByStep();
   };
 
-  const [formRegister, { setFieldsValue, clearValidate, validateFields }] = useForm({
+  const [formRegister, { updateSchema, setFieldsValue, clearValidate, validateFields }] = useForm({
     schemas: formSchema,
     baseColProps: {
       span: 24,
@@ -346,10 +442,48 @@
   const [openFullLoading, closeFullLoading] = useLoading({
     tip: '加载中...',
   });
-  const { createMessage } = useMessage();
   const saveRecordData = async () => {
     openFullLoading();
     btnLoading.value = true;
+    try {
+      if (unref(isUpdate)) {
+        await updateRecordData();
+      } else {
+        await createRecordData();
+      }
+    } finally {
+      closeFullLoading();
+      btnLoading.value = false;
+    }
+  };
+  const createRecordData = async () => {
+    const stagePosition = getStagePosition();
+    const seatDetail = getSeatDetail();
+    if (seatDetail.length === 0) {
+      createMessage.error('没有已选定座位');
+      return;
+    }
+    recordData.value.stagePosition = stagePosition;
+    recordData.value.desJson = JSON.stringify({
+      name: recordData.value.name,
+      tempChartId: recordData.value.tempChartId,
+      rowsNum: recordData.value.initRow,
+      colsNum: recordData.value.initColumn,
+      stageShow: 1, // 默认展示舞台
+      stagePosition,
+      seatDetail,
+    });
+    const id = await createTmpChartSplit(unref(recordData));
+    createInfoModal({
+      title: t('sys.api.operationSuccess'),
+      content: t('sys.api.createSuccessMsg', ['票图结构']),
+      onOk: () => {
+        go({ query: { id } });
+        return Promise.resolve();
+      },
+    });
+  };
+  const updateRecordData = async () => {
     const stagePosition = getStagePosition();
     const seatDetail = getSeatDetail();
     if (seatDetail.length === 0) {
@@ -359,14 +493,19 @@
       return;
     }
     recordData.value.stagePosition = stagePosition;
-    recordData.value.desJson = JSON.stringify({ seatDetail });
-    try {
-      await createTmpChartSplit(unref(recordData));
-      createMessage.success(t('sys.api.operationSuccess'));
-    } finally {
-      closeFullLoading();
-      btnLoading.value = false;
-    }
+    recordData.value.desJson = JSON.stringify({
+      name: recordData.value.name,
+      tempChartId: recordData.value.tempChartId,
+      rowsNum: recordData.value.initRow,
+      colsNum: recordData.value.initColumn,
+      stageShow: 1, // 默认展示舞台
+      stagePosition,
+      seatDetail,
+    });
+    await updateTmpChartSplit(unref(recordData));
+    createMessage.success(t('sys.api.operationSuccess'));
+    // 保存成功，移除操作历史
+    clearHistory();
   };
 </script>
 <style lang="scss" scoped>

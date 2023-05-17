@@ -298,6 +298,9 @@ export const getHistory = function (btnObjs?: string[]) {
 export const hasHistory = function () {
   return history.length > 0;
 };
+export const clearHistory = function () {
+  history = [];
+};
 export const getReset = function (btnObjs) {
   //取出最初始状态返回,并清除所有历史记录
   const resetObj = history[0];
@@ -324,4 +327,12 @@ export const setSeatActionDisable = function (seatCvs, actionDisable: boolean) {
 
 export const getSeatActionDisable = function (seatCvs) {
   return !!seatCvs.__action_disable__;
+};
+
+/**
+ * 座位号转换为字符串
+ * @param num
+ */
+export const seatNumToString = (num: number) => {
+  return num < 10 ? '0' + num : num.toString();
 };

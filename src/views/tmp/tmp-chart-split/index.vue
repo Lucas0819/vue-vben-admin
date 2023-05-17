@@ -57,7 +57,7 @@
         api: getTmpChartSplitListByPage,
         columns,
         useSearchForm: false,
-        showTableSetting: false,
+        showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
         // actionColumn: {
