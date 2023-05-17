@@ -6,7 +6,7 @@
         <a-button type="primary" @click="handleCreate"> 创建商户 </a-button>
       </template>
       <template #bodyCell="{ column, record, text }">
-        <template v-if="column.key === 'zipCode'">
+        <template v-if="column.key === 'qrCodeUrl'">
           <img :src="text" class="zip-code" @click="() => handlePreviewCode(text)" />
         </template>
         <template v-if="column.key === 'settlementRatio'">
@@ -15,8 +15,8 @@
         <template v-if="column.key === 'name'">
           <Link @click="() => handleEdit(record)">{{ record.name }}</Link>
         </template>
-        <template v-if="column.key === 'settleAccountStatus'">
-          <Tag color="#87d068">{{ translateDictData('log_type', text) }}</Tag>
+        <template v-if="column.key === 'payState'">
+          <Tag color="#87d068">{{ translateDictData('tenant_pay_status', text) }}</Tag>
         </template>
         <template v-if="column.key === 'action'">
           <TableAction

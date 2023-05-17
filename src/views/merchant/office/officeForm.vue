@@ -74,6 +74,9 @@
       async function handleSubmit() {
         const values = await validate();
         const office = { ...values };
+        if (office.cityId && office.cityId.length > 0) {
+          office.cityId = office.cityId[office.cityId.length - 1];
+        }
         if (unref(isUpdate)) {
           office.id = unref(recordId);
           await updateOffice(office);

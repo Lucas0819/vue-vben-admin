@@ -1,5 +1,8 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { getAllOfficeList } from '/@/api/merchant/office';
+import { getCantonList } from '@/api/sys/canton';
+import { CantonLevelEnum } from '@/enums/cantonLevelEnum';
 
 const { t } = useI18n();
 
@@ -13,7 +16,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '二维码',
-    dataIndex: 'zipCode',
+    dataIndex: 'qrCodeUrl',
     width: 60,
   },
   {
@@ -29,11 +32,8 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '上级商户',
-    dataIndex: 'parent',
+    dataIndex: 'parentName',
     width: 150,
-    // customRender: ({ record }) => {
-    //   return record.parent.name;
-    // },
   },
   {
     title: '结算比例',
@@ -47,32 +47,32 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '卡券电话',
-    dataIndex: 'phone',
+    dataIndex: 'tel',
     width: 120,
   },
   {
     title: '修改时间',
-    dataIndex: 'updateDate',
+    dataIndex: 'updateTime',
     width: 180,
     sorter: true,
     defaultHidden: true,
   },
   {
     title: '创建时间',
-    dataIndex: 'createDate',
+    dataIndex: 'createTime',
     width: 180,
     sorter: true,
     defaultSortOrder: 'descend',
   },
   {
     title: '支付账户状态',
-    dataIndex: 'settleAccountStatus',
+    dataIndex: 'payState',
     width: 120,
     sorter: true,
   },
   {
     title: '备注',
-    dataIndex: 'remarks',
+    dataIndex: 'remark',
     sorter: true,
   },
   {
@@ -96,15 +96,15 @@ export const searchFormSchema: FormSchema[] = [
     field: 'settlementRatio',
     label: '结算比例',
     component: 'Select',
-    defaultValue: '1',
+    defaultValue: '0.994',
     componentProps: {
       options: [
         { label: '全部', value: 'all' },
-        { label: '0.6%', value: '1' },
-        { label: '0.7%', value: '2' },
-        { label: '1%', value: '3' },
-        { label: '2.6%', value: '4' },
-        { label: '2.7%', value: '5' },
+        { label: '0.6%', value: '0.994' },
+        { label: '0.7%', value: '0.993' },
+        { label: '1%', value: '0.99' },
+        { label: '2.6%', value: '0.974' },
+        { label: '2.7%', value: '0.973' },
       ],
     },
   },
@@ -123,22 +123,16 @@ export const formSchema: FormSchema[] = [
     field: 'parentId',
     label: '上级商户',
     required: true,
-    component: 'Select',
-    defaultValue: '1',
+    component: 'ApiSelect',
     componentProps: {
-      options: [
-        { label: '票票龙2', value: '1' },
-        { label: '票票龙2', value: '2' },
-        { label: '票票龙3', value: '3' },
-        { label: '票票龙4', value: '4' },
-        { label: '票票龙5', value: '5' },
-      ],
+      api: getAllOfficeList,
+      labelField: 'name',
+      valueField: 'id',
     },
   },
   {
     field: 'code',
     label: '商户号',
-    defaultValue: '110946',
     component: 'Input',
     required: true,
   },
@@ -161,28 +155,31 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       options: [
         { label: '启用', value: '1' },
-        { label: '停用', value: '2' },
+        { label: '停用', value: '0' },
       ],
     },
   },
   {
-    field: 'area',
+    field: 'cityId',
     label: '归属区域',
     required: false,
-    component: 'Select',
-    defaultValue: '1',
+    component: 'ApiCascader',
     componentProps: {
-      options: [
-        { label: '中国', value: '1' },
-        { label: '辽宁省', value: '2' },
-        { label: '大连市', value: '3' },
-        { label: '沈阳市', value: '4' },
-        { label: '抚顺市', value: '5' },
-      ],
+      api: getCantonList,
+      initFetchParams: {
+        areaLevel: CantonLevelEnum.LEVEL_1,
+      },
+      labelField: 'areaName',
+      valueField: 'areaId',
+      levelField: 'areaLevel',
+      showSearch: true,
+      isLeaf: (record) => {
+        return record.areaLevel === CantonLevelEnum.LEVEL_3;
+      },
     },
   },
   {
-    field: 'isClassicShop',
+    field: 'shopStyle',
     label: '店铺风格',
     required: false,
     component: 'Select',
@@ -195,13 +192,13 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    field: 'zipCode',
+    field: 'qrCodeUrl',
     label: '商户logo',
     required: false,
     component: 'Input',
   },
   {
-    field: 'phone',
+    field: 'tel',
     label: '客服电话',
     component: 'Input',
     required: true,
@@ -210,7 +207,7 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    field: 'email',
+    field: 'describe',
     label: '商户简介',
     required: false,
     component: 'InputTextArea',
@@ -228,7 +225,7 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    field: 'remarks',
+    field: 'remark',
     label: '备注',
     required: false,
     component: 'InputTextArea',
