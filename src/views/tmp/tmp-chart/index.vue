@@ -85,6 +85,7 @@
         rowSelection: {
           type: 'checkbox',
         },
+        rowKey: 'id',
       });
 
       const canBatchDelete = computed(() => {

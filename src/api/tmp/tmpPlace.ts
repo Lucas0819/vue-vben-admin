@@ -35,4 +35,4 @@ export const deleteTmpPlace = (id: string) =>
   defHttp.delete({ url: Api.DeleteTmpPlace.replace('{id}', id) });
 
 export const batchDeleteTmpPlace = (ids: string[]) =>
-  defHttp.delete({ url: Api.BatchDeleteTmpPlace, params: { ids } });
+  defHttp.delete({ url: Api.BatchDeleteTmpPlace + '?ids=' + ids });

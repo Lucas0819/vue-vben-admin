@@ -98,9 +98,9 @@ export const searchFormSchema: FormSchema[] = [
     component: 'ApiCascader',
     componentProps: {
       api: getCantonList,
-      // initFetchParams: {
-      //   areaLevel: CantonLevelEnum.LEVEL_1,
-      // },
+      initFetchParams: {
+        areaLevel: CantonLevelEnum.LEVEL_1,
+      },
       labelField: 'areaName',
       valueField: 'areaId',
       levelField: 'areaLevel',

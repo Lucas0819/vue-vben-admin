@@ -117,6 +117,7 @@
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
+        rowKey: 'id',
       });
 
       function handleCreate() {

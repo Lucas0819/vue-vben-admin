@@ -104,6 +104,7 @@
         rowSelection: {
           type: 'checkbox',
         },
+        rowKey: 'id',
       });
 
       onMountedOrActivated(reload);
