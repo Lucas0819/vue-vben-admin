@@ -21,7 +21,7 @@
   </Select>
 </template>
 <script lang="ts">
-  import { defineComponent, PropType, ref, watchEffect, computed, unref, watch } from 'vue';
+  import { computed, defineComponent, PropType, ref, unref, watch, watchEffect } from 'vue';
   import { Select } from 'ant-design-vue';
   import { isFunction } from '/@/utils/is';
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
@@ -51,6 +51,7 @@
       params: propTypes.any.def({}),
       // support xxx.xxx.xx
       resultField: propTypes.string.def(''),
+      // special: support xxx.xxx.xxx,xxx result: xxx-xxx
       labelField: propTypes.string.def('label'),
       valueField: propTypes.string.def('value'),
       immediate: propTypes.bool.def(true),
@@ -68,6 +69,17 @@
       // Embedded in the form, just use the hook binding to perform form verification
       const [state] = useRuleFormItem(props, 'value', 'change', emitData);
 
+      const getLabel = (res) => {
+        const { labelField } = props;
+        // lodash get support xxx.xxx.xx
+        if (labelField.indexOf(',') === -1) return get(res, labelField);
+        // 支持多个字段拼接显示为label
+        const result = [];
+        labelField.split(',').forEach((item) => {
+          result.push(get(res, item));
+        });
+        return result.join('-');
+      };
       const getOptions = computed(() => {
         const { labelField, valueField, numberToString } = props;
 
@@ -76,7 +88,7 @@
             const value = get(next, valueField);
             prev.push({
               ...omit(next, [labelField, valueField]),
-              label: get(next, labelField),
+              label: getLabel(next),
               value: numberToString ? `${value}` : value,
             });
           }
