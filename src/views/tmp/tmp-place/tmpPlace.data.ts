@@ -128,6 +128,8 @@ export const formSchema: FormSchema[] = [
       api: getAllTmpChartList,
       labelField: 'name,remarks',
       valueField: 'id',
+      showSearch: true,
+      optionFilterProp: 'label',
     },
     itemProps: {
       extra: '提示：票图模板保存后不可修改',

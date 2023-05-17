@@ -128,6 +128,8 @@ export const formSchema: FormSchema[] = [
       api: getAllOfficeList,
       labelField: 'name',
       valueField: 'id',
+      showSearch: true,
+      optionFilterProp: 'label',
     },
   },
   {
