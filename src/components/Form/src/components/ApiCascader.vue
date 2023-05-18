@@ -82,7 +82,7 @@
       const isFirstLoad = ref(true);
       const { t } = useI18n();
       // Embedded in the form, just use the hook binding to perform form verification
-      const [state] = useRuleFormItem(props, 'value', 'change', emitData);
+      const [state, setState] = useRuleFormItem(props, 'value', 'change', emitData);
 
       watch(
         apiData,
@@ -124,9 +124,7 @@
           const res = await api(props.initFetchParams);
           if (Array.isArray(res)) {
             apiData.value = res;
-            return;
-          }
-          if (props.resultField) {
+          } else if (props.resultField) {
             apiData.value = get(res, props.resultField) || [];
           }
         } catch (error) {
@@ -139,7 +137,6 @@
       async function loadData(selectedOptions: Option[]) {
         const targetOption = selectedOptions[selectedOptions.length - 1];
         targetOption.loading = true;
-
         const api = props.api;
         if (!api || !isFunction(api)) return;
         try {
@@ -170,14 +167,60 @@
         }
       }
 
+      async function getAreaData(areaId) {
+        // 城市id, 获取城市数据
+        if (areaId && areaId.slice(4, 6) === '00') {
+          const provinceId = areaId.slice(0, 2) + '0000';
+          const province = apiData.value.find((item) => {
+            return parseInt(item.areaId) === parseInt(provinceId);
+          });
+          if (province) {
+            province.value = province.areaId;
+            await loadData([province]);
+            const cityList = province.children;
+            if (cityList && cityList.length > 0) {
+              const cityId = areaId.slice(0, 4) + '00';
+              const city = cityList.find((item) => {
+                return parseInt(item.belongtoCityId) === parseInt(cityId);
+              });
+              console.error(city);
+              if (city) {
+                city.value = city.belongtoCityId;
+                setState([provinceId, cityId]);
+              }
+            }
+          }
+        }
+      }
+
       watchEffect(() => {
-        props.immediate && initialFetch();
+        props.immediate && unref(isFirstLoad) && initialFetch();
       });
 
       watch(
         () => props.initFetchParams,
-        () => {
+        (newV, oldV) => {
+          if (JSON.stringify(newV) === JSON.stringify(oldV)) {
+            return;
+          }
           !unref(isFirstLoad) && initialFetch();
+        },
+        { deep: true },
+      );
+      watch(
+        () => props.value,
+        () => {
+          // 如果省市区联动设置了选中值，则需要组件回显
+          if (props.initFetchParams.areaLevel && props.value) {
+            const areaId = props.value[0];
+            // 省份 不做处理
+            if (areaId && areaId.slice(2, 6) === '0000') {
+              setState([areaId]);
+              return;
+            }
+            // 城市id, 获取城市数据
+            getAreaData(areaId);
+          }
         },
         { deep: true },
       );

@@ -112,6 +112,12 @@
           type: 'checkbox',
         },
         rowKey: 'id',
+        beforeFetch(info) {
+          if (info.areaId && info.areaId.length > 1) {
+            info.areaId = info.areaId[info.areaId.length - 1];
+          }
+          return info;
+        },
       });
 
       const canBatchDelete = computed(() => {

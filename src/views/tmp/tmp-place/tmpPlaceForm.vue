@@ -92,7 +92,7 @@
         }
         await resetFields();
         data.value = await findOne(recordId.value);
-        data.value.areaId = data.value.areaId.split(',');
+        data.value.areaId = data.value.areaId && data.value.areaId.split(',');
         setTitle('活动地址-有座-' + data.value?.remarks);
         setFieldsValue(data.value);
       });
