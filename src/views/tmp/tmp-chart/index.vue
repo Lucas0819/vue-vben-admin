@@ -17,9 +17,9 @@
                 label: '复制',
               },
               {
-                label: record.name === 'Ruth White' ? '已发布' : '待发布',
+                label: record.isRelease ? '已发布' : '待发布',
                 color: 'error',
-                disabled: record.name === 'Ruth White',
+                disabled: record.isRelease,
                 popConfirm: {
                   title: '是否确认发布该项吗？',
                   placement: 'left',
