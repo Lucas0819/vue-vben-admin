@@ -14,6 +14,9 @@
         </template>
         <slot name="headerContent" v-else></slot>
       </template>
+      <template #extra>
+        <slot name="extra"></slot>
+      </template>
       <template #[item]="data" v-for="item in getHeaderSlots">
         <slot :name="item" v-bind="data || {}"></slot>
       </template>
