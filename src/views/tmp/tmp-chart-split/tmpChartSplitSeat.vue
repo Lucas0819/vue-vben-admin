@@ -3,12 +3,12 @@
     <PageWrapper
       :title="recordData?.tmpChartName ?? '票图'"
       :sub-title="recordData?.name ?? '票图结构'"
-      contentBackground
       contentClass="flex flex-col"
       contentFullHeight
+      dense
       fixedHeight
     >
-      <template #headerContent v-if="isUpdate">
+      <template #extra v-if="isUpdate">
         <RadioGroup v-model:value="step" @change="getAndSetSeatDataByStep">
           <RadioButton value="1">1.修改结构</RadioButton>
           <RadioButton value="2">2.定义座位号<span class="text-red-500">(必填)</span></RadioButton>
@@ -17,14 +17,15 @@
           >
         </RadioGroup>
       </template>
-      <div class="p-5 flex-1 flex flex-col overflow-hidden">
-        <PageToolbox class="mb-5" v-if="step == StepEnum.STEP_ONE">
+      <div class="m-1 px-2 py-1 flex-1 flex flex-col overflow-hidden bg-white">
+        <PageToolbox class="mb-1" v-if="step == StepEnum.STEP_ONE">
           <div class="h-10 flex flex-row items-center">
             <a-button
               type="primary"
               size="small"
               class="mr-2"
-              preIcon="ant-design:qrcode-outlined"
+              color="success"
+              preIcon="ant-design:appstore-filled"
               :loading="btnLoading"
               @click="openResizeCanvasModal"
             >
@@ -34,7 +35,8 @@
               type="primary"
               size="small"
               class="mr-2"
-              preIcon="ant-design:plus-outlined"
+              color="success"
+              preIcon="ant-design:border-horizontal-outlined"
               :loading="btnLoading"
               @click="moveStage"
             >
@@ -44,7 +46,7 @@
               type="primary"
               size="small"
               class="mr-2"
-              preIcon="ant-design:printer-outlined"
+              preIcon="ant-design:drag-outlined"
               :loading="btnLoading"
               @click="resizeProportion"
             >
@@ -55,7 +57,11 @@
                 type="primary"
                 size="small"
                 class="mr-2"
-                preIcon="ant-design:save-outlined"
+                :preIcon="
+                  selectType === SelectTypeEnum.SQUARE
+                    ? 'ant-design:border-outlined'
+                    : 'ant-design:border-outer-outlined'
+                "
                 :loading="btnLoading"
               >
                 {{ selectType === SelectTypeEnum.SQUARE ? '矩形选择' : '轨迹选择' }}
@@ -68,12 +74,11 @@
                       type="primary"
                       size="small"
                       class="mr-2"
-                      preIcon="ant-design:save-outlined"
+                      preIcon="ant-design:border-outlined"
                       :loading="btnLoading"
                       @click="changeSelectType(SelectTypeEnum.SQUARE)"
                     >
                       矩形选择
-                      <DownOutlined />
                     </a-button>
                   </Menu.Item>
                   <Menu.Item>
@@ -81,12 +86,11 @@
                       type="primary"
                       size="small"
                       class="mr-2"
-                      preIcon="ant-design:save-outlined"
+                      preIcon="ant-design:border-outer-outlined"
                       :loading="btnLoading"
                       @click="changeSelectType(SelectTypeEnum.TRAJECTORY)"
                     >
                       轨迹选择
-                      <DownOutlined />
                     </a-button>
                   </Menu.Item>
                 </Menu>
@@ -96,7 +100,9 @@
               type="primary"
               size="small"
               class="mr-2"
-              preIcon="ant-design:printer-outlined"
+              color="error"
+              preIcon="ant-design:rollback-outlined"
+              :disabled="btnDisabled"
               :loading="btnLoading"
               @click="revocation"
             >
@@ -106,7 +112,7 @@
               type="primary"
               size="small"
               class="mr-2"
-              preIcon="ant-design:printer-outlined"
+              preIcon="ant-design:save-outlined"
               :loading="btnLoading"
               @click="saveRecordData"
             >
@@ -115,7 +121,7 @@
             <Alert :message="tips" type="info" class="flex-1 !ml-2" show-icon v-if="showTips" />
           </div>
         </PageToolbox>
-        <PageToolbox class="mb-5" v-else-if="step == StepEnum.STEP_TWO">
+        <PageToolbox class="mb-1" v-else-if="step == StepEnum.STEP_TWO">
           <div class="h-10 flex flex-row items-center">
             <a-button
               type="primary"
@@ -223,7 +229,7 @@
   import { useForm } from '@/components/Form';
   import { formSchema } from './tmpChartSplit.data';
   import { PageToolbox, PageWrapper } from '/@/components/Page';
-  import { clearHistory, hasHistory } from '@/utils/seat/seatUtil';
+  import { btnDisabled, clearHistory, hasHistory } from '@/utils/seat/seatUtil';
   import {
     changeSelectType,
     destroySeatByStruct,
@@ -267,7 +273,6 @@
   const { query } = unref(router.currentRoute);
   const isUpdate = ref(false);
   const btnLoading = ref(false);
-  let seatCtx, seatCvs;
 
   const { t } = useI18n();
   const go = useGo();
@@ -301,16 +306,12 @@
     }
 
     // 座位图结构初始化
-    const { seatCtx: _seatCtx, seatCvs: _seatCvs } = initSeat({
+    initSeat({
       rowsNum: recordData.value.initRow ?? 10,
       colsNum: recordData.value.initColumn ?? 10,
       stagePosition: recordData.value.stagePosition,
       setTips: setTips,
-      setRuleVisible: () => {},
-      setBtnAvailable: () => {},
     });
-    seatCtx = _seatCtx;
-    seatCvs = _seatCvs;
     // 根据具体的步骤，获取座位信息并绘制
     getAndSetSeatDataByStep();
 
@@ -350,28 +351,20 @@
       case StepEnum.STEP_ONE:
         destroySeatByNo();
         initSeatByStruct({
-          seatCtx,
-          seatCvs,
           rowsNum: recordData.value.initRow ?? 10,
           colsNum: recordData.value.initColumn ?? 10,
           seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
           setTips: setTips,
-          setRuleVisible: () => {},
-          setBtnAvailable: () => {},
         });
         break;
       case StepEnum.STEP_TWO:
         destroySeatByStruct();
         initSeatByNo({
-          seatCtx,
-          seatCvs,
           rowsNum: recordData.value.initRow ?? 10,
           colsNum: recordData.value.initColumn ?? 10,
           seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
           openStructNoModal: openStructNoModal,
           setTips: setTips,
-          setRuleVisible: () => {},
-          setBtnAvailable: () => {},
         });
         break;
       case StepEnum.STEP_THREE:

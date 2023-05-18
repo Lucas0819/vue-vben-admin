@@ -5,15 +5,25 @@
  * @Date: 2023-03-30
  */
 import { cloneDeep } from 'lodash-es';
-import { isEmpty } from '/@/utils/is';
-import { ShapeItem, TmpShapeItem } from '@/utils/seat/typing';
+import { isArray, isEmpty, isNotEmpty } from '/@/utils/is';
+import {
+  HistoryItem,
+  ShapeItem,
+  StageShapeItem,
+  StageShapeLineItem,
+  StageShapeTextItem,
+  TmpShapeItem,
+} from '@/utils/seat/typing';
+import { ref } from 'vue';
 
 //使用SvgAPI进行扩展,SVG的API比canvas更加全面
 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 let xform: DOMMatrix = svg.createSVGMatrix();
 let ctxInfo: CustomCanvasRenderingContext2D;
 const savedTransforms: DOMMatrix[] = []; //保存的画板矩阵
-let history = []; //对座位历史操作记录
+let history: HistoryItem[] = []; //对座位历史操作记录
+export const btnDisabled = ref(true); // 按钮是否可操作
+
 export interface CustomCanvasRenderingContext2D extends CanvasRenderingContext2D {
   transformedPoint: (x: number, y: number) => DOMPoint;
   transformedPoint2: (x: number, y: number) => DOMPoint;
@@ -119,11 +129,13 @@ export const trackTransform = function (ctx: CustomCanvasRenderingContext2D) {
 };
 
 //根据图形属性生成图形路径,并根据颜色填充
-export const buildPath = function (shape: ShapeItem | TmpShapeItem) {
+export const buildPath = function (
+  shape: ShapeItem | TmpShapeItem | StageShapeItem | StageShapeLineItem | StageShapeTextItem,
+) {
   let x = shape.x;
   let y = shape.y;
-  let width = shape.width;
-  let height = shape.height;
+  let width = shape.width ?? 0;
+  let height = shape.height ?? 0;
   const r = shape.r;
   const type = shape.type;
   if (type == 'rect') {
@@ -255,43 +267,33 @@ export const windowToCanvas = function (canvas, x, y) {
   };
 };
 
-export const addHistory = function (operationObj, btnObjs) {
+export const addHistory = function (operationObj) {
   //深复制新对象和对象数组,从而不影响原全局变量,但是取出时,为了影响全局变量,需要调整子数组的指针地址,重新指向到克隆后的母数组
-  operationObj.shapes = cloneDeep(operationObj.shapes);
-  operationObj.selectRects = cloneDeep(operationObj.selectRects);
-  operationObj.stageShape = cloneDeep(operationObj.stageShape);
-  operationObj.stageShapeText = cloneDeep(operationObj.stageShapeText);
-  operationObj.stageShapeMiddleLine = cloneDeep(operationObj.stageShapeMiddleLine);
-  if (operationObj.rowsNo) {
-    operationObj.rowsNo = cloneDeep(operationObj.rowsNo);
+  const clonedObj = cloneDeep(operationObj);
+  if (
+    isNotEmpty(clonedObj.selectRects) &&
+    isArray(clonedObj.selectRects) &&
+    isNotEmpty(clonedObj.shapes) &&
+    isArray(clonedObj.shapes)
+  ) {
+    clonedObj.selectRects = clonedObj.selectRects.map((item) => clonedObj.shapes[item.index]);
   }
-  if (operationObj.colsNo) {
-    operationObj.colsNo = cloneDeep(operationObj.colsNo);
-  }
-  if (operationObj.selectRects) {
-    for (const i in operationObj.selectRects) {
-      operationObj.selectRects[i] = operationObj.shapes[operationObj.selectRects[i].index];
-    }
-  }
+  // if (operationObj.selectRects) {
+  //   for (const i in operationObj.selectRects) {
+  //     operationObj.selectRects[i] = operationObj.shapes[operationObj.selectRects[i].index];
+  //   }
+  // }
   //放入到历史记录中
-  if (!isEmpty(operationObj)) {
-    history.push(operationObj);
+  if (isNotEmpty(clonedObj)) {
+    history.push(clonedObj);
   }
-  if (btnObjs) {
-    // TODO @Lucas 处理按钮
-    // $.each(btnObjs, function (x, y) {
-    //   y.attr('disabled', false);
-    // });
-  }
+  btnDisabled.value = false;
 };
-export const getHistory = function (btnObjs?: string[]) {
+export const getHistory = function () {
   //以堆栈方式,从历史记录中取出最后一次操作记录
   const _history = history.pop();
-  if (history.length == 0 && btnObjs) {
-    // TODO @Lucas 处理按钮
-    // $.each(btnObjs, function (x, y) {
-    //   y.attr('disabled', true);
-    // });
+  if (history.length == 0) {
+    btnDisabled.value = true;
   }
   return _history;
 };
@@ -301,16 +303,11 @@ export const hasHistory = function () {
 export const clearHistory = function () {
   history = [];
 };
-export const getReset = function (btnObjs) {
+export const getReset = function () {
   //取出最初始状态返回,并清除所有历史记录
   const resetObj = history[0];
   history = [];
-  if (btnObjs) {
-    // TODO @Lucas 处理按钮
-    // $.each(btnObjs, function (x, y) {
-    //   y.attr('disabled', true);
-    // });
-  }
+  btnDisabled.value = true;
   return resetObj;
 };
 
@@ -321,7 +318,6 @@ export const getReset = function (btnObjs) {
  * @param actionDisable
  */
 export const setSeatActionDisable = function (seatCvs, actionDisable: boolean) {
-  console.error('setSeatActionDisable', actionDisable);
   seatCvs.__action_disable__ = actionDisable;
 };
 
