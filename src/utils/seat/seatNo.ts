@@ -1,15 +1,15 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { buildPath, getSeatActionDisable, seatNumToString, windowToCanvas } from './seatUtil';
-import { isDef, isEmpty, isNotEmpty, isNullOrUnDef, isNumber } from '/@/utils/is';
+import { isDef, isEmpty, isNotEmpty, isNullOrUnDef } from '/@/utils/is';
 import {
+  GlobalNoSettingItem,
   RuleStyle,
-  SeatNoItem,
   SeatProps,
   ShapeItem,
   StructNoViewTypeEnum,
   TmpShapeItem,
 } from '@/utils/seat/typing';
-import { drawSeat, setStructNo } from '@/utils/seat/seatInit';
+import { drawSeat, getStagePosition } from '@/utils/seat/seatInit';
 import {
   globalSeatData,
   seatBorderColor,
@@ -22,6 +22,8 @@ import {
   seatSizeHeight,
   seatSizeWidth,
 } from '@/utils/seat/seat.data';
+// @ts-ignore
+import { propTypes } from '@/utils/propTypes';
 
 /**
  * 改写自：seat-no12121.js
@@ -35,8 +37,14 @@ let seatDetail: string[] = [];
 let seatDetailIndexList: string[] = [];
 
 //可配置变量
-//初始行列数
-let structNoViewType = StructNoViewTypeEnum.ALL; // 座位号显示模式
+
+// @ts-ignore
+export const structNoViewType = ref<propTypes.string>(StructNoViewTypeEnum.ALL); // 座位号显示模式
+watch(structNoViewType, () => {
+  // TODO seat-no line 1301 调整文字大小
+  // TODO 搜索行
+  drawSeat();
+});
 
 let setTips;
 
@@ -48,8 +56,8 @@ let selectBatchStatus = false; //按ctrl批量选择状态
 // let seatWidthTotal; //已有座位总长度
 // let seatHeightTotal; //已有座位总宽度
 // let shapes: ShapeItem[] = []; //所有票图图形
-const rowsNo: (SeatNoItem | null)[] = [];
-const colsNo: (SeatNoItem | null)[] = [];
+// const rowsNo: (SeatNoItem | null)[] = [];
+// const colsNo: (SeatNoItem | null)[] = [];
 // let leftLabelBg; //左方坐标标尺背景图形
 // const leftLabelsText: LabelText[] = []; //左方坐标标尺文字
 // let topLabelBg; //上方坐标标尺背景图形
@@ -102,31 +110,23 @@ export function initSeatDataByNo() {
         detail: seatDetail[seatIndex],
       });
       if (seatIndex >= 0) {
-        rowsNo.push({
+        globalSeatData.rowsNo.push({
           x: j * (seatSizeWidth + seatInterval) + seatMarginLeft + seatSizeWidth * 0.25,
           y: i * (seatSizeHeight + seatInterval) + seatMarginTop + seatSizeHeight * 0.4,
-          text: !isNumber(seatDetailIndexList[1])
-            ? seatDetailIndexList[1]
-            : seatDetailIndexList[1] < 10
-            ? '0' + parseInt(seatDetailIndexList[1])
-            : seatDetailIndexList[1],
+          text: _seatDetail[1],
           font: seatSizeWidth * 0.5 + 'px italic arial,sans-serif',
           color: '#ffffff',
         });
-        colsNo.push({
+        globalSeatData.colsNo.push({
           x: j * (seatSizeWidth + seatInterval) + seatMarginLeft + seatSizeWidth * 0.25,
           y: i * (seatSizeHeight + seatInterval) + seatMarginTop + seatSizeHeight * 0.9,
-          text: !isNumber(seatDetailIndexList[2])
-            ? seatDetailIndexList[2]
-            : seatDetailIndexList[2] < 10
-            ? '0' + parseInt(seatDetailIndexList[2])
-            : seatDetailIndexList[2],
+          text: _seatDetail[2],
           font: seatSizeWidth * 0.5 + 'px italic arial,sans-serif',
           color: '#ffffff',
         });
       } else {
-        rowsNo.push(null);
-        colsNo.push(null);
+        globalSeatData.rowsNo.push(null);
+        globalSeatData.colsNo.push(null);
       }
     }
   }
@@ -419,11 +419,210 @@ function changeMsg(text, delay = 5) {
 // TODO 完善方法
 function setSeatNoFunc() {}
 
-export const setStructNoViewType = function (viewType: StructNoViewTypeEnum) {
-  structNoViewType = viewType;
-  setStructNo(rowsNo, colsNo, viewType);
-  // 重绘所有
+/**
+ * 全局设置-设置座位号
+ * @param data
+ */
+export const setSeatNoByGlobal = (data: GlobalNoSettingItem) => {
+  // TODO 缺一个addHistory 判断是否有问题
+  // 批量去除脏值-全局设置不允许设置字母排号
+  [
+    'rowNoGlobal',
+    'rowNoIntervalGlobal',
+    'colNoGlobal',
+    'colNoIntervalGlobal',
+    'colNoLeftGlobal',
+    'colNoLeftIntervalGlobal',
+    'colNoRightGlobal',
+    'colNoRightIntervalGlobal',
+  ].forEach((key) => {
+    data[key] = (data[key] ?? 0) < 0 ? 0 : data[key] ?? 0;
+  });
+  //设置模式
+  if (data.setTypeGlobal === '1') {
+    //按舞台位置设置座位号
+    const stagePosition = getStagePosition();
+    //确定矩阵大小
+    const seatAtRowLeft: any[] = []; //初始化矩阵
+    const seatAtRowRight: any[] = []; //初始化矩阵
+    for (let i = 0; i < globalSeatData.rowsNum; i++) {
+      //矩阵X
+      seatAtRowLeft[i] = [];
+      seatAtRowRight[i] = [];
+      for (let j = 0; j < globalSeatData.colsNum; j++) {
+        //矩阵Y
+        const seatIndex = i * globalSeatData.colsNum + j;
+        if (globalSeatData.shapes[seatIndex].isSeat) {
+          if (j < stagePosition) {
+            seatAtRowLeft[i][j] = [
+              globalSeatData.rowsNo[i * globalSeatData.colsNum + j],
+              globalSeatData.colsNo[i * globalSeatData.colsNum + j],
+            ]; //矩阵初始值
+          } else if (j >= stagePosition) {
+            seatAtRowRight[i][j] = [
+              globalSeatData.rowsNo[i * globalSeatData.colsNum + j],
+              globalSeatData.colsNo[i * globalSeatData.colsNum + j],
+            ]; //矩阵初始值
+          }
+        } else {
+          if (j < stagePosition) {
+            seatAtRowLeft[i][j] = null; //矩阵初始值
+          } else if (j >= stagePosition) {
+            seatAtRowRight[i][j] = null; //矩阵初始值
+          }
+        }
+      }
+    }
+    //------ 舞台左侧设置座位开始 ------
+    let rowNoGlobal = data.rowNoGlobal;
+    seatAtRowLeft.forEach((row) => {
+      if (data.colNoLeftOrientationGlobal === '2') row.reverse();
+      let rowHaveSeat = false; //行内是否包含座位
+      let colNoLeftGlobal = data.colNoLeftGlobal;
+      row.forEach((item) => {
+        if (
+          item &&
+          isNotEmpty(rowNoGlobal) &&
+          isNotEmpty(colNoLeftGlobal) &&
+          isNotEmpty(data.colNoLeftIntervalGlobal)
+        ) {
+          rowHaveSeat = true; //包含座位
+          item[0].text = rowNoGlobal < 10 ? '0' + rowNoGlobal : rowNoGlobal;
+          item[1].text = colNoLeftGlobal < 10 ? '0' + colNoLeftGlobal : colNoLeftGlobal;
+          if (data.colNoLeftTypeGlobal === '1') {
+            //正序
+            colNoLeftGlobal += data.colNoLeftIntervalGlobal;
+          } else if (data.colNoLeftTypeGlobal === '2') {
+            //倒序
+            colNoLeftGlobal -= data.colNoLeftIntervalGlobal;
+          }
+        }
+      });
+      if (rowHaveSeat && isNotEmpty(rowNoGlobal) && isNotEmpty(data.rowNoIntervalGlobal)) {
+        if (data.rowNoTypeGlobal === '1') {
+          //正序
+          rowNoGlobal += data.rowNoIntervalGlobal;
+        } else if (data.rowNoTypeGlobal === '2') {
+          //倒序
+          rowNoGlobal -= data.rowNoIntervalGlobal;
+        }
+      }
+    });
+    //------ 舞台左侧设置座位结束 ------
+    //重置排号
+    rowNoGlobal = data.rowNoGlobal;
+    //------ 舞台右侧设置座位开始 ------
+    seatAtRowRight.forEach((row) => {
+      if (data.colNoRightOrientationGlobal === '2') row.reverse();
+      let rowHaveSeat = false; //行内是否包含座位
+      let colNoRightGlobal = data.colNoRightGlobal;
+      row.forEach((item) => {
+        if (
+          item &&
+          isNotEmpty(rowNoGlobal) &&
+          isNotEmpty(colNoRightGlobal) &&
+          isNotEmpty(data.colNoRightIntervalGlobal)
+        ) {
+          rowHaveSeat = true; //包含座位
+          item[0].text = rowNoGlobal < 10 ? '0' + rowNoGlobal : rowNoGlobal;
+          item[1].text = colNoRightGlobal < 10 ? '0' + colNoRightGlobal : colNoRightGlobal;
+          if (data.colNoRightTypeGlobal === '1') {
+            //正序
+            colNoRightGlobal += data.colNoRightIntervalGlobal;
+          } else if (data.colNoRightTypeGlobal === '2') {
+            //倒序
+            colNoRightGlobal -= data.colNoRightIntervalGlobal;
+          }
+        }
+      });
+      if (rowHaveSeat && isNotEmpty(rowNoGlobal) && isNotEmpty(data.rowNoIntervalGlobal)) {
+        if (data.rowNoTypeGlobal === '1') {
+          //正序
+          rowNoGlobal += data.rowNoIntervalGlobal;
+        } else if (data.rowNoTypeGlobal === '2') {
+          //倒序
+          rowNoGlobal -= data.rowNoIntervalGlobal;
+        }
+      }
+    });
+    //------ 舞台右侧设置座位结束 ------
+  } else if (data.setTypeGlobal === '2') {
+    //普通模式
+    const seatAtRow: any[] = []; //初始化矩阵
+    for (let i = 0; i < globalSeatData.rowsNum; i++) {
+      //矩阵X
+      seatAtRow[i] = [];
+      for (let j = 0; j < globalSeatData.colsNum; j++) {
+        //矩阵Y
+        const seatIndex = i * globalSeatData.colsNum + j;
+        if (globalSeatData.shapes[seatIndex].isSeat) {
+          seatAtRow[i][j] = [
+            globalSeatData.rowsNo[i * globalSeatData.colsNum + j],
+            globalSeatData.colsNo[i * globalSeatData.colsNum + j],
+          ]; //矩阵初始值
+        } else {
+          seatAtRow[i][j] = null; //矩阵初始值
+        }
+      }
+    }
+    let rowNoGlobal = data.rowNoGlobal;
+    seatAtRow.forEach((row) => {
+      if (data.colNoOrientationGlobal === '2') row.reverse();
+      let rowHaveSeat = false; //行内是否包含座位
+      let colNoGlobal = data.colNoGlobal;
+      row.forEach((item) => {
+        if (
+          item &&
+          isNotEmpty(rowNoGlobal) &&
+          isNotEmpty(colNoGlobal) &&
+          isNotEmpty(data.colNoIntervalGlobal)
+        ) {
+          rowHaveSeat = true;
+          item[0].text = rowNoGlobal < 10 ? '0' + rowNoGlobal : rowNoGlobal;
+          item[1].text = colNoGlobal < 10 ? '0' + colNoGlobal : colNoGlobal;
+          if (data.colNoTypeGlobal === '1') {
+            //正序
+            colNoGlobal += data.colNoIntervalGlobal;
+          } else if (data.colNoTypeGlobal === '2') {
+            //倒序
+            colNoGlobal -= data.colNoIntervalGlobal;
+          }
+        }
+      });
+      if (rowHaveSeat && isNotEmpty(rowNoGlobal) && isNotEmpty(data.rowNoIntervalGlobal)) {
+        if (data.rowNoTypeGlobal === '1') {
+          //正序
+          rowNoGlobal += data.rowNoIntervalGlobal;
+        } else if (data.rowNoTypeGlobal === '2') {
+          //倒序
+          rowNoGlobal -= data.rowNoIntervalGlobal;
+        }
+      }
+    });
+  }
+
+  // 清理选中颜色
+  globalSeatData.selectRects.forEach((seat) => (seat.borderColor = seatBorderColor));
+  globalSeatData.selectRects = [];
+  // 将新的座位号写入座位数据
+  updateSeatNo();
+  // 重绘
   drawSeat();
+};
+
+const updateSeatNo = () => {
+  // TODO 重复座位号校验
+  globalSeatData.shapes
+    .filter((item) => item.isSeat)
+    .forEach((seat) => {
+      if (isNotEmpty(seat.detail)) {
+        const _detail = seat.detail.split('|');
+        _detail[1] = globalSeatData.rowsNo[seat.index]?.text ?? '0';
+        _detail[2] = globalSeatData.colsNo[seat.index]?.text ?? '0';
+        _detail[3] = seat.fillColorName ?? '0';
+        seat.detail = _detail.join('|'); //index|座位行|座位列|颜色|预留|预留|预留
+      }
+    });
 };
 
 export const initSeatByNo = function (props: SeatProps) {
@@ -448,8 +647,6 @@ export const initSeatByNo = function (props: SeatProps) {
   seatCvsEventInit();
   //初始化座位
   initSeatDataByNo();
-  // 设置座位号
-  setStructNo(rowsNo, colsNo, structNoViewType);
   // 重绘所有
   drawSeat();
 };
@@ -459,8 +656,8 @@ export const destroySeatByNo = function () {
   seatCvsEventDestroy();
   // 移除座位
   globalSeatData.shapes = [];
-  // 重置座位号
-  setStructNo([], [], StructNoViewTypeEnum.ALL);
+  globalSeatData.rowsNo = [];
+  globalSeatData.colsNo = [];
   // 重绘所有
   drawSeat();
 };

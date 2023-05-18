@@ -9,7 +9,6 @@ import {
 } from './seatUtil';
 import {
   LabelText,
-  SeatNoItem,
   SeatProps,
   StageShapeItem,
   StageShapeLineItem,
@@ -30,6 +29,7 @@ import {
   seatSizeHeight,
   seatSizeWidth,
 } from '@/utils/seat/seat.data';
+import { structNoViewType } from '@/utils/seat/seatNo';
 
 /**
  * 摘取自：seat-add12121.js
@@ -39,7 +39,6 @@ import {
  * @Date: 2023-05-16
  */
 //可配置变量
-let structNoViewType = StructNoViewTypeEnum.ALL; // 座位号显示模式
 let minScale = 0.6; //最小缩放比例(值已无效,改为自动计算极限值)
 let maxScale = 2.4; //最大缩放比例(值已无效,改为自动计算极限值)
 
@@ -226,12 +225,12 @@ export function drawSeat() {
     //绘制舞台位置文字
     buildText(stageShapeText);
   }
-  if (structNoViewType === StructNoViewTypeEnum.ALL) {
+  if (structNoViewType.value === StructNoViewTypeEnum.ALL) {
     globalSeatData.rowsNo.filter(isNotEmpty).forEach(buildText);
     globalSeatData.colsNo.filter(isNotEmpty).forEach(buildText);
-  } else if (structNoViewType === StructNoViewTypeEnum.ONLY_ROWS) {
+  } else if (structNoViewType.value === StructNoViewTypeEnum.ONLY_ROWS) {
     globalSeatData.rowsNo.filter(isNotEmpty).forEach(buildText);
-  } else if (structNoViewType === StructNoViewTypeEnum.ONLY_COLS) {
+  } else if (structNoViewType.value === StructNoViewTypeEnum.ONLY_COLS) {
     globalSeatData.colsNo.filter(isNotEmpty).forEach(buildText);
   }
 }
@@ -583,16 +582,6 @@ export const initSeat = function (props: SeatProps) {
   drawSeat();
   //初始化票图画板事件
   seatCvsEventInit();
-};
-
-export const setStructNo = function (
-  _rowsNo: (SeatNoItem | null)[] = [],
-  _colsNo: (SeatNoItem | null)[] = [],
-  _viewType: StructNoViewTypeEnum,
-) {
-  globalSeatData.rowsNo = _rowsNo;
-  globalSeatData.colsNo = _colsNo;
-  structNoViewType = _viewType;
 };
 
 //移动舞台按钮事件

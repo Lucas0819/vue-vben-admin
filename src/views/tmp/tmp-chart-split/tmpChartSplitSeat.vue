@@ -129,7 +129,7 @@
               class="mr-2"
               preIcon="ant-design:qrcode-outlined"
               :loading="btnLoading"
-              @click="openResizeCanvasModal"
+              @click="openGlobalSeatNoSettingModal"
             >
               全局设置
             </a-button>
@@ -172,11 +172,7 @@
                 v-if="showTips"
               />
             </div>
-            <RadioGroup
-              v-model:value="structNoViewType"
-              size="small"
-              @change="handleChangeStructNoViewType"
-            >
+            <RadioGroup v-model:value="structNoViewType" size="small">
               <RadioButton value="all">显示全部</RadioButton>
               <RadioButton value="rows"> 显示排号</RadioButton>
               <RadioButton value="cols">显示列号</RadioButton>
@@ -208,9 +204,32 @@
         </template>
       </BasicForm>
     </BasicModal>
-    <!-- 2.修改座位号弹窗 -->
-    <BasicModal @register="noModalRegister" @ok="handleSubmitNo">
-      <BasicForm @register="noFormRegister" />
+    <!-- 2-1.全局设置座位号弹窗 -->
+    <BasicModal @register="globalNoSettingModalRegister" @ok="handleSubmitGlobalNoSetting">
+      <ACard title="排号设置" :bordered="false" :bodyStyle="cardBodyStyle">
+        <BasicForm @register="globalNoRowsSettingFormRegister" />
+      </ACard>
+      <ACard title="列号设置" :bordered="false" :bodyStyle="cardBodyStyle">
+        <BasicForm @register="globalNoColsSettingFormRegister" />
+        <template v-if="setTypeGlobal === '1'">
+          <ARow :gutter="20">
+            <ACol span="12">
+              <ACard title="舞台左侧配置">
+                <BasicForm @register="globalNoColsStageLeftSettingFormRegister" />
+              </ACard>
+            </ACol>
+            <ACol span="12">
+              <ACard title="舞台右侧配置">
+                <BasicForm @register="globalNoColsStageRightSettingFormRegister" />
+              </ACard>
+            </ACol>
+          </ARow>
+        </template>
+      </ACard>
+    </BasicModal>
+    <!-- 2-2.修改座位号弹窗 -->
+    <BasicModal @register="noSettingModalRegister" @ok="handleSubmitNoSetting">
+      <BasicForm @register="noSettingFormRegister" />
     </BasicModal>
   </div>
 </template>
@@ -227,7 +246,13 @@
   import BasicModal from '@/components/Modal/src/BasicModal.vue';
   import { useModal } from '@/components/Modal';
   import { useForm } from '@/components/Form';
-  import { formSchema } from './tmpChartSplit.data';
+  import {
+    formSchema,
+    globalNoColsSettingFormSchema,
+    globalNoColsStageLeftSettingFormSchema,
+    globalNoColsStageRightSettingFormSchema,
+    globalNoRowsSettingFormSchema,
+  } from './tmpChartSplit.data';
   import { PageToolbox, PageWrapper } from '/@/components/Page';
   import { btnDisabled, clearHistory, hasHistory } from '@/utils/seat/seatUtil';
   import {
@@ -248,6 +273,7 @@
   } from '@/utils/seat/seatInit';
   import {
     Alert,
+    Card as ACard,
     Col as ACol,
     Dropdown,
     InputNumber as AInputNumber,
@@ -260,8 +286,13 @@
   import { useLoading } from '@/components/Loading';
   import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
   import { propTypes } from '@/utils/propTypes';
-  import { SelectTypeEnum, StructNoViewTypeEnum } from '@/utils/seat/typing';
-  import { destroySeatByNo, initSeatByNo, setStructNoViewType } from '@/utils/seat/seatNo';
+  import { GlobalNoSettingItem, SelectTypeEnum } from '@/utils/seat/typing';
+  import {
+    destroySeatByNo,
+    initSeatByNo,
+    setSeatNoByGlobal,
+    structNoViewType,
+  } from '@/utils/seat/seatNo';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useGo } from '@/hooks/web/usePage';
   import BasicForm from '@/components/Form/src/BasicForm.vue';
@@ -363,7 +394,7 @@
           rowsNum: recordData.value.initRow ?? 10,
           colsNum: recordData.value.initColumn ?? 10,
           seatDetail: JSON.parse(recordData.value.desJson ?? '{}').seatDetail ?? [],
-          openStructNoModal: openStructNoModal,
+          openSeatNoSettingModal: openSeatNoSettingModal,
           setTips: setTips,
         });
         break;
@@ -483,13 +514,145 @@
   });
 
   // 2.座位号
-  const structNoViewType = ref<propTypes.string>(StructNoViewTypeEnum.ALL);
-  const handleChangeStructNoViewType = () => {
-    setStructNoViewType(unref(structNoViewType));
-  };
-  const [noModalRegister, { setModalProps: setNoModalProps, openModal: openNoModal }] = useModal();
+  // 全局设置座位号
   const [
-    noFormRegister,
+    globalNoSettingModalRegister,
+    { openModal: openGlobalNoSettingModal, setModalProps: setGlobalNoSettingModalProps },
+  ] = useModal();
+  // 全局座位号配置数据
+  const globalNoSettingData = ref<GlobalNoSettingItem>({});
+  const cardBodyStyle = {
+    backgroundColor: '#f6f6f6',
+    borderRadius: '6px',
+  };
+  // 排号设置
+  const [globalNoRowsSettingFormRegister, { getFieldsValue: getGlobalNoRowsSettingFieldsValue }] =
+    useForm({
+      schemas: globalNoRowsSettingFormSchema,
+      baseColProps: {
+        span: 24,
+      },
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+      showActionButtonGroup: false,
+    });
+  // 列号设置-总
+  const [
+    globalNoColsSettingFormRegister,
+    {
+      updateSchema: globalNoColsSettingUpdateSchema,
+      getFieldsValue: getGlobalNoColsSettingFieldsValue,
+    },
+  ] = useForm({
+    schemas: globalNoColsSettingFormSchema,
+    baseColProps: {
+      span: 24,
+    },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    showActionButtonGroup: false,
+  });
+  // 列号设置-舞台-左侧
+  const [
+    globalNoColsStageLeftSettingFormRegister,
+    { getFieldsValue: getGlobalNoColsStageLeftSettingFieldsValue },
+  ] = useForm({
+    schemas: globalNoColsStageLeftSettingFormSchema,
+    baseColProps: {
+      span: 24,
+    },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    showActionButtonGroup: false,
+  });
+  // 列号设置-舞台-右侧
+  const [
+    globalNoColsStageRightSettingFormRegister,
+    { getFieldsValue: getGlobalNoColsStageRightSettingFieldsValue },
+  ] = useForm({
+    schemas: globalNoColsStageRightSettingFormSchema,
+    baseColProps: {
+      span: 24,
+    },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    showActionButtonGroup: false,
+  });
+  const setTypeGlobal = ref('1');
+  // 列号-按舞台位置 与 普通模式 切换处理
+  const handleGlobalColsSettingModal = (_setTypeGlobal: string) => {
+    setTypeGlobal.value = _setTypeGlobal;
+    // 设置列的表单显示与否
+    globalNoColsSettingUpdateSchema([
+      {
+        field: 'colNoGlobal',
+        show: _setTypeGlobal === '2',
+      },
+      {
+        field: 'colNoTypeGlobal',
+        show: _setTypeGlobal === '2',
+      },
+      {
+        field: 'colNoOrientationGlobal',
+        show: _setTypeGlobal === '2',
+      },
+      {
+        field: 'colNoIntervalGlobal',
+        show: _setTypeGlobal === '2',
+      },
+    ]);
+  };
+  // 打开弹窗
+  const openGlobalSeatNoSettingModal = () => {
+    setGlobalNoSettingModalProps({ title: '全局设置', width: 900, canFullscreen: true });
+    openGlobalNoSettingModal(true);
+    nextTick(() => {
+      // 处理列号设置模式
+      handleGlobalColsSettingModal(globalNoSettingData.value.setTypeGlobal ?? '1');
+      // 监听设置模式变化
+      globalNoColsSettingUpdateSchema({
+        field: 'setTypeGlobal',
+        componentProps: {
+          onChange: (e) => handleGlobalColsSettingModal(e.target.value),
+        },
+      });
+    });
+  };
+  // 保存
+  const handleSubmitGlobalNoSetting = () => {
+    const data = {
+      ...getGlobalNoRowsSettingFieldsValue(),
+      ...getGlobalNoColsSettingFieldsValue(),
+      ...getGlobalNoColsStageLeftSettingFieldsValue(),
+      ...getGlobalNoColsStageRightSettingFieldsValue(),
+    };
+    globalNoSettingData.value = {
+      rowNoGlobal: data.rowNoGlobal,
+      rowNoTypeGlobal: data.rowNoTypeGlobal,
+      rowNoIntervalGlobal: data.rowNoIntervalGlobal,
+      setTypeGlobal: data.setTypeGlobal,
+      colNoGlobal: data.colNoGlobal,
+      colNoTypeGlobal: data.colNoTypeGlobal,
+      colNoOrientationGlobal: data.colNoOrientationGlobal,
+      colNoIntervalGlobal: data.colNoIntervalGlobal,
+      colNoLeftGlobal: data.colNoLeftGlobal,
+      colNoLeftTypeGlobal: data.colNoLeftTypeGlobal,
+      colNoLeftOrientationGlobal: data.colNoLeftOrientationGlobal,
+      colNoLeftIntervalGlobal: data.colNoLeftIntervalGlobal,
+      colNoRightGlobal: data.colNoRightGlobal,
+      colNoRightTypeGlobal: data.colNoRightTypeGlobal,
+      colNoRightOrientationGlobal: data.colNoRightOrientationGlobal,
+      colNoRightIntervalGlobal: data.colNoRightIntervalGlobal,
+    };
+    setSeatNoByGlobal(globalNoSettingData.value);
+    openGlobalNoSettingModal(false);
+  };
+
+  // 批量修改座位号弹窗
+  const [noSettingModalRegister, { setModalProps: setNoModalProps, openModal: openNoModal }] =
+    useModal();
+  const [
+    noSettingFormRegister,
     // {
     //   setFieldsValue: setNoFieldsValue,
     //   clearValidate: clearNoValidate,
@@ -504,12 +667,11 @@
     wrapperCol: { span: 20 },
     showActionButtonGroup: false,
   });
-  // 批量修改座位号弹窗
-  const openStructNoModal = () => {
+  const openSeatNoSettingModal = () => {
     setNoModalProps({ title: '修改' });
     openNoModal(true);
   };
-  const handleSubmitNo = () => {};
+  const handleSubmitNoSetting = () => {};
 
   // 操作文字提示
   const tips = ref('');

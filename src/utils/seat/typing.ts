@@ -1,5 +1,8 @@
 import { StyleValue } from '@/utils/types';
 
+/**
+ * 选择模式 矩形/轨迹
+ */
 export enum SelectTypeEnum {
   SQUARE = 'square',
   TRAJECTORY = 'trajectory',
@@ -25,7 +28,7 @@ export interface SeatProps {
     viewType: StructNoViewTypeEnum,
   ) => void;
   // 打开设置座位号弹窗
-  openStructNoModal?: () => void;
+  openSeatNoSettingModal?: () => void;
   // 提示文字
   setTips?: (tips: string, delay: number) => void;
 }
@@ -154,14 +157,29 @@ export interface RuleStyle {
   visible: boolean;
 }
 
-export interface SeatHistory {
-  shapes: ShapeItem[];
-  selectRects: ShapeItem[];
-}
-
 // 2.座位号-显示模式
 export const enum StructNoViewTypeEnum {
   ALL = 'all',
   ONLY_ROWS = 'rows',
   ONLY_COLS = 'cols',
+}
+
+// 2.座位号-全局设置数据格式
+export interface GlobalNoSettingItem {
+  rowNoGlobal?: number; // 排号起始
+  rowNoTypeGlobal?: string; // 排号延续方式
+  rowNoIntervalGlobal?: number; // 间隔
+  setTypeGlobal?: string; // 设置模式
+  colNoGlobal?: number; // 列号起始
+  colNoTypeGlobal?: string; // 延续方式
+  colNoOrientationGlobal?: string; // 排布方向
+  colNoIntervalGlobal?: number; // 间隔
+  colNoLeftGlobal?: number; // 列号起始
+  colNoLeftTypeGlobal?: string; // 列号延续方式
+  colNoLeftOrientationGlobal?: string; // 排布方向
+  colNoLeftIntervalGlobal?: number; // 列号间隔
+  colNoRightGlobal?: number; // 列号起始
+  colNoRightTypeGlobal?: string; // 延续方式
+  colNoRightOrientationGlobal?: string; // 排布方向
+  colNoRightIntervalGlobal?: number; // 间隔
 }
