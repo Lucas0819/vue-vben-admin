@@ -15,6 +15,7 @@ enum Api {
   UpdateTmpChart = ServiceEnum.TICKET + '/tmp_chart/modify',
   DeleteTmpChart = ServiceEnum.TICKET + '/tmp_chart/{id}/remove',
   BatchDeleteTmpChart = ServiceEnum.TICKET + '/tmp_chart/remove',
+  ReleaseTmpChart = ServiceEnum.TICKET + '/tmp_chart/{id}/release',
 }
 
 export const getTmpChartListByPage = (params: TmpChartPageParams) =>
@@ -36,3 +37,6 @@ export const deleteTmpChart = (id: string) =>
 
 export const batchDeleteTmpChart = (id: string[]) =>
   defHttp.delete({ url: Api.BatchDeleteTmpChart, params: { id } });
+
+export const releaseTmpChart = (id) =>
+  defHttp.post<TmpChartItem>({ url: Api.ReleaseTmpChart.replace('{id}', id) });

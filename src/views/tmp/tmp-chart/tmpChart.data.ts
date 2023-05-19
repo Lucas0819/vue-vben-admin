@@ -28,26 +28,26 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '所属区域',
-    dataIndex: 'areaName',
+    dataIndex: 'areaId',
     width: 120,
     defaultHidden: true,
   },
   {
     title: '修改时间',
-    dataIndex: 'updateDate',
-    width: 120,
+    dataIndex: 'updateTime',
+    width: 160,
     sorter: true,
   },
   {
     title: '创建时间',
-    dataIndex: 'createDate',
-    width: 120,
+    dataIndex: 'createTime',
+    width: 160,
     sorter: true,
     defaultSortOrder: 'descend',
   },
   {
     title: '创建人',
-    dataIndex: 'createBy',
+    dataIndex: 'creator',
     width: 120,
   },
 ];
