@@ -23,6 +23,7 @@
   import TmpChartSplitManagement from '/@/views/tmp/tmp-chart-split/index.vue';
   import { TmpChartItem } from '@/api/tmp/model/tmpChartModel';
   import { useGo } from '@/hooks/web/usePage';
+  import { PageEnum } from '@/enums/pageEnum';
 
   export default defineComponent({
     components: {
@@ -44,7 +45,7 @@
         isUpdate.value = true;
       }
 
-      const { setTitle } = useTabs();
+      const { setTitle, updatePath } = useTabs();
 
       const [register, { resetFields, setFieldsValue, validate }] = useForm({
         autoFocusFirstItem: true,
@@ -91,9 +92,10 @@
         }
         await handleSuccess();
         if (!unref(isUpdate)) {
-          go({
-            query: { id: recordId.value },
-          });
+          // 重定向到编辑页
+          const path = PageEnum.TMP_TMP_CHART_FORM + `?id=${recordId.value}`;
+          await updatePath(path);
+          go(path, true);
         }
       }
 

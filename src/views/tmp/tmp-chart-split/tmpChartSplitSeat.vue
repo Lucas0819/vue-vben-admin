@@ -296,8 +296,9 @@
   import { useI18n } from '@/hooks/web/useI18n';
   import { useGo } from '@/hooks/web/usePage';
   import BasicForm from '@/components/Form/src/BasicForm.vue';
+  import { PageEnum } from '@/enums/pageEnum';
 
-  const { createConfirm, createInfoModal, createMessage } = useMessage();
+  const { createConfirm, createInfoModal, createSuccessModal, createMessage } = useMessage();
   const recordId = ref('');
   const recordData = ref<TmpChartSplitItem>({});
   const router = useRouter();
@@ -307,7 +308,7 @@
 
   const { t } = useI18n();
   const go = useGo();
-  const { setTitle, closeCurrent } = useTabs();
+  const { setTitle, updatePath, closeCurrent } = useTabs();
 
   const initData = async () => {
     if (!isNotEmpty(query.id) && !isNotEmpty(query.tempChartId)) {
@@ -343,6 +344,7 @@
       stagePosition: recordData.value.stagePosition,
       setTips: setTips,
     });
+    clearHistory();
     // 根据具体的步骤，获取座位信息并绘制
     getAndSetSeatDataByStep();
 
@@ -723,11 +725,14 @@
       seatDetail,
     });
     const id = await createTmpChartSplit(unref(recordData));
-    createInfoModal({
+    createSuccessModal({
       title: t('sys.api.operationSuccess'),
       content: t('sys.api.createSuccessMsg', ['票图结构']),
-      onOk: () => {
-        go({ query: { id } });
+      onOk: async () => {
+        // 重定向到编辑页
+        const path = PageEnum.TMP_TMP_CHART_SPLIT_SEAT + `?id=${id}`;
+        await updatePath(path);
+        go(path, true);
         return Promise.resolve();
       },
     });

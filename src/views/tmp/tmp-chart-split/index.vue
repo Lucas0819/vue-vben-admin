@@ -55,6 +55,9 @@
 
       const [registerTable, { reload, setLoading: setTableLoading, getSelectRowKeys }] = useTable({
         api: getTmpChartSplitListByPage,
+        searchInfo: {
+          tempChartId: props.tempChartId,
+        },
         columns,
         useSearchForm: false,
         showTableSetting: true,
