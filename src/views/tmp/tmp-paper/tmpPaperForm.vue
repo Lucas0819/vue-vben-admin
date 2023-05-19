@@ -97,10 +97,11 @@
   import { BasicModal, useModal } from '@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '@/components/Form';
   import { TmpPaperElTemplateEnum } from '@/enums/tmp/tmpPaperEnum';
-  import { useMessage } from '@/hooks/web/useMessage';
   import { useI18n } from '@/hooks/web/useI18n';
   import projectSetting from '@/settings/projectSetting';
   import { downloadFileUrl } from '@/api/sys/file';
+  import { useMessage } from '@/hooks/web/useMessage';
+  import { useGo } from '@/hooks/web/usePage';
 
   export default defineComponent({
     components: {
@@ -426,13 +427,13 @@
       };
       const doSaveTmpPaper = async () => {
         data.value.id = await createTmpPaper(data.value);
-        isUpdate.value = true;
       };
       const doUpdateTmpPaper = async () => {
         await updateTmpPaper(data.value);
       };
 
       const { t } = useI18n();
+      const go = useGo();
       function handleSuccess() {
         const { createSuccessModal } = useMessage();
         createSuccessModal({
@@ -442,6 +443,12 @@
             : t('sys.api.createSuccessMsg', ['票纸设计']),
           closable: false,
           okText: t('common.okText'),
+          onOk: () => {
+            if (!unref(isUpdate) && isNotEmpty(data.value.id)) {
+              go({ query: { id: data.value.id } });
+            }
+            return Promise.resolve();
+          },
         });
       }
 
