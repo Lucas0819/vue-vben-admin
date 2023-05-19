@@ -32,6 +32,7 @@
   import { AMapLocator, useAMapLocator } from '@/components/AMapLocator';
   import { TmpPlaceItem } from '@/api/tmp/model/tmpPlaceModel';
   import { Button } from '/@/components/Button';
+  import { translateCantonDataAllLevels } from '@/utils/canton';
 
   export default defineComponent({
     components: {
@@ -92,7 +93,17 @@
         }
         await resetFields();
         data.value = await findOne(recordId.value);
-        data.value.areaId = data.value.areaId && data.value.areaId.split(',');
+        if (data.value.areaId) {
+          const areaParam = translateCantonDataAllLevels(parseInt(data.value.areaId));
+          data.value.areaId = areaParam.areaIds;
+          data.value.areaName = areaParam.areaNames;
+        }
+        updateSchema({
+          field: 'areaId',
+          componentProps: {
+            displayRenderArray: data.value.areaName,
+          },
+        });
         setTitle('活动地址-有座-' + data.value?.remarks);
         setFieldsValue(data.value);
       });

@@ -15,7 +15,7 @@ import { DEFAULT_FILTER_FN, DEFAULT_SORT_FN, FETCH_SETTING, DEFAULT_SIZE } from 
 import { propTypes } from '/@/utils/propTypes';
 
 export const basicProps = {
-  clickToRowSelect: { type: Boolean, default: true },
+  clickToRowSelect: { type: Boolean, default: false },
   isTreeTable: Boolean,
   tableSetting: propTypes.shape<TableSetting>({}),
   inset: Boolean,

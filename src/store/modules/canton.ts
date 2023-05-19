@@ -32,6 +32,10 @@ export const useCantonStore = defineStore({
           areaId: item.areaId,
           areaLevel: item.areaLevel,
           areaName: item.areaName,
+          belongtoProvinceId: item.belongtoProvinceId,
+          belongtoProvinceName: item.belongtoProvinceName,
+          belongtoCityId: item.belongtoCityId,
+          belongtoCityName: item.belongtoCityName,
         })),
       );
     },

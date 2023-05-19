@@ -3,6 +3,7 @@ import { CacheTypeEnum, CANTON_ENUM_KEY } from '/@/enums/cacheEnum';
 import projectSetting from '/@/settings/projectSetting';
 import { isEmpty, isNullOrUnDef } from '/@/utils/is';
 import { CantonModel } from '@/api/sys/model/cantonModel';
+import { CantonLevelEnum } from '@/enums/cantonLevelEnum';
 
 const { permissionCacheType } = projectSetting;
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL;
@@ -33,4 +34,34 @@ export function translateCantonData(areaId: number): string {
   const currentData = cantonData.find((item: CantonModel) => item.areaId === areaId);
   if (isNullOrUnDef(currentData)) return DEFAULT_CANTON_VALUE;
   return currentData.areaName;
+}
+
+export function translateCantonDataAllLevels(areaId: number): object {
+  if (isEmpty(areaId)) return { areaIds: [], areaNames: [DEFAULT_CANTON_VALUE] };
+  const cantonData = getCantonData() ?? [];
+  const currentData = cantonData.find((item: CantonModel) => item.areaId === areaId);
+  if (isNullOrUnDef(currentData)) return { areaIds: [], areaNames: [DEFAULT_CANTON_VALUE] };
+  // 省级数据
+  if (currentData.areaLevel === CantonLevelEnum.LEVEL_1) {
+    return { areaIds: [currentData.areaId], areaNames: [currentData.areaName] };
+  }
+  // 市级数据
+  if (currentData.areaLevel === CantonLevelEnum.LEVEL_2) {
+    return {
+      areaIds: [currentData.belongtoProvinceId, currentData.areaId],
+      areaNames: [currentData.belongtoProvinceName || '-', currentData.areaName || '-'],
+    };
+  }
+  // 区域数据
+  if (currentData.areaLevel === CantonLevelEnum.LEVEL_3) {
+    return {
+      areaIds: [currentData.belongtoProvinceId, currentData.belongtoCityId, currentData.areaId],
+      areaNames: [
+        currentData.belongtoProvinceName || '-',
+        currentData.belongtoCityName || '-',
+        currentData.areaName,
+      ],
+    };
+  }
+  return { areaIds: [], areaNames: [DEFAULT_CANTON_VALUE] };
 }

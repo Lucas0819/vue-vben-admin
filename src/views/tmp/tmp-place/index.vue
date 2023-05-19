@@ -44,7 +44,9 @@
           >
         </template>
         <template v-if="column.key === 'areaId'">
-          <span>{{ translateCantonData(parseInt(record.areaId)) }}</span>
+          <span>{{
+            translateCantonDataAllLevels(parseInt(record.areaId)).areaNames.join('/')
+          }}</span>
         </template>
         <template v-if="column.key === 'action'">
           <TableAction
@@ -78,7 +80,7 @@
   import { Typography } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
   import { PageEnum } from '/@/enums/pageEnum';
-  import { translateCantonData } from '@/utils/canton';
+  import { translateCantonDataAllLevels } from '@/utils/canton';
 
   export default defineComponent({
     name: 'TmpPlaceManagement',
@@ -195,7 +197,7 @@
         handleSuccess,
         canBatchDelete,
         batchDelete,
-        translateCantonData,
+        translateCantonDataAllLevels,
         handleEditTmpChart,
         openActiveModal,
       };
